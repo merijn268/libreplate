@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     "groceries.apps.GroceriesConfig",
     "accounts.apps.AccountsConfig",
     "recipes.apps.RecipesConfig",
+    "core.apps.CoreConfig",
     "meals.apps.MealsConfig",
     "integrations.apps.IntegrationsConfig",
     "body_metrics.apps.BodyMetricsConfig",

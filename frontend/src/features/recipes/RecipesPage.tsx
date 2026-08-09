@@ -15,7 +15,6 @@ import {
   recipesList,
   recipesTagsList,
   recipesToggleFavoriteCreate,
-  recipesTogglePinCreate,
 } from "@/api/generated";
 
 export default function RecipePage() {
@@ -63,17 +62,6 @@ export default function RecipePage() {
     onSuccess: invalidateRecipes,
   });
 
-  const togglePin = useMutation({
-    mutationFn: (id: number) =>
-      recipesTogglePinCreate({
-        path: {
-          id,
-        },
-        body: {} as never,
-      }),
-    onSuccess: invalidateRecipes,
-  });
-
   const copyRecipe = useMutation({
     mutationFn: ({ id, name }: { id: number; name: string }) =>
       recipesCopyCreate({
@@ -92,7 +80,6 @@ export default function RecipePage() {
       recipesCreate({
         body: {
           name: "New recipe",
-          summary: "",
           description: "",
           instructions: "",
           cooking_time: "0",
@@ -135,9 +122,7 @@ export default function RecipePage() {
     .filter((recipe) => {
       const searchTerm = search.toLowerCase();
 
-      const matchesSearch =
-        recipe.name.toLowerCase().includes(searchTerm) ||
-        (recipe.summary ?? "").toLowerCase().includes(searchTerm);
+      const matchesSearch = recipe.name.toLowerCase().includes(searchTerm);
 
       const matchesFavorite = !showFavorites || recipe.is_favorite;
 
@@ -150,14 +135,6 @@ export default function RecipePage() {
       return matchesSearch && matchesFavorite && matchesTags;
     })
     .sort((a, b) => {
-      if (a.is_pinned && !b.is_pinned) {
-        return -1;
-      }
-
-      if (!a.is_pinned && b.is_pinned) {
-        return 1;
-      }
-
       switch (sortMethod) {
         case "name":
           return a.name.localeCompare(b.name);
@@ -214,7 +191,6 @@ export default function RecipePage() {
           recipes={filteredRecipes}
           onDelete={(id) => deleteRecipe.mutate(id)}
           onToggleFavorite={(id) => toggleFavorite.mutate(id)}
-          onTogglePinned={(id) => togglePin.mutate(id)}
           onCopy={(id, name) =>
             copyRecipe.mutate({
               id,

@@ -10,6 +10,9 @@ from invoke import Context, task
 from .data import create_cache_table, migrate
 from .utils import info
 
+# TODO There should be a task that makes proper migrations for release. Some
+# fields don't get the proper values automatically.
+
 
 def latest_master_sha():
     """

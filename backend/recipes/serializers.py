@@ -85,8 +85,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "is_favorite",
-            "is_pinned",
-            "summary",
             "description",
             "instructions",
             "cooking_time",

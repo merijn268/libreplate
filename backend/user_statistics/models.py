@@ -1,10 +1,17 @@
-from uuid import uuid4
-
-from django.conf import settings
+from core.models import (
+    BelongsToUser,
+    CanBeFavorited,
+    HasDescription,
+    HasName,
+    HasTimestamps,
+    TracksUsage,
+)
 from django.db import models
 
 
-class Graph(models.Model):
+class Graph(
+    HasName, CanBeFavorited, BelongsToUser, HasDescription, HasTimestamps, TracksUsage
+):
     class GraphType(models.TextChoices):
         LINE = "line", "Line Graph"
         BAR = "bar", "Bar Graph"
@@ -24,14 +31,6 @@ class Graph(models.Model):
     class RangeType(models.TextChoices):
         FIXED = "fixed", "Fixed"
         DYNAMIC = "dynamic", "Dynamic"
-
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid4,
-        editable=False,
-    )
-
-    name = models.CharField(max_length=50)
 
     graph_type = models.CharField(
         max_length=20,
@@ -62,23 +61,8 @@ class Graph(models.Model):
         default=RangeType.DYNAMIC,
     )
 
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="graphs",
-    )
 
-    def __str__(self):
-        return self.name
-
-
-class GraphLine(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid4,
-        editable=False,
-    )
-
+class GraphLine(HasName, HasDescription):
     class MovingAverageUnit(models.TextChoices):
         DAY = "day", "Day"
         WEEK = "week", "Week"
@@ -90,8 +74,6 @@ class GraphLine(models.Model):
         on_delete=models.CASCADE,
         related_name="lines",
     )
-
-    name = models.CharField(max_length=50)
 
     moving_average_unit = models.CharField(
         max_length=20,
@@ -119,12 +101,6 @@ class GraphLine(models.Model):
 
 
 class GraphLineBodyMetric(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid4,
-        editable=False,
-    )
-
     graph_line = models.OneToOneField(
         GraphLine,
         on_delete=models.CASCADE,
@@ -138,12 +114,6 @@ class GraphLineBodyMetric(models.Model):
 
 
 class GraphLineNutrient(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid4,
-        editable=False,
-    )
-
     graph_line = models.OneToOneField(
         GraphLine,
         on_delete=models.CASCADE,

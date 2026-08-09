@@ -675,6 +675,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/MealPlan'
+        required: true
       security:
       - cookieAuth: []
       responses:
@@ -727,6 +728,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/MealPlan'
+        required: true
       security:
       - cookieAuth: []
       responses:
@@ -806,6 +808,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/MealPlan'
+        required: true
       security:
       - cookieAuth: []
       responses:
@@ -839,6 +842,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/MealPlan'
+        required: true
       security:
       - cookieAuth: []
       responses:
@@ -871,6 +875,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/MealPlan'
+        required: true
       security:
       - cookieAuth: []
       responses:
@@ -2058,38 +2063,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Recipe'
           description: ''
-  /api/recipes/{id}/toggle-pin/:
-    post:
-      operationId: recipes_toggle_pin_create
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - recipes
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Recipe'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Recipe'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Recipe'
-        required: true
-      security:
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Recipe'
-          description: ''
   /api/recipes/tags/:
     get:
       operationId: recipes_tags_list
@@ -2458,7 +2431,6 @@ components:
           maxLength: 255
         description:
           type: string
-          nullable: true
         is_favorite:
           type: boolean
         external_source:
@@ -2540,6 +2512,7 @@ components:
           readOnly: true
         name:
           type: string
+          maxLength: 255
       required:
       - created_at
       - id
@@ -2723,6 +2696,7 @@ components:
       - created_at
       - id
       - last_used_at
+      - name
       - start_day_display
       - updated_at
       - user
@@ -2828,6 +2802,7 @@ components:
       - created_at
       - food_count
       - id
+      - name
       - recipe_count
       - start_day_display
       - updated_at
@@ -2893,7 +2868,6 @@ components:
         description:
           type: string
           readOnly: true
-          nullable: true
         abbreviation:
           type: string
           readOnly: true
@@ -2969,7 +2943,7 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 100
+          maxLength: 255
         unit:
           type: string
           nullable: true
@@ -3022,7 +2996,6 @@ components:
           maxLength: 255
         description:
           type: string
-          nullable: true
         is_favorite:
           type: boolean
         external_source:
@@ -3249,15 +3222,8 @@ components:
           maxLength: 255
         is_favorite:
           type: boolean
-        is_pinned:
-          type: boolean
-        summary:
-          type: string
-          nullable: true
-          maxLength: 70
         description:
           type: string
-          nullable: true
         instructions:
           type: string
           nullable: true
@@ -3276,6 +3242,7 @@ components:
         last_used_at:
           type: string
           format: date-time
+          nullable: true
         created_at:
           type: string
           format: date-time
@@ -3337,7 +3304,7 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 50
+          maxLength: 255
     PatchedTag:
       type: object
       properties:
@@ -3356,15 +3323,8 @@ components:
           maxLength: 255
         is_favorite:
           type: boolean
-        is_pinned:
-          type: boolean
-        summary:
-          type: string
-          nullable: true
-          maxLength: 70
         description:
           type: string
-          nullable: true
         instructions:
           type: string
           nullable: true
@@ -3383,6 +3343,7 @@ components:
         last_used_at:
           type: string
           format: date-time
+          nullable: true
         created_at:
           type: string
           format: date-time
@@ -3479,7 +3440,7 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 50
+          maxLength: 255
       required:
       - id
       - name
@@ -3527,7 +3488,7 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 50
+          maxLength: 255
         description:
           type: string
         abbreviation:
@@ -3551,7 +3512,7 @@ components:
           readOnly: true
         name:
           type: string
-          maxLength: 50
+          maxLength: 255
         abbreviation:
           type: string
           maxLength: 15

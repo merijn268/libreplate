@@ -37,7 +37,7 @@ export type Food = {
     unit: UnitBrief;
     barcode?: string | null;
     brand?: string | null;
-    description?: string | null;
+    description?: string;
     is_favorite?: boolean;
     external_source?: string | null;
     external_id?: string | null;
@@ -109,7 +109,7 @@ export type MealFoodCreate = {
  */
 export type MealPlan = {
     readonly id: number;
-    name?: string;
+    name: string;
     description?: string;
     readonly user: number;
     tags?: Array<number>;
@@ -154,7 +154,7 @@ export type MealPlanFood = {
  */
 export type MealPlanList = {
     readonly id: number;
-    name?: string;
+    name: string;
     description?: string;
     tags?: Array<number>;
     is_favorite?: boolean;
@@ -200,7 +200,7 @@ export type Message = {
 export type Nutrient = {
     readonly id: number;
     readonly name: string;
-    readonly description: string | null;
+    readonly description: string;
     readonly abbreviation: string | null;
     /**
      * Display unit for this nutrient's amount (e.g. g, mg, kcal).
@@ -264,7 +264,7 @@ export type PatchedFood = {
     unit?: UnitBrief;
     barcode?: string | null;
     brand?: string | null;
-    description?: string | null;
+    description?: string;
     is_favorite?: boolean;
     external_source?: string | null;
     external_id?: string | null;
@@ -365,9 +365,7 @@ export type PatchedRecipe = {
     readonly id?: number;
     name?: string;
     is_favorite?: boolean;
-    is_pinned?: boolean;
-    summary?: string | null;
-    description?: string | null;
+    description?: string;
     instructions?: string | null;
     cooking_time?: string | null;
     prepping_time?: string | null;
@@ -375,7 +373,7 @@ export type PatchedRecipe = {
      * Number of portions this recipe creates
      */
     portions?: number;
-    last_used_at?: string;
+    last_used_at?: string | null;
     readonly created_at?: string;
     readonly updated_at?: string;
     readonly tags?: Array<Tag>;
@@ -407,9 +405,7 @@ export type Recipe = {
     readonly id: number;
     name: string;
     is_favorite?: boolean;
-    is_pinned?: boolean;
-    summary?: string | null;
-    description?: string | null;
+    description?: string;
     instructions?: string | null;
     cooking_time?: string | null;
     prepping_time?: string | null;
@@ -417,7 +413,7 @@ export type Recipe = {
      * Number of portions this recipe creates
      */
     portions?: number;
-    last_used_at?: string;
+    last_used_at?: string | null;
     readonly created_at: string;
     readonly updated_at: string;
     readonly tags: Array<Tag>;
@@ -524,7 +520,7 @@ export type FoodWritable = {
     unit_id: number;
     barcode?: string | null;
     brand?: string | null;
-    description?: string | null;
+    description?: string;
     is_favorite?: boolean;
     external_source?: string | null;
     external_id?: string | null;
@@ -582,7 +578,7 @@ export type MealFoodCreateWritable = {
  * On write, food_id and recipe_id are used to reference existing objects.
  */
 export type MealPlanWritable = {
-    name?: string;
+    name: string;
     description?: string;
     tags?: Array<number>;
     is_favorite?: boolean;
@@ -618,7 +614,7 @@ export type MealPlanFoodWritable = {
  * Lightweight serializer for list views.
  */
 export type MealPlanListWritable = {
-    name?: string;
+    name: string;
     description?: string;
     tags?: Array<number>;
     is_favorite?: boolean;
@@ -672,7 +668,7 @@ export type PatchedFoodWritable = {
     unit_id?: number;
     barcode?: string | null;
     brand?: string | null;
-    description?: string | null;
+    description?: string;
     is_favorite?: boolean;
     external_source?: string | null;
     external_id?: string | null;
@@ -755,9 +751,7 @@ export type PatchedMealPlanRecipeWritable = {
 export type PatchedRecipeWritable = {
     name?: string;
     is_favorite?: boolean;
-    is_pinned?: boolean;
-    summary?: string | null;
-    description?: string | null;
+    description?: string;
     instructions?: string | null;
     cooking_time?: string | null;
     prepping_time?: string | null;
@@ -765,7 +759,7 @@ export type PatchedRecipeWritable = {
      * Number of portions this recipe creates
      */
     portions?: number;
-    last_used_at?: string;
+    last_used_at?: string | null;
     tag_ids?: Array<number>;
 };
 
@@ -783,9 +777,7 @@ export type PatchedRecipeTagWritable = {
 export type RecipeWritable = {
     name: string;
     is_favorite?: boolean;
-    is_pinned?: boolean;
-    summary?: string | null;
-    description?: string | null;
+    description?: string;
     instructions?: string | null;
     cooking_time?: string | null;
     prepping_time?: string | null;
@@ -793,7 +785,7 @@ export type RecipeWritable = {
      * Number of portions this recipe creates
      */
     portions?: number;
-    last_used_at?: string;
+    last_used_at?: string | null;
     tag_ids?: Array<number>;
 };
 
@@ -1278,7 +1270,7 @@ export type MealPlansListResponses = {
 export type MealPlansListResponse = MealPlansListResponses[keyof MealPlansListResponses];
 
 export type MealPlansCreateData = {
-    body?: MealPlanWritable;
+    body: MealPlanWritable;
     path?: never;
     query?: never;
     url: '/api/meal-plans/';
@@ -1348,7 +1340,7 @@ export type MealPlansPartialUpdateResponses = {
 export type MealPlansPartialUpdateResponse = MealPlansPartialUpdateResponses[keyof MealPlansPartialUpdateResponses];
 
 export type MealPlansUpdateData = {
-    body?: MealPlanWritable;
+    body: MealPlanWritable;
     path: {
         /**
          * A unique integer value identifying this Meal Plan.
@@ -1366,7 +1358,7 @@ export type MealPlansUpdateResponses = {
 export type MealPlansUpdateResponse = MealPlansUpdateResponses[keyof MealPlansUpdateResponses];
 
 export type MealPlansMarkFavoriteCreateData = {
-    body?: MealPlanWritable;
+    body: MealPlanWritable;
     path: {
         /**
          * A unique integer value identifying this Meal Plan.
@@ -1384,7 +1376,7 @@ export type MealPlansMarkFavoriteCreateResponses = {
 export type MealPlansMarkFavoriteCreateResponse = MealPlansMarkFavoriteCreateResponses[keyof MealPlansMarkFavoriteCreateResponses];
 
 export type MealPlansMarkUsedCreateData = {
-    body?: MealPlanWritable;
+    body: MealPlanWritable;
     path: {
         /**
          * A unique integer value identifying this Meal Plan.
@@ -1402,7 +1394,7 @@ export type MealPlansMarkUsedCreateResponses = {
 export type MealPlansMarkUsedCreateResponse = MealPlansMarkUsedCreateResponses[keyof MealPlansMarkUsedCreateResponses];
 
 export type MealPlansUnmarkFavoriteCreateData = {
-    body?: MealPlanWritable;
+    body: MealPlanWritable;
     path: {
         /**
          * A unique integer value identifying this Meal Plan.
@@ -2169,21 +2161,6 @@ export type RecipesToggleFavoriteCreateResponses = {
 };
 
 export type RecipesToggleFavoriteCreateResponse = RecipesToggleFavoriteCreateResponses[keyof RecipesToggleFavoriteCreateResponses];
-
-export type RecipesTogglePinCreateData = {
-    body: RecipeWritable;
-    path: {
-        id: number;
-    };
-    query?: never;
-    url: '/api/recipes/{id}/toggle-pin/';
-};
-
-export type RecipesTogglePinCreateResponses = {
-    200: Recipe;
-};
-
-export type RecipesTogglePinCreateResponse = RecipesTogglePinCreateResponses[keyof RecipesTogglePinCreateResponses];
 
 export type RecipesTagsListData = {
     body?: never;

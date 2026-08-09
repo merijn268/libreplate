@@ -29,12 +29,6 @@ toggle_favorite = RecipeViewSet.as_view(
     }
 )
 
-toggle_pin = RecipeViewSet.as_view(
-    {
-        "post": "toggle_pin",
-    }
-)
-
 recipe_copy = RecipeViewSet.as_view(
     {
         "post": "copy",
@@ -108,11 +102,6 @@ urlpatterns = [
         "<int:pk>/toggle-favorite/",
         toggle_favorite,
         name="recipe-toggle-favorite",
-    ),
-    path(
-        "<int:pk>/toggle-pin/",
-        toggle_pin,
-        name="recipe-toggle-pin",
     ),
     path(
         "<int:pk>/copy/",

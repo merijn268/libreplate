@@ -1,12 +1,14 @@
 # nutrients/models
+from core import models as core_models
 from django.db import models
 
 # TODO add way so user can make his own nutrients.
 
 
-class Nutrient(models.Model):
-    name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True, null=True)
+class Nutrient(
+    core_models.HasName,
+    core_models.HasDescription,
+):
     abbreviation = models.CharField(max_length=100, blank=True, null=True)
 
     # TODO user unit model not chars!

@@ -1,13 +1,19 @@
 from collections import defaultdict
 from decimal import ROUND_HALF_UP, Decimal
 
-from django.contrib.auth.models import User
+from core import models as core_models
 from django.db import models
-from django.utils import timezone
 from tags.models import BaseTag
 
 
-class Recipe(models.Model):
+class Recipe(
+    core_models.HasName,
+    core_models.BelongsToUser,
+    core_models.CanBeFavorited,
+    core_models.HasDescription,
+    core_models.TracksUsage,
+    core_models.HasTimestamps,
+):
     def get_nutrients(self, per_portion=True):
         totals = defaultdict(lambda: Decimal("0"))
 
@@ -33,16 +39,6 @@ class Recipe(models.Model):
 
         return totals
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recipes")
-    name = models.CharField(max_length=255)
-    is_favorite = models.BooleanField(default=False)
-
-    # TODO Remove pin feature.
-    is_pinned = models.BooleanField(default=False)
-
-    # TODO Remove summary, description is enough.
-    summary = models.CharField(max_length=70, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
     instructions = models.TextField(blank=True, null=True)
     cooking_time = models.CharField(max_length=20, blank=True, null=True)
     prepping_time = models.CharField(max_length=20, blank=True, null=True)
@@ -50,10 +46,6 @@ class Recipe(models.Model):
     portions = models.FloatField(
         default=1, help_text="Number of portions this recipe creates"
     )
-
-    last_used_at = models.DateTimeField(default=timezone.now)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     tags = models.ManyToManyField(
         "RecipeTag",
@@ -77,6 +69,7 @@ class RecipePicture(models.Model):
         return f"{self.recipe.name} picture"
 
 
+# TODO hide constrains in base class
 class RecipeTag(BaseTag):
     class Meta(BaseTag.Meta):
         constraints = [

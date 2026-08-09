@@ -1,15 +1,15 @@
-from django.conf import settings
+from core import models as core_models
 from django.db import models
 
 
-class GoalGroup(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="goal_groups",
-    )
+class GoalGroup(
+    core_models.BelongsToUser,
+    core_models.CanBeFavorited,
+    core_models.HasDescription,
+    core_models.HasName,
+    core_models.HasTimestamps,
+    core_models.TracksUsage,
+):
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
 

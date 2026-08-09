@@ -9,7 +9,6 @@ interface Props {
   recipe: Recipe;
   onDelete?: (id: number) => void;
   onToggleFavorite?: (id: number) => void;
-  onTogglePinned?: (id: number) => void;
   onCopy?: (id: number, name: string) => void;
 }
 
@@ -17,7 +16,6 @@ export default function RecipeCard({
   recipe,
   onDelete,
   onToggleFavorite,
-  onTogglePinned,
   onCopy,
 }: Props) {
   const navigate = useNavigate();
@@ -37,7 +35,6 @@ export default function RecipeCard({
   return (
     <ItemCard
       title={recipe.name}
-      subtitle={recipe.summary}
       onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
       actions={
         <RecipeCardActions
@@ -45,7 +42,6 @@ export default function RecipeCard({
           onCopy={handleCopy}
           onDelete={onDelete}
           onToggleFavorite={onToggleFavorite}
-          onTogglePinned={onTogglePinned}
         />
       }
       meta={

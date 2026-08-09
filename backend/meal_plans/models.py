@@ -1,6 +1,6 @@
 import calendar
 
-from django.conf import settings
+from core import models as core_models
 from django.core.validators import MaxValueValidator
 from django.db import models
 from meals.models import DefaultMeal
@@ -17,16 +17,14 @@ class MealPlanTag(BaseTag):
         ]
 
 
-class MealPlan(models.Model):
-    name = models.CharField(max_length=255, default="New Meal Plan")
-    description = models.TextField(blank=True)
-
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="meal_plans",
-    )
-
+class MealPlan(
+    core_models.BelongsToUser,
+    core_models.CanBeFavorited,
+    core_models.HasDescription,
+    core_models.HasName,
+    core_models.HasTimestamps,
+    core_models.TracksUsage,
+):
     tags = models.ManyToManyField(
         MealPlanTag,
         blank=True,
@@ -39,12 +37,6 @@ class MealPlan(models.Model):
         validators=[MaxValueValidator(6)],
         help_text="Weekday on which the meal plan starts.",
     )
-
-    # TODO Add base class for food, meal and recipe. they all have favorites users description, name and useage data.
-    is_favorite = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    last_used_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         ordering = ["-created_at"]

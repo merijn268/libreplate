@@ -61,26 +61,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         )
 
     @action(detail=True, methods=["post"])
-    def toggle_pin(self, request, pk=None):
-        recipe = self.get_object()
-
-        recipe.is_pinned = not recipe.is_pinned
-
-        recipe.save(
-            update_fields=[
-                "is_pinned",
-                "updated_at",
-            ]
-        )
-
-        return Response(
-            {
-                "id": recipe.id,
-                "is_pinned": recipe.is_pinned,
-            }
-        )
-
-    @action(detail=True, methods=["post"])
     def copy(self, request, pk=None):
         recipe = self.get_object()
 
@@ -95,7 +75,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         new_recipe = Recipe.objects.create(
             user=request.user,
             name=new_name,
-            summary=recipe.summary,
             description=recipe.description,
             instructions=recipe.instructions,
             cooking_time=recipe.cooking_time,

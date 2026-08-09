@@ -4,13 +4,8 @@ import type { Recipe } from "@/api/generated/types.gen";
 
 interface Props {
   recipes: Recipe[];
-
   onDelete?: (id: number) => void;
-
   onToggleFavorite?: (id: number) => void;
-
-  onTogglePinned?: (id: number) => void;
-
   onCopy?: (id: number, name: string) => void;
 }
 
@@ -18,7 +13,6 @@ export default function RecipeList({
   recipes,
   onDelete,
   onToggleFavorite,
-  onTogglePinned,
   onCopy,
 }: Props) {
   return (
@@ -30,7 +24,6 @@ export default function RecipeList({
           recipe={recipe}
           onDelete={onDelete}
           onToggleFavorite={onToggleFavorite}
-          onTogglePinned={onTogglePinned}
           onCopy={onCopy}
         />
       ))}

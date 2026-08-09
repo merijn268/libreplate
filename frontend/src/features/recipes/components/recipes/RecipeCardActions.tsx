@@ -11,7 +11,6 @@ interface Props {
   onCopy: () => void;
   onDelete?: (id: number) => void;
   onToggleFavorite?: (id: number) => void;
-  onTogglePinned?: (id: number) => void;
 }
 
 export default function RecipeCardActions({
@@ -19,17 +18,10 @@ export default function RecipeCardActions({
   onCopy,
   onDelete,
   onToggleFavorite,
-  // onTogglePinned,
 }: Props) {
   const navigate = useNavigate();
 
   const items: ItemCardMenuItem[] = [
-    // TODO Pin is usefully but distracts the UI too much.
-    // {
-    //   key: "pin",
-    //   label: recipe.is_pinned ? "Unpin" : "Pin",
-    //   onClick: () => onTogglePinned?.(recipe.id),
-    // },
     {
       key: "favorite",
       label: recipe.is_favorite ? "Favorited" : "Favorite",

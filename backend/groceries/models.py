@@ -1,19 +1,18 @@
-from django.contrib.auth.models import User
+from core import models as core_models
 from django.db import models
 from foods.models import Food
 
 
-class GroceryList(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="grocery_lists"
-    )
-    name = models.TextField()
+class GroceryList(
+    core_models.BelongsToUser,
+    core_models.CanBeFavorited,
+    core_models.HasDescription,
+    core_models.HasName,
+    core_models.HasTimestamps,
+    core_models.TracksUsage,
+):
     date_start = models.DateField(null=True, blank=True)
     date_end = models.DateField(null=True, blank=True)
-
-    # TODO what do auto now and auto add do?
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -22,15 +21,15 @@ class GroceryList(models.Model):
         return self.name
 
 
-class GroceryListFood(models.Model):
+class GroceryListFood(
+    core_models.HasTimestamps,
+):
     grocery_list = models.ForeignKey(
         GroceryList, on_delete=models.CASCADE, related_name="items"
     )
 
     food = models.ForeignKey(Food, on_delete=models.CASCADE)
-
     amount = models.FloatField()
-
     on_hand = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)

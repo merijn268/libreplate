@@ -1,42 +1,30 @@
-from django.conf import settings
+from core import models as core_models
 from django.db import models
 from django.db.models import Q
 
 
-class Unit(models.Model):
+class Unit(
+    core_models.UserScoped,
+    core_models.HasName,
+    core_models.HasDescription,
+    core_models.HasTimestamps,
+):
     """
     Represents a unit of measurement.
-
-    A unit can either be:
-    - global (user is NULL)
-    - owned by a specific user
     """
 
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name="units",
-        help_text="Leave empty for a global unit.",
-    )
-
-    name = models.CharField(max_length=50)
-    description = models.TextField(blank=True)
     abbreviation = models.CharField(max_length=15, blank=True)
 
     # TODO "visable", is not a good name for it. It should be more descriptive.
     # These flags mean that it shows in a dropdown menu for a user when they can
-    # pick a unit.
+    # pick a unit. Preferably it inherits something from a base class, since
+    # These variables get used more often with objects in this codebase.
+
     visible_in_nutrients = models.BooleanField(default=False)
     visible_in_body_metrics = models.BooleanField(default=False)
     visible_in_foods = models.BooleanField(default=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
     class Meta:
-        ordering = ["name"]
         constraints = [
             models.UniqueConstraint(
                 fields=["name"],

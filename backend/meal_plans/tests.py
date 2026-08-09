@@ -5,8 +5,10 @@ from meal_plans.models import MealPlan, MealPlanTag
 from meals.models import DefaultMeal
 from recipes.models import Recipe, RecipeIngredient
 from units.models import Unit
+
 # TODO ISort removes inproper imports, instead of raising an error.
 # It should be configured to raise an error
+
 
 @pytest.mark.django_db
 class TestMealPlanAPI:

@@ -1,12 +1,15 @@
-from django.contrib.auth.models import User
+from core import models as core_models
 from django.db import models
 from django.db.models import Q
 
 
-class BodyMetric(models.Model):
-    name = models.CharField(max_length=50)
-    description = models.TextField(blank=True, null=True)
-
+class BodyMetric(
+    core_models.UserScopedNamed,
+    core_models.CanBeFavorited,
+    core_models.HasDescription,
+    core_models.HasTimestamps,
+    core_models.TracksUsage,
+):
     show_in_diary_total = models.BooleanField(
         default=True,
     )
@@ -15,13 +18,6 @@ class BodyMetric(models.Model):
     )
     is_single_entry = models.BooleanField(
         default=False,
-    )
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="body_metric",
-        null=True,
-        help_text="If True, this nutrient will be visible to users",
     )
 
     class Meta:
@@ -41,17 +37,16 @@ class BodyMetric(models.Model):
             ),
         ]
 
-    def __str__(self):
-        return self.name
 
-
-class BodyMetricLog(models.Model):
+# TODO When a user owns a body metric and also the logs, there will be a lot
+# off dupplicate data. The Logs do not need a user in that case
+class BodyMetricLog(
+    core_models.BelongsToUser,
+):
     body_metric = models.ForeignKey(
         BodyMetric, on_delete=models.CASCADE, related_name="logs"
     )
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="body_metric_logs"
-    )
+
     date = models.DateField()
 
     amount = models.FloatField()
