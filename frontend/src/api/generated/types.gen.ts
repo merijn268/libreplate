@@ -112,6 +112,8 @@ export type MealPlan = {
     name?: string;
     description?: string;
     readonly user: number;
+    tags?: Array<number>;
+    is_favorite?: boolean;
     /**
      * Weekday on which the meal plan starts.
      *
@@ -154,6 +156,8 @@ export type MealPlanList = {
     readonly id: number;
     name?: string;
     description?: string;
+    tags?: Array<number>;
+    is_favorite?: boolean;
     /**
      * Weekday on which the meal plan starts.
      *
@@ -305,6 +309,8 @@ export type PatchedMealPlan = {
     name?: string;
     description?: string;
     readonly user?: number;
+    tags?: Array<number>;
+    is_favorite?: boolean;
     /**
      * Weekday on which the meal plan starts.
      *
@@ -578,6 +584,8 @@ export type MealFoodCreateWritable = {
 export type MealPlanWritable = {
     name?: string;
     description?: string;
+    tags?: Array<number>;
+    is_favorite?: boolean;
     /**
      * Weekday on which the meal plan starts.
      *
@@ -612,6 +620,8 @@ export type MealPlanFoodWritable = {
 export type MealPlanListWritable = {
     name?: string;
     description?: string;
+    tags?: Array<number>;
+    is_favorite?: boolean;
     /**
      * Weekday on which the meal plan starts.
      *
@@ -700,6 +710,8 @@ export type PatchedMealFoodCreateWritable = {
 export type PatchedMealPlanWritable = {
     name?: string;
     description?: string;
+    tags?: Array<number>;
+    is_favorite?: boolean;
     /**
      * Weekday on which the meal plan starts.
      *
@@ -1353,6 +1365,24 @@ export type MealPlansUpdateResponses = {
 
 export type MealPlansUpdateResponse = MealPlansUpdateResponses[keyof MealPlansUpdateResponses];
 
+export type MealPlansMarkFavoriteCreateData = {
+    body?: MealPlanWritable;
+    path: {
+        /**
+         * A unique integer value identifying this Meal Plan.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/{id}/mark_favorite/';
+};
+
+export type MealPlansMarkFavoriteCreateResponses = {
+    200: MealPlan;
+};
+
+export type MealPlansMarkFavoriteCreateResponse = MealPlansMarkFavoriteCreateResponses[keyof MealPlansMarkFavoriteCreateResponses];
+
 export type MealPlansMarkUsedCreateData = {
     body?: MealPlanWritable;
     path: {
@@ -1370,6 +1400,24 @@ export type MealPlansMarkUsedCreateResponses = {
 };
 
 export type MealPlansMarkUsedCreateResponse = MealPlansMarkUsedCreateResponses[keyof MealPlansMarkUsedCreateResponses];
+
+export type MealPlansUnmarkFavoriteCreateData = {
+    body?: MealPlanWritable;
+    path: {
+        /**
+         * A unique integer value identifying this Meal Plan.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/{id}/unmark_favorite/';
+};
+
+export type MealPlansUnmarkFavoriteCreateResponses = {
+    200: MealPlan;
+};
+
+export type MealPlansUnmarkFavoriteCreateResponse = MealPlansUnmarkFavoriteCreateResponses[keyof MealPlansUnmarkFavoriteCreateResponses];
 
 export type MealPlansFoodsListData = {
     body?: never;

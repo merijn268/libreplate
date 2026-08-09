@@ -783,10 +783,74 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/meal-plans/{id}/mark_favorite/:
+    post:
+      operationId: meal_plans_mark_favorite_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Meal Plan.
+        required: true
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+          description: ''
   /api/meal-plans/{id}/mark_used/:
     post:
       operationId: meal_plans_mark_used_create
       description: Stamp `last_used_at` to now, e.g. when a plan is applied.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Meal Plan.
+        required: true
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+          description: ''
+  /api/meal-plans/{id}/unmark_favorite/:
+    post:
+      operationId: meal_plans_unmark_favorite_create
       parameters:
       - in: path
         name: id
@@ -2610,6 +2674,12 @@ components:
         user:
           type: integer
           readOnly: true
+        tags:
+          type: array
+          items:
+            type: integer
+        is_favorite:
+          type: boolean
         start_day:
           allOf:
           - $ref: '#/components/schemas/StartDayEnum'
@@ -2712,6 +2782,12 @@ components:
           maxLength: 255
         description:
           type: string
+        tags:
+          type: array
+          items:
+            type: integer
+        is_favorite:
+          type: boolean
         start_day:
           allOf:
           - $ref: '#/components/schemas/StartDayEnum'
@@ -3047,6 +3123,12 @@ components:
         user:
           type: integer
           readOnly: true
+        tags:
+          type: array
+          items:
+            type: integer
+        is_favorite:
+          type: boolean
         start_day:
           allOf:
           - $ref: '#/components/schemas/StartDayEnum'

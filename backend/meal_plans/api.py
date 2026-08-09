@@ -27,7 +27,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return MealPlan.objects.filter(user=self.request.user).prefetch_related(
-            "foods", "recipes"
+            "foods", "recipes", "tags"
         )
 
     def get_serializer_class(self):
@@ -41,6 +41,22 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         meal_plan = self.get_object()
         meal_plan.last_used_at = timezone.now()
         meal_plan.save(update_fields=["last_used_at"])
+        serializer = self.get_serializer(meal_plan)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["post"])
+    def mark_favorite(self, request, pk=None):
+        meal_plan = self.get_object()
+        meal_plan.is_favorite = True
+        meal_plan.save(update_fields=["is_favorite"])
+        serializer = self.get_serializer(meal_plan)
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["post"])
+    def unmark_favorite(self, request, pk=None):
+        meal_plan = self.get_object()
+        meal_plan.is_favorite = False
+        meal_plan.save(update_fields=["is_favorite"])
         serializer = self.get_serializer(meal_plan)
         return Response(serializer.data)
 

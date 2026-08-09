@@ -4,6 +4,17 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 from meals.models import DefaultMeal
+from tags.models import BaseTag
+
+
+class MealPlanTag(BaseTag):
+    class Meta(BaseTag.Meta):
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "name"],
+                name="unique_user_meal_plan_tag",
+            )
+        ]
 
 
 class MealPlan(models.Model):
@@ -16,6 +27,12 @@ class MealPlan(models.Model):
         related_name="meal_plans",
     )
 
+    tags = models.ManyToManyField(
+        MealPlanTag,
+        blank=True,
+        related_name="meal_plans",
+    )
+
     start_day = models.PositiveSmallIntegerField(
         choices=[(day.value, day.name.title()) for day in calendar.Day],
         default=calendar.Day.MONDAY.value,
@@ -23,6 +40,8 @@ class MealPlan(models.Model):
         help_text="Weekday on which the meal plan starts.",
     )
 
+    # TODO Add base class for food, meal and recipe. they all have favorites users description, name and useage data.
+    is_favorite = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_used_at = models.DateTimeField(null=True, blank=True)

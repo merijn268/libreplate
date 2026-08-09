@@ -33,13 +33,14 @@ class Recipe(models.Model):
 
         return totals
 
-        return totals
-
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="recipes")
     name = models.CharField(max_length=255)
     is_favorite = models.BooleanField(default=False)
+
+    # TODO Remove pin feature.
     is_pinned = models.BooleanField(default=False)
 
+    # TODO Remove summary, description is enough.
     summary = models.CharField(max_length=70, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     instructions = models.TextField(blank=True, null=True)

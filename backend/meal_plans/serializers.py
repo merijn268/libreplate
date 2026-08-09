@@ -4,7 +4,7 @@ from recipes.models import Recipe
 from recipes.serializers import RecipeSerializer
 from rest_framework import serializers
 
-from .models import MealPlan, MealPlanFood, MealPlanRecipe
+from .models import MealPlan, MealPlanFood, MealPlanRecipe, MealPlanTag
 
 
 class MealPlanFoodSerializer(serializers.ModelSerializer):
@@ -95,6 +95,11 @@ class MealPlanSerializer(serializers.ModelSerializer):
         many=True,
         required=False,
     )
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=MealPlanTag.objects.all(),
+        many=True,
+        required=False,
+    )
 
     start_day_display = serializers.CharField(
         source="get_start_day_display",
@@ -112,6 +117,8 @@ class MealPlanSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "user",
+            "tags",
+            "is_favorite",
             "start_day",
             "start_day_display",
             "created_at",
@@ -126,13 +133,23 @@ class MealPlanSerializer(serializers.ModelSerializer):
             "last_used_at",
         ]
 
+    def validate_tags(self, tags):
+        user = self.context["request"].user
+
+        if any(tag.user_id != user.id for tag in tags):
+            raise serializers.ValidationError("You can only use your own tags.")
+
+        return tags
+
     def create(self, validated_data):
         foods_data = validated_data.pop("foods", [])
         recipes_data = validated_data.pop("recipes", [])
+        tags_data = validated_data.pop("tags", [])
 
         validated_data["user"] = self.context["request"].user
 
         meal_plan = MealPlan.objects.create(**validated_data)
+        meal_plan.tags.set(tags_data)
 
         for food_data in foods_data:
             MealPlanFood.objects.create(
@@ -151,11 +168,15 @@ class MealPlanSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         foods_data = validated_data.pop("foods", None)
         recipes_data = validated_data.pop("recipes", None)
+        tags_data = validated_data.pop("tags", None)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
         instance.save()
+
+        if tags_data is not None:
+            instance.tags.set(tags_data)
 
         if foods_data is not None:
             instance.foods.all().delete()
@@ -202,6 +223,8 @@ class MealPlanListSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "description",
+            "tags",
+            "is_favorite",
             "start_day",
             "start_day_display",
             "created_at",
