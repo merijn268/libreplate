@@ -38,15 +38,15 @@ def react_app(request):
 
 
 urlpatterns = [
-    path("api/accounts/", include("accounts.api_urls")),
-    path("api/foods/", include("foods.urls")),
-    path("api/groceries/", include("groceries.api_urls")),
-    path("api/integrations/", include("integrations.urls")),
-    path("api/meals/", include("meals.urls")),
-    path("api/nutrients/", include("nutrients.urls")),
-    path("api/units/", include("units.urls")),
-    path("api/recipes/", include("recipes.urls")),
-    path("api/meal-plans/", include("meal_plans.urls")),
+    path("api/accounts/", include("apps.accounts.api_urls")),
+    path("api/foods/", include("apps.foods.urls")),
+    path("api/groceries/", include("apps.groceries.api_urls")),
+    path("api/integrations/", include("apps.integrations.urls")),
+    path("api/meals/", include("apps.meals.urls")),
+    path("api/nutrients/", include("apps.nutrients.urls")),
+    path("api/units/", include("apps.units.urls")),
+    path("api/recipes/", include("apps.recipes.urls")),
+    path("api/meal-plans/", include("apps.meal_plans.urls")),
 ]
 
 
@@ -91,7 +91,7 @@ urlpatterns += [
         },
     ),
     re_path(
-        r"^favicon\.ico$",
+        r"^favicon.ico$",
         serve,
         {
             "document_root": settings.FRONTEND_DIST,

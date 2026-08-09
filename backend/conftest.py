@@ -1,12 +1,12 @@
 from typing import Callable, Optional, TypeAlias
 
 import pytest
-from body_metrics.services import sync_default_body_metrics
+from apps.body_metrics.services import sync_default_body_metrics
+from apps.nutrients.services import sync_default_nutrients
+from apps.units.services import sync_default_units
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser
-from nutrients.services import sync_default_nutrients
 from rest_framework.test import APIClient
-from units.services import sync_default_units
 
 User = get_user_model()
 

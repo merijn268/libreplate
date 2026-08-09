@@ -17,6 +17,7 @@ DEBUG = env("DEBUG")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -24,19 +25,19 @@ INSTALLED_APPS = [
     "django_htmx",
     "drf_spectacular",
     "rest_framework",
-    "foods.apps.FoodsConfig",
-    "meal_plans.apps.MealPlansConfig",
-    "units.apps.UnitsConfig",
-    "nutrients.apps.NutrientsConfig",
-    "groceries.apps.GroceriesConfig",
-    "accounts.apps.AccountsConfig",
-    "recipes.apps.RecipesConfig",
-    "core.apps.CoreConfig",
-    "meals.apps.MealsConfig",
-    "integrations.apps.IntegrationsConfig",
-    "body_metrics.apps.BodyMetricsConfig",
-    "goals.apps.GoalsConfig",
-    "user_statistics.apps.UserStatisticsConfig",
+    "apps.foods.apps.FoodsConfig",
+    "apps.meal_plans.apps.MealPlansConfig",
+    "apps.units.apps.UnitsConfig",
+    "apps.nutrients.apps.NutrientsConfig",
+    "apps.groceries.apps.GroceriesConfig",
+    "apps.accounts.apps.AccountsConfig",
+    "apps.recipes.apps.RecipesConfig",
+    "apps.core.apps.CoreConfig",
+    "apps.meals.apps.MealsConfig",
+    "apps.integrations.apps.IntegrationsConfig",
+    "apps.body_metrics.apps.BodyMetricsConfig",
+    "apps.goals.apps.GoalsConfig",
+    "apps.user_statistics.apps.UserStatisticsConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -57,6 +59,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
@@ -64,7 +67,9 @@ CACHES = {
     },
 }
 
+
 ROOT_URLCONF = "libreplate.urls"
+
 
 TEMPLATES = [
     {
@@ -82,24 +87,32 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = "libreplate.wsgi.application"
 
-DATABASES = {"default": env.db("DATABASE_URL")}
+
+DATABASES = {
+    "default": env.db("DATABASE_URL"),
+}
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+        ),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": ("django.contrib.auth.password_validation.MinimumLengthValidator"),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME": ("django.contrib.auth.password_validation.CommonPasswordValidator"),
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME": ("django.contrib.auth.password_validation.NumericPasswordValidator"),
     },
 ]
+
 
 LANGUAGE_CODE = "en-us"
 
@@ -108,6 +121,7 @@ TIME_ZONE = "CET"
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
 
 # Static & media
 
@@ -124,6 +138,7 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = Path(env("MEDIA_ROOT"))
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
 
 LOGGING = {
     "version": 1,
@@ -158,6 +173,7 @@ LOGGING = {
     },
 }
 
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://libreplate.alwaysdata.net",
@@ -165,10 +181,12 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "https://libreplate.alwaysdata.net",
 ]
+
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -180,22 +198,10 @@ REST_FRAMEWORK = {
     ],
 }
 
+
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
 
-SPECTACULAR_SETTINGS = {
-    "TITLE": "LibrePlate API",
-    "VERSION": "0.0.0",
-    "APPEND_COMPONENTS": {
-        "securitySchemes": {
-            "cookieAuth": {
-                "type": "apiKey",
-                "in": "cookie",
-                "name": "sessionid",
-            },
-        }
-    },
-}
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "LibrePlate API",
@@ -207,9 +213,9 @@ SPECTACULAR_SETTINGS = {
                 "in": "cookie",
                 "name": "sessionid",
             },
-        }
+        },
     },
-    "SWWAGGER_UI_SETTINGS": {
+    "SWAGGER_UI_SETTINGS": {
         "withCredentials": True,
         "requestInterceptor": """
         function(request) {
