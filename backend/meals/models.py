@@ -32,13 +32,9 @@ class Meal(models.Model):
     """
 
     name = models.CharField(max_length=255)
-
     date = models.DateField()
-
     note = models.TextField(blank=True)
-
     order = models.PositiveIntegerField(default=0)
-
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
