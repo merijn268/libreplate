@@ -5,18 +5,19 @@ from invoke import Context, task
 from invoke.exceptions import Exit
 from utils import BASE_DIR, print_success
 
+# TODO this code should probably be moved to a sepparate package!
+
 TASK_PATTERN = re.compile(
     r"""
-    ^\s{2}
-    (?P<name>[a-zA-Z_][\w.-]*)
-    (?:\s+\((?P<aliases>[^)]*)\))?
-    \s{2,}
-    """,
+^\s{2}
+(?P<name>[a-zA-Z_][\w\.-]*)
+(?:\s+\((?P<aliases>[^)]*)\))?
+\s{2,}
+""",
     re.VERBOSE,
 )
 
 MANUAL_HEADER = """
-<!-- AUTOMATICALLY GENERATED FILE, CHECK INVOKE HOW TO UPDATE. -->
 
 # Invoke tasks documentation
 
@@ -46,6 +47,7 @@ If you are new to Invoke you can also run:
 ```sh
 invoke --help
 ```
+
 """
 
 
@@ -84,20 +86,31 @@ def generate_invoke_manual(c: Context, check: bool = False) -> None:
     markdown.append("## Table of contents\n")
 
     for task_data in tasks:
-        markdown.append(f"- [`{task_data['name']}`](#{task_data['name'].lower()})")
+        name = task_data["name"]
+        anchor = name.lower().replace(".", "-")
+        markdown.append(f"- [`{name}`](#{anchor})")
 
     markdown.append("")
 
     for task_data in tasks:
         name = task_data["name"]
         aliases = task_data["aliases"]
+        anchor = name.lower().replace(".", "-")
 
         help_text = c.run(
             f"invoke --help {name}",
             hide=True,
             warn=True,
-        ).stdout
+        ).stdout.strip()
 
+        # Remove the Options section when Invoke reports that there are no options.
+        help_text = re.sub(
+            r"\n\nOptions:\n\s*none\s*$",
+            "",
+            help_text,
+        )
+
+        markdown.append(f'<a id="{anchor}"></a>')
         markdown.append(f"\n## `{name}`\n")
 
         if aliases:
@@ -105,9 +118,9 @@ def generate_invoke_manual(c: Context, check: bool = False) -> None:
 
         markdown.extend(
             [
-                "```text\n",
+                "```text",
                 help_text,
-                "```\n",
+                "```",
             ]
         )
 

@@ -6,7 +6,7 @@ librePlate exists because many existing food tracking services are closed source
 
 ## Getting Started
 
-LibrePlate uses invoke to manage everything from dev tools to installing. See the manual for the tasks here: [Invoke Task Manual](INVOKE_MANUAL.md).
+LibrePlate uses invoke to manage everything from dev tools to installing. See the manual for the tasks here: [Invoke Task Manual](tasks_manual.md).
 
 ### Configuration
 
