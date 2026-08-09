@@ -35,7 +35,7 @@ export default function FoodItem({ item, onSave, onDelete }: Props) {
   return (
     <>
       <li
-        className="list-group-item list-group-item-action d-flex align-items-center px-1 py-1"
+        className="list-group-item list-group-item-action d-flex align-items-center px-1 py-2"
         role="button"
         tabIndex={0}
         onClick={() => setIsEditOpen(true)}
