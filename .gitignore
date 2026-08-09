@@ -1,3 +1,7 @@
+# ============================================================
+# Python
+# ============================================================
+
 # Byte-compiled / cache
 __pycache__/
 *.py[cod]
@@ -22,7 +26,7 @@ dist/
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage
+# Test / coverage
 .pytest_cache/
 .coverage
 .coverage.*
@@ -38,16 +42,16 @@ htmlcov/
 # Linter caches
 .ruff_cache/
 
-# Jupyter Notebook
+# Jupyter
 .ipynb_checkpoints/
 
-# IDEs
-.vscode/
-.idea/
+# Python version management
+.python-version
 
-# OS files
-.DS_Store
-Thumbs.db
+
+# ============================================================
+# Django
+# ============================================================
 
 # Environment variables
 .env
@@ -60,12 +64,54 @@ Thumbs.db
 *.sqlite3
 *.db
 
-# Python version management
-.python-version
-
-# Django
+# Migrations
 **/migrations/*
 !**/migrations/__init__.py
 
-# Frontend build output
+
+# ============================================================
+# React / Node
+# ============================================================
+
+# Dependencies
+node_modules/
+
+# Build output
 frontend/dist/
+dist/
+dist-ssr/
+
+# Local environment / configuration
+*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+
+# ============================================================
+# IDEs / Editors
+# ============================================================
+
+.vscode/
+!.vscode/extensions.json
+
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# ============================================================
+# OS
+# ============================================================
+
+.DS_Store
+Thumbs.db

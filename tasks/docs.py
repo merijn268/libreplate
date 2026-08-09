@@ -58,7 +58,7 @@ def generate_invoke_manual(c: Context, check: bool = False) -> None:
         check: Only check whether the generated manual differs from the existing file.
     """
 
-    output = Path(BASE_DIR / "INVOKE_MANUAL.md")
+    output = Path(BASE_DIR / "tasks_manual.md")
     result = c.run("invoke --list", hide=True)
 
     tasks = []

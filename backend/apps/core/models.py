@@ -10,13 +10,13 @@ class ExclusiveMixin(models.Model):
     """
     Base class for model mixins that cannot be combined with
     specific other mixins.
-
-    Subclasses can define `incompatible_mixins` as a tuple of
-    mixins that are not allowed anywhere in the model's
-    inheritance hierarchy.
     """
 
     incompatible_mixins = ()
+    """
+    Subclasses can define `incompatible_mixins` that are not allowed
+    anywhere in the model's inheritance hierarchy.
+    """
 
     class Meta:
         abstract = True
