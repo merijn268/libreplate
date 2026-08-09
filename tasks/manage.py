@@ -139,6 +139,7 @@ def download_frontend_dist(owner: str, repo: str):
     info(f"Front end build extracted at `{frontend_dist}`.")
 
 
+# TODO when update fails, go back to previous commit.
 @task(
     aliases=["u"],
     help={
