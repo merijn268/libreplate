@@ -731,7 +731,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this Meal Plan.
+        description: A unique integer value identifying this meal plan.
         required: true
       tags:
       - meal-plans
@@ -751,7 +751,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this Meal Plan.
+        description: A unique integer value identifying this meal plan.
         required: true
       tags:
       - meal-plans
@@ -783,7 +783,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this Meal Plan.
+        description: A unique integer value identifying this meal plan.
         required: true
       tags:
       - meal-plans
@@ -814,7 +814,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this Meal Plan.
+        description: A unique integer value identifying this meal plan.
         required: true
       tags:
       - meal-plans
@@ -831,7 +831,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this Meal Plan.
+        description: A unique integer value identifying this meal plan.
         required: true
       tags:
       - meal-plans
@@ -865,7 +865,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this Meal Plan.
+        description: A unique integer value identifying this meal plan.
         required: true
       tags:
       - meal-plans
@@ -898,7 +898,7 @@ paths:
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this Meal Plan.
+        description: A unique integer value identifying this meal plan.
         required: true
       tags:
       - meal-plans
@@ -2695,7 +2695,7 @@ components:
           allOf:
           - $ref: '#/components/schemas/StartDayEnum'
           description: |-
-            Weekday on which the meal plan starts.
+            Weekday number on which the meal plan starts (Monday=0)
 
             * `0` - Monday
             * `1` - Tuesday
@@ -2804,7 +2804,7 @@ components:
           allOf:
           - $ref: '#/components/schemas/StartDayEnum'
           description: |-
-            Weekday on which the meal plan starts.
+            Weekday number on which the meal plan starts (Monday=0)
 
             * `0` - Monday
             * `1` - Tuesday
@@ -3144,7 +3144,7 @@ components:
           allOf:
           - $ref: '#/components/schemas/StartDayEnum'
           description: |-
-            Weekday on which the meal plan starts.
+            Weekday number on which the meal plan starts (Monday=0)
 
             * `0` - Monday
             * `1` - Tuesday

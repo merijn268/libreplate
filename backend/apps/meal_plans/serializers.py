@@ -15,10 +15,7 @@ class MealPlanFoodSerializer(serializers.ModelSerializer):
         write_only=True,
     )
 
-    item_name = serializers.CharField(
-        source="get_item_name",
-        read_only=True,
-    )
+    item_name = serializers.SerializerMethodField()
     weekday = serializers.CharField(
         source="get_weekday_display",
         read_only=True,
@@ -42,6 +39,9 @@ class MealPlanFoodSerializer(serializers.ModelSerializer):
             "meal_plan": {"required": False},
         }
 
+    def get_item_name(self, obj) -> str:
+        return obj.get_item().name
+
 
 class MealPlanRecipeSerializer(serializers.ModelSerializer):
     recipe = RecipeSerializer(read_only=True)
@@ -51,10 +51,7 @@ class MealPlanRecipeSerializer(serializers.ModelSerializer):
         write_only=True,
     )
 
-    item_name = serializers.CharField(
-        source="get_item_name",
-        read_only=True,
-    )
+    item_name = serializers.SerializerMethodField()
     weekday = serializers.CharField(
         source="get_weekday_display",
         read_only=True,
@@ -77,6 +74,9 @@ class MealPlanRecipeSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "meal_plan": {"required": False},
         }
+
+    def get_item_name(self, obj) -> str:
+        return obj.get_item().name
 
 
 class MealPlanSerializer(serializers.ModelSerializer):

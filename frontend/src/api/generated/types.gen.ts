@@ -115,7 +115,7 @@ export type MealPlan = {
     tags?: Array<number>;
     is_favorite?: boolean;
     /**
-     * Weekday on which the meal plan starts.
+     * Weekday number on which the meal plan starts (Monday=0)
      *
      * * `0` - Monday
      * * `1` - Tuesday
@@ -159,7 +159,7 @@ export type MealPlanList = {
     tags?: Array<number>;
     is_favorite?: boolean;
     /**
-     * Weekday on which the meal plan starts.
+     * Weekday number on which the meal plan starts (Monday=0)
      *
      * * `0` - Monday
      * * `1` - Tuesday
@@ -312,7 +312,7 @@ export type PatchedMealPlan = {
     tags?: Array<number>;
     is_favorite?: boolean;
     /**
-     * Weekday on which the meal plan starts.
+     * Weekday number on which the meal plan starts (Monday=0)
      *
      * * `0` - Monday
      * * `1` - Tuesday
@@ -593,7 +593,7 @@ export type MealPlanWritable = {
     tags?: Array<number>;
     is_favorite?: boolean;
     /**
-     * Weekday on which the meal plan starts.
+     * Weekday number on which the meal plan starts (Monday=0)
      *
      * * `0` - Monday
      * * `1` - Tuesday
@@ -629,7 +629,7 @@ export type MealPlanListWritable = {
     tags?: Array<number>;
     is_favorite?: boolean;
     /**
-     * Weekday on which the meal plan starts.
+     * Weekday number on which the meal plan starts (Monday=0)
      *
      * * `0` - Monday
      * * `1` - Tuesday
@@ -719,7 +719,7 @@ export type PatchedMealPlanWritable = {
     tags?: Array<number>;
     is_favorite?: boolean;
     /**
-     * Weekday on which the meal plan starts.
+     * Weekday number on which the meal plan starts (Monday=0)
      *
      * * `0` - Monday
      * * `1` - Tuesday
@@ -1322,7 +1322,7 @@ export type MealPlansDestroyData = {
     body?: never;
     path: {
         /**
-         * A unique integer value identifying this Meal Plan.
+         * A unique integer value identifying this meal plan.
          */
         id: number;
     };
@@ -1343,7 +1343,7 @@ export type MealPlansRetrieveData = {
     body?: never;
     path: {
         /**
-         * A unique integer value identifying this Meal Plan.
+         * A unique integer value identifying this meal plan.
          */
         id: number;
     };
@@ -1361,7 +1361,7 @@ export type MealPlansPartialUpdateData = {
     body?: PatchedMealPlanWritable;
     path: {
         /**
-         * A unique integer value identifying this Meal Plan.
+         * A unique integer value identifying this meal plan.
          */
         id: number;
     };
@@ -1379,7 +1379,7 @@ export type MealPlansUpdateData = {
     body: MealPlanWritable;
     path: {
         /**
-         * A unique integer value identifying this Meal Plan.
+         * A unique integer value identifying this meal plan.
          */
         id: number;
     };
@@ -1397,7 +1397,7 @@ export type MealPlansMarkFavoriteCreateData = {
     body: MealPlanWritable;
     path: {
         /**
-         * A unique integer value identifying this Meal Plan.
+         * A unique integer value identifying this meal plan.
          */
         id: number;
     };
@@ -1415,7 +1415,7 @@ export type MealPlansMarkUsedCreateData = {
     body: MealPlanWritable;
     path: {
         /**
-         * A unique integer value identifying this Meal Plan.
+         * A unique integer value identifying this meal plan.
          */
         id: number;
     };
@@ -1433,7 +1433,7 @@ export type MealPlansUnmarkFavoriteCreateData = {
     body: MealPlanWritable;
     path: {
         /**
-         * A unique integer value identifying this Meal Plan.
+         * A unique integer value identifying this meal plan.
          */
         id: number;
     };

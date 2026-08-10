@@ -1,13 +1,14 @@
 import pytest
 from apps.foods.models import Food
-from apps.meal_plans.models import MealPlan, MealPlanTag
+from apps.meal_plans.models import MealPlan, MealPlanFood, MealPlanRecipe, MealPlanTag
 from apps.meals.models import DefaultMeal
 from apps.recipes.models import Recipe, RecipeIngredient
 from apps.units.models import Unit
+from django.db import IntegrityError
 from django.urls import reverse
 
-# TODO ISort removes inproper imports, instead of raising an error.
-# It should be configured to raise an error
+# TODO ISort removes improper imports, instead of raising an error.
+# It should be configured to raise an error.
 
 
 @pytest.mark.django_db
@@ -106,9 +107,64 @@ class TestMealPlanAPI:
 
         assert len(data["foods"]) == 1
         assert data["foods"][0]["food"]["id"] == apple.id
+        assert data["foods"][0]["item_name"] == apple.name
 
         assert len(data["recipes"]) == 1
         assert data["recipes"][0]["recipe"]["id"] == oatmeal.id
+        assert data["recipes"][0]["item_name"] == oatmeal.name
+
+    def test_meal_plan_entries_return_their_item(
+        self,
+        authenticated_client,
+        setup_default_data,
+    ):
+        _client, user = authenticated_client
+
+        unit = Unit.objects.get(name="Gram")
+
+        food = Food.objects.create(
+            name="Apple",
+            user=user,
+            serving=100,
+            unit=unit,
+        )
+
+        recipe = Recipe.objects.create(
+            user=user,
+            name="Oatmeal Bowl",
+            portions=2,
+        )
+
+        meal_plan = MealPlan.objects.create(
+            name="My Meal Plan",
+            user=user,
+        )
+
+        meal = DefaultMeal.objects.get(
+            user=user,
+            name="Breakfast",
+        )
+
+        food_entry = MealPlanFood.objects.create(
+            meal_plan=meal_plan,
+            meal=meal,
+            food=food,
+            day=0,
+            serving_size=100,
+            number_of_servings=1,
+        )
+
+        recipe_entry = MealPlanRecipe.objects.create(
+            meal_plan=meal_plan,
+            meal=meal,
+            recipe=recipe,
+            day=1,
+            serving_size=100,
+            number_of_servings=1,
+        )
+
+        assert food_entry.get_item() == food
+        assert recipe_entry.get_item() == recipe
 
     def test_user_cannot_see_another_users_meal_plan(
         self,
@@ -181,7 +237,7 @@ class TestMealPlanAPI:
         create_user,
         setup_default_data,
     ):
-        client, user = authenticated_client
+        client, _user = authenticated_client
         other_user = create_user(username="other_user")
 
         tag = MealPlanTag.objects.create(
@@ -239,3 +295,40 @@ class TestMealPlanAPI:
         meal_plan.refresh_from_db()
 
         assert list(meal_plan.tags.values_list("id", flat=True)) == [second_tag.id]
+
+    def test_meal_plan_tag_name_must_be_unique_per_user(
+        self,
+        authenticated_client,
+    ):
+        _client, user = authenticated_client
+
+        MealPlanTag.objects.create(
+            user=user,
+            name="Healthy",
+        )
+
+        with pytest.raises(IntegrityError):
+            MealPlanTag.objects.create(
+                user=user,
+                name="Healthy",
+            )
+
+    def test_users_can_have_tags_with_the_same_name(
+        self,
+        authenticated_client,
+        create_user,
+    ):
+        _client, user = authenticated_client
+        other_user = create_user(username="other_user")
+
+        first_tag = MealPlanTag.objects.create(
+            user=user,
+            name="Healthy",
+        )
+        second_tag = MealPlanTag.objects.create(
+            user=other_user,
+            name="Healthy",
+        )
+
+        assert first_tag.name == second_tag.name
+        assert first_tag.user_id != second_tag.user_id
