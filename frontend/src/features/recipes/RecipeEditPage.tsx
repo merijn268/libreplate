@@ -14,7 +14,7 @@ import {
 
 import RecipeDetailsForm from "./components/edit/RecipeDetailsForm";
 import IngredientsCard from "./components/edit/IngredientsCard";
-import TagModal from "../../components/ui/TagModal";
+import TagModal from "../../components/ui/modals/TagModal";
 
 export default function RecipeEditPage() {
   const { id } = useParams();

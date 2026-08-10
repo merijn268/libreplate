@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import Modal from "@/components/ui/Modal";
+import Modal from "@/components/ui/modals/Modal";
 import MacroPieChart from "@/components/ui/MacroPieChart";
 
 type Totals = {

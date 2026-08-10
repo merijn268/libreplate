@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { recipesList } from "@/api/generated";
 import type { Recipe } from "@/api/generated/types.gen";
-import Modal from "@/components/ui/Modal";
+import Modal from "@/components/ui/modals/Modal";
 
 interface RecipePickerModalProps {
   isOpen: boolean;

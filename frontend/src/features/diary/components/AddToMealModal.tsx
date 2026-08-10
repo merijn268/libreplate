@@ -1,4 +1,4 @@
-import Modal from "@/components/ui/Modal";
+import Modal from "@/components/ui/modals/Modal";
 
 type Props = {
   isOpen: boolean;

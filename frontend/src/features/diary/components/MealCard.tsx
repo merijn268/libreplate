@@ -6,7 +6,7 @@ import {
   mealsMealFoodsPartialUpdate,
 } from "@/api/generated";
 
-import TotalsModal from "@/components/ui/NutrientsTotalsModal";
+import TotalsModal from "@/components/ui/modals/NutrientsTotalsModal";
 import FoodItem from "@/components/ui/FoodAmountItem";
 
 import type { DayMeal } from "@/api/generated";

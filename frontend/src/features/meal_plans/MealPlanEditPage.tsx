@@ -7,7 +7,7 @@ import type { PatchedMealPlanWritable } from "@/api/generated";
 
 import MealPlanEditForm from "./components/edit/MealPlanEditForm";
 import MealPlanEditTabs from "./components/edit/MealPlanEditTabs";
-import MealPlanMealsFoodsTab from "./components/edit/MealPlanMealsFoodsTab";
+import MealPlanMealsFoodsTab from "./components/edit/MealPlanEditContent";
 
 type EditTab = "details" | "meals-foods";
 
@@ -70,7 +70,7 @@ export default function MealPlanEditPage() {
   }
 
   return (
-    <div className="container py-4">
+    <div className="container">
       <MealPlanEditTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
       {activeTab === "details" && (

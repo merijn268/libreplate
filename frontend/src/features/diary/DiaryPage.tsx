@@ -1,22 +1,23 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import DailyTotalsBar from "./components/DailyTotalsBar";
-
 import {
   mealsDayList,
   mealsCreate,
   mealsMealFoodsCreate,
 } from "@/api/generated";
 
+import type { DayMeal, Food, Recipe } from "@/api/generated";
+
+import NutrientTotalsBar from "../../components/ui/bars/NutrientsTotalBar";
 import FoodPickerModal from "../foods/components/FoodPickerModal";
 import RecipePickerModal from "../recipes/components/common/Recipepickermodal";
 import AddToMealModal from "./components/AddToMealModal";
 
-import DiaryHeader from "./components/DiaryHeader";
+import DiaryHeader from "../../components/ui/DateSelector";
 import MealList from "./components/MealList";
 
-import type { DayMeal, Food, Recipe } from "@/api/generated";
+import { computeDailyTotals } from "@/features/diary/utils/computeDailyTotals";
 
 function formatDate(date: Date): string {
   const year = date.getFullYear();
@@ -57,6 +58,9 @@ export default function DiaryPage() {
       return response.data ?? [];
     },
   });
+
+  // DiaryPage is responsible for knowing how totals are calculated.
+  const totals = computeDailyTotals(meals);
 
   const createMeal = useMutation({
     mutationFn: async (options: Parameters<typeof mealsCreate>[0]) => {
@@ -195,13 +199,6 @@ export default function DiaryPage() {
 
   return (
     <div className="container">
-      <AddToMealModal
-        isOpen={isAddModalOpen}
-        onClose={closeAddModal}
-        onFood={openFoodPicker}
-        onRecipe={openRecipePicker}
-      />
-
       <FoodPickerModal
         isOpen={isFoodPickerOpen}
         onClose={closeFoodPicker}
@@ -212,6 +209,13 @@ export default function DiaryPage() {
         isOpen={isRecipePickerOpen}
         onClose={closeRecipePicker}
         onSelect={handleRecipeSelect}
+      />
+
+      <AddToMealModal
+        isOpen={isAddModalOpen}
+        onClose={closeAddModal}
+        onFood={openFoodPicker}
+        onRecipe={openRecipePicker}
       />
 
       <DiaryHeader
@@ -230,7 +234,12 @@ export default function DiaryPage() {
         <div className="alert alert-secondary">No meal slots configured.</div>
       )}
 
-      <DailyTotalsBar meals={meals} />
+      <NutrientTotalsBar
+        energy={totals.energy}
+        protein={totals.protein}
+        fat={totals.fat}
+        carbs={totals.carbs}
+      />
 
       <MealList
         meals={meals}
