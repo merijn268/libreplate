@@ -220,7 +220,6 @@ export default function DiaryPage() {
         onChangeDate={setSelectedDate}
         onPrevious={() => changeDay(-1)}
         onNext={() => changeDay(1)}
-        onToday={() => setSelectedDate(todayString)}
       />
 
       {isError && (

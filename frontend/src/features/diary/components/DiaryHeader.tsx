@@ -6,7 +6,6 @@ type Props = {
   onChangeDate: (date: string) => void;
   onPrevious: () => void;
   onNext: () => void;
-  onToday: () => void;
 };
 
 export default function DiaryHeader({
@@ -15,7 +14,6 @@ export default function DiaryHeader({
   onChangeDate,
   onPrevious,
   onNext,
-  onToday,
 }: Props) {
   const dateInputRef = useRef<HTMLInputElement>(null);
 
@@ -29,77 +27,152 @@ export default function DiaryHeader({
     }
   };
 
-  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     onChangeDate(event.target.value);
   };
 
-  const formattedButtonLabel = new Date(
-    `${selectedDate}T00:00:00`,
-  ).toLocaleDateString(undefined, {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  function formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  function formatDisplayDate(): string {
+    const selected = new Date(`${selectedDate}T00:00:00`);
+    const today = new Date(`${todayString}T00:00:00`);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (selectedDate === todayString) {
+      return "Today";
+    }
+
+    if (selectedDate === formatDate(tomorrow)) {
+      return "Tomorrow";
+    }
+
+    return selected.toLocaleDateString(undefined, {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+    });
+  }
 
   return (
-    <div className="d-flex justify-content-center mb-2">
-      <div className="d-flex flex-wrap justify-content-center align-items-center gap-2">
-        <button
-          onClick={onPrevious}
-          className="btn btn-outline-secondary d-flex align-items-center gap-1 flex-shrink-0"
-          aria-label="Previous day"
-        >
-          <i className="bi bi-chevron-left" />
-          <span className="d-none d-sm-inline">Previous</span>
-        </button>
+    <div
+      className="position-relative d-flex align-items-center justify-content-center mb-2 diary-header"
+      style={{ minHeight: "40px" }}
+    >
+      {/* Previous */}
+      <button
+        onClick={onPrevious}
+        type="button"
+        className="btn border-0 bg-transparent shadow-none position-absolute d-flex align-items-center justify-content-center p-0 text-secondary diary-header-nav diary-header-prev"
+        style={{
+          width: "40px",
+          height: "40px",
+          zIndex: 2,
+        }}
+        aria-label="Previous day"
+      >
+        <i className="bi bi-chevron-left" />
+      </button>
 
-        <div
-          className="position-relative flex-shrink-0"
-          style={{ minWidth: "180px" }}
-        >
-          <input
-            ref={dateInputRef}
-            type="date"
-            value={selectedDate}
-            onChange={handleDateChange}
-            style={{
-              position: "absolute",
-              inset: 0,
-              opacity: 0,
-              zIndex: -1,
-              cursor: "pointer",
-            }}
-            tabIndex={-1}
-          />
-
-          <button
-            onClick={handleButtonClick}
-            type="button"
-            className="btn btn-outline-primary d-flex align-items-center justify-content-center gap-2 w-100 position-relative"
-            style={{ zIndex: 0 }}
-          >
-            <i className="bi bi-calendar3" />
-            <span>{formattedButtonLabel}</span>
-          </button>
-        </div>
-
-        <button
-          onClick={onToday}
-          className="btn btn-primary flex-shrink-0"
-          disabled={selectedDate === todayString}
-        >
-          Today
-        </button>
+      {/* Date */}
+      <div
+        className="position-relative flex-shrink-0"
+        style={{
+          zIndex: 1,
+        }}
+      >
+        <input
+          ref={dateInputRef}
+          type="date"
+          value={selectedDate}
+          onChange={handleDateChange}
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: 0,
+            zIndex: -1,
+          }}
+          tabIndex={-1}
+        />
 
         <button
-          onClick={onNext}
-          className="btn btn-outline-secondary d-flex align-items-center gap-1 flex-shrink-0"
-          aria-label="Next day"
+          onClick={handleButtonClick}
+          type="button"
+          className="btn border-0 bg-transparent shadow-none d-flex align-items-center justify-content-center p-0 text-body diary-header-date-button"
+          style={{
+            height: "40px",
+          }}
+          aria-label="Select date"
         >
-          <span className="d-none d-sm-inline">Next</span>
-          <i className="bi bi-chevron-right" />
+          <span>{formatDisplayDate()}</span>
         </button>
       </div>
+
+      {/* Next */}
+      <button
+        onClick={onNext}
+        type="button"
+        className="btn border-0 bg-transparent shadow-none position-absolute d-flex align-items-center justify-content-center p-0 text-secondary diary-header-nav diary-header-next"
+        style={{
+          width: "40px",
+          height: "40px",
+          zIndex: 2,
+        }}
+        aria-label="Next day"
+      >
+        <i className="bi bi-chevron-right" />
+      </button>
+
+      <style>{`
+        .diary-header-nav,
+        .diary-header-date-button {
+          transition: background-color 0.15s ease;
+        }
+
+        /* Mobile */
+        .diary-header-prev {
+          left: 0;
+        }
+
+        .diary-header-next {
+          right: 0;
+        }
+
+        .diary-header-date-button {
+          min-width: 120px;
+          border-radius: 0.375rem;
+        }
+
+        /* Desktop */
+        @media (min-width: 768px) {
+          .diary-header-prev {
+            left: calc(50% - 160px) !important;
+          }
+
+          .diary-header-next {
+            right: calc(50% - 160px) !important;
+          }
+
+          .diary-header-date-button {
+            width: 230px;
+          }
+
+          .diary-header-nav:hover,
+          .diary-header-date-button:hover {
+            background-color: var(--bs-secondary) !important;
+            color: var(--bs-white) !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
