@@ -72,6 +72,7 @@ def ruff_check_cmd(fix: bool = False, exit_zero: bool = False) -> str:
     return " ".join(args)
 
 
+# TODO add a "changes in" function. not all code has to be checked every run
 @task(
     aliases=["v"],
     help={"verbose": "Show stdout output from commands."},

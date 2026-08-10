@@ -27,9 +27,7 @@ export default function DiaryHeader({
     }
   };
 
-  const handleDateChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     onChangeDate(event.target.value);
   };
 
@@ -45,21 +43,33 @@ export default function DiaryHeader({
     const selected = new Date(`${selectedDate}T00:00:00`);
     const today = new Date(`${todayString}T00:00:00`);
 
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
+    const datePart = selected.toLocaleDateString(undefined, {
+      day: "numeric",
+      month: "short",
+    });
+
+    if (selectedDate === formatDate(yesterday)) {
+      return `Yesterday, ${datePart}`;
+    }
+
     if (selectedDate === todayString) {
-      return "Today";
+      return `Today, ${datePart}`;
     }
 
     if (selectedDate === formatDate(tomorrow)) {
-      return "Tomorrow";
+      return `Tomorrow, ${datePart}`;
     }
 
     return selected.toLocaleDateString(undefined, {
       weekday: "long",
-      month: "long",
       day: "numeric",
+      month: "short",
     });
   }
 
