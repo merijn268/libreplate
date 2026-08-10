@@ -167,7 +167,7 @@ export default function FoodEditPage() {
         data: {
           name,
           brand: brand || null,
-          description: description || null,
+          description: description || "",
           serving: serving === "" ? 0 : Number(serving),
           unit_id: unitID,
           barcode: barcode || null,
