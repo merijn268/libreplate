@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import FoodPickerModal from "@/features/foods/components/FoodPickerModal";
 
-import FoodAmountItem from "@/components/ui/FoodAmountItem";
+import FoodAmountItem from "@/features/diary/components/FoodAmountItem";
 import TotalsModal from "@/components/ui/modals/NutrientsTotalsModal";
 
 interface IngredientsCardProps {

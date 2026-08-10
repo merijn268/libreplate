@@ -3,10 +3,9 @@ import NutrientTotalsBar from "@/components/ui/bars/NutrientsTotalBar";
 
 export default function MealPlanEditContent() {
   return (
-    <div>
+    <div className="container">
       <MealPlanDateSelector />
-
-      <NutrientTotalsBar energy={0} protein={0} fat={0} carbs={0} />
+      <NutrientTotalsBar energy={13} protein={14} fat={15} carbs={16} />
     </div>
   );
 }

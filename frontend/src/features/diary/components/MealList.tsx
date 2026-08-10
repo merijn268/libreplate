@@ -1,6 +1,6 @@
 import type { DayMeal } from "@/api/generated";
 
-import MealCard from "@/features/diary/components/MealCard";
+import MealCardController from "@/features/diary/components/MealCardController";
 
 type Props = {
   meals: DayMeal[];
@@ -10,9 +10,9 @@ type Props = {
 
 export default function MealList({ meals, onAdd, onDiaryChanged }: Props) {
   return (
-    <div className="row g-2">
+    <div>
       {meals.map((meal) => (
-        <MealCard
+        <MealCardController
           key={meal.default_meal.id}
           meal={meal}
           onAdd={onAdd}
