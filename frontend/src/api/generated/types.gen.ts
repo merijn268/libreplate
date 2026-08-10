@@ -111,6 +111,10 @@ export type MealPlan = {
     readonly id: number;
     name: string;
     description?: string;
+    /**
+     * Duration of the meal plan in days.
+     */
+    duration?: number;
     readonly user: number;
     tags?: Array<number>;
     is_favorite?: boolean;
@@ -308,6 +312,10 @@ export type PatchedMealPlan = {
     readonly id?: number;
     name?: string;
     description?: string;
+    /**
+     * Duration of the meal plan in days.
+     */
+    duration?: number;
     readonly user?: number;
     tags?: Array<number>;
     is_favorite?: boolean;
@@ -590,6 +598,10 @@ export type MealFoodCreateWritable = {
 export type MealPlanWritable = {
     name: string;
     description?: string;
+    /**
+     * Duration of the meal plan in days.
+     */
+    duration?: number;
     tags?: Array<number>;
     is_favorite?: boolean;
     /**
@@ -716,6 +728,10 @@ export type PatchedMealFoodCreateWritable = {
 export type PatchedMealPlanWritable = {
     name?: string;
     description?: string;
+    /**
+     * Duration of the meal plan in days.
+     */
+    duration?: number;
     tags?: Array<number>;
     is_favorite?: boolean;
     /**

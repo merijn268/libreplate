@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-import type { RecipeTag } from "@/api/generated";
-
 export interface SortOption<TSort extends string> {
   value: TSort;
   label: string;
@@ -12,7 +10,7 @@ export interface SearchScope {
   label: string;
 }
 
-interface Props<TSort extends string, TagType extends RecipeTag> {
+interface Props<TSort extends string, TagType = unknown> {
   search: string;
   onSearchChange: (value: string) => void;
   scope: SearchScope;
@@ -25,16 +23,13 @@ interface Props<TSort extends string, TagType extends RecipeTag> {
   sortOptions: SortOption<TSort>[];
 
   tags?: TagType[];
-  selectedTags: number[];
-  onTagsChange: (tags: number[]) => void;
+  selectedTags?: number[];
+  onTagsChange?: (tags: number[]) => void;
 
   onManageTags?: () => void;
 }
 
-export default function SearchBar<
-  TSort extends string,
-  TagType extends RecipeTag,
->({
+export default function SearchBar<TSort extends string, TagType = unknown>({
   search,
   onSearchChange,
   scope,
@@ -43,7 +38,7 @@ export default function SearchBar<
   sortMethod,
   onSortChange,
   sortOptions,
-  selectedTags,
+  selectedTags = [],
   onManageTags,
 }: Props<TSort, TagType>) {
   const [sortOpen, setSortOpen] = useState(false);
@@ -66,81 +61,81 @@ export default function SearchBar<
       : `Searching ${scope.count} ${scope.label}`;
 
   return (
-    <>
-      <div className="row g-2 align-items-center">
-        <div className="col-12 col-md">
-          <div className="input-group">
-            <input
-              value={search}
-              onChange={(e) => onSearchChange(e.target.value)}
-              placeholder={placeholder}
-              className="form-control"
-            />
+    <div className="row">
+      <div className="col">
+        <div className="input-group">
+          <input
+            value={search}
+            onChange={(e) => onSearchChange(e.target.value)}
+            placeholder={placeholder}
+            className="form-control"
+          />
 
+          <button
+            className={`btn border ${
+              showFavorites
+                ? "btn-success border-success"
+                : "btn-outline-secondary border-secondary-subtle"
+            }`}
+            onClick={onToggleFavorites}
+            title="Show favorites"
+          >
+            <i className={showFavorites ? "bi bi-heart-fill" : "bi bi-heart"} />
+          </button>
+
+          {onManageTags && (
             <button
               className={`btn border ${
-                showFavorites
+                selectedTags.length > 0
                   ? "btn-success border-success"
                   : "btn-outline-secondary border-secondary-subtle"
               }`}
-              onClick={onToggleFavorites}
-              title="Show favorites"
+              onClick={onManageTags}
+              title="Manage tags"
             >
               <i
-                className={showFavorites ? "bi bi-heart-fill" : "bi bi-heart"}
+                className={`bi ${
+                  selectedTags.length > 0 ? "bi-tags-fill" : "bi-tags"
+                }`}
               />
             </button>
+          )}
 
-            {onManageTags && (
-              <button
-                className={`btn border ${
-                  selectedTags.length > 0
-                    ? "btn-success border-success"
-                    : "btn-outline-secondary border-secondary-subtle"
-                }`}
-                onClick={onManageTags}
-                title="Manage tags"
-              >
-                <i
-                  className={`bi ${selectedTags.length > 0 ? "bi-tags-fill" : "bi-tags"}`}
-                />
-              </button>
-            )}
+          <div className="dropdown" ref={sortRef}>
+            <button
+              type="button"
+              className="btn btn-outline-secondary border-secondary-subtle rounded-0 rounded-end"
+              aria-expanded={sortOpen}
+              title="Sort"
+              onClick={() => setSortOpen((open) => !open)}
+            >
+              <i className="bi bi-filter" />
+            </button>
 
-            <div className="dropdown" ref={sortRef}>
-              <button
-                type="button"
-                className="btn btn-outline-secondary border-secondary-subtle rounded-0 rounded-end"
-                aria-expanded={sortOpen}
-                title="Sort"
-                onClick={() => setSortOpen((open) => !open)}
-              >
-                <i className="bi bi-filter" />
-              </button>
-
-              <ul
-                className={`dropdown-menu${sortOpen ? " show" : ""}`}
-                style={{ right: 0, left: "auto" }}
-              >
-                {sortOptions.map((option) => (
-                  <li key={option.value}>
-                    <button
-                      className={`dropdown-item ${sortMethod === option.value ? "active" : ""}`}
-                      type="button"
-                      onClick={() => {
-                        onSortChange(option.value);
-                        setSortOpen(false);
-                      }}
-                    >
-                      {option.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ul
+              className={`dropdown-menu${sortOpen ? " show" : ""}`}
+              style={{ right: 0, left: "auto" }}
+            >
+              {sortOptions.map((option) => (
+                <li key={option.value}>
+                  <button
+                    className={`dropdown-item ${
+                      sortMethod === option.value ? "active" : ""
+                    }`}
+                    type="button"
+                    onClick={() => {
+                      onSortChange(option.value);
+                      setSortOpen(false);
+                    }}
+                  >
+                    {option.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

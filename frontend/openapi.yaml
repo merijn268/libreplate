@@ -2682,6 +2682,11 @@ components:
           maxLength: 255
         description:
           type: string
+        duration:
+          type: integer
+          maximum: 32767
+          minimum: 1
+          description: Duration of the meal plan in days.
         user:
           type: integer
           readOnly: true
@@ -3131,6 +3136,11 @@ components:
           maxLength: 255
         description:
           type: string
+        duration:
+          type: integer
+          maximum: 32767
+          minimum: 1
+          description: Duration of the meal plan in days.
         user:
           type: integer
           readOnly: true

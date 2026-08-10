@@ -10,14 +10,16 @@ import RecipeEditPage from "../features/recipes/RecipeEditPage";
 import FoodEditPage from "../features/foods/FoodEditPage";
 import FoodsPage from "../features/foods/FoodsPage";
 import DiaryPage from "../features/diary/DiaryPage";
+import MealPlansPage from "../features/meal_plans/MealPlansPage";
+import MealPlanEditPage from "../features/meal_plans/MealPlanEditPage";
 import SettingsPage from "../features/settings/SettingsPage";
 import AppearanceSettingsPage from "../features/settings/AppearanceSettingsPage";
 
 function placeholder(title: string) {
   return (
     <>
-      {title}
-      Coming soon.
+      <h1>{title}</h1>
+      <p>Coming soon.</p>
     </>
   );
 }
@@ -97,9 +99,17 @@ const router = createBrowserRouter([
 
       {
         path: "meal-plans",
-        element: placeholder("Meal Plans"),
+        element: <MealPlansPage />,
         handle: {
           title: "Meal Plans",
+        },
+      },
+
+      {
+        path: "meal-plans/:id/edit",
+        element: <MealPlanEditPage />,
+        handle: {
+          title: "Edit Meal Plan",
         },
       },
 

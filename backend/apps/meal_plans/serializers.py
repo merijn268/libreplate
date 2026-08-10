@@ -100,12 +100,10 @@ class MealPlanSerializer(serializers.ModelSerializer):
         many=True,
         required=False,
     )
-
     start_day_display = serializers.CharField(
         source="get_start_day_display",
         read_only=True,
     )
-
     user = serializers.PrimaryKeyRelatedField(
         read_only=True,
     )
@@ -116,6 +114,7 @@ class MealPlanSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "description",
+            "duration",
             "user",
             "tags",
             "is_favorite",

@@ -5,7 +5,7 @@ from apps.foods.models import Food
 from apps.meals.models import DefaultMeal
 from apps.recipes.models import Recipe
 from apps.tags.models import BaseTag
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -32,6 +32,12 @@ class MealPlan(
         default=calendar.Day.MONDAY.value,
         validators=[MaxValueValidator(6)],
         help_text="Weekday number on which the meal plan starts (Monday=0)",
+    )
+
+    duration = models.PositiveSmallIntegerField(
+        default=7,
+        validators=[MinValueValidator(1)],
+        help_text="Duration of the meal plan in days.",
     )
 
 
