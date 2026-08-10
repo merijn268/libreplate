@@ -48,6 +48,7 @@ def print_error(message: str) -> None:
     console.print(f"[bold red]ERROR[/bold red] {message}")
 
 
+# TODO Breaks formatting and pythons breakline(). messy when fails.
 def run_command(c: Context, command: str, quiet_stdout: bool = False) -> None:
     """
     Run a command, optionally suppressing normal output.

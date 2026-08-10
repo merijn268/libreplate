@@ -8,13 +8,7 @@ from django.db import models
 
 
 class MealPlanTag(BaseTag):
-    class Meta(BaseTag.Meta):
-        constraints = [
-            models.UniqueConstraint(
-                fields=["user", "name"],
-                name="unique_user_meal_plan_tag",
-            )
-        ]
+    pass
 
 
 class MealPlan(

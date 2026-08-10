@@ -74,15 +74,8 @@ class Food(
         return None
 
 
-# TODO hide constrains in base class
 class FoodTag(BaseTag):
-    class Meta(BaseTag.Meta):
-        constraints = [
-            models.UniqueConstraint(
-                fields=["user", "name"],
-                name="unique_user_food_tag",
-            ),
-        ]
+    pass
 
 
 class FoodNutrient(models.Model):

@@ -69,15 +69,8 @@ class RecipePicture(models.Model):
         return f"{self.recipe.name} picture"
 
 
-# TODO hide constrains in base class
 class RecipeTag(BaseTag):
-    class Meta(BaseTag.Meta):
-        constraints = [
-            models.UniqueConstraint(
-                fields=["user", "name"],
-                name="unique_user_recipe_tag",
-            )
-        ]
+    pass
 
 
 class RecipeIngredient(models.Model):

@@ -1,4 +1,5 @@
 from apps.core import models as core_models
+from django.db import models
 
 
 class BaseTag(
@@ -14,3 +15,9 @@ class BaseTag(
 
     class Meta:
         abstract = True
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "name"],
+                name="unique_%(class)s_tag",
+            ),
+        ]

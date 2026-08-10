@@ -11,6 +11,8 @@ from invoke import Context, task
 from .data import migrate, sync_default_data
 from .utils import copy_frontend_dist, django_run, info, npm_run, print_success
 
+# TODO use Docker for release.
+
 
 @task(
     aliases=["bf"],
