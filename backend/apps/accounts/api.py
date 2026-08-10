@@ -3,9 +3,57 @@ from django.middleware.csrf import get_token
 from django.views.decorators.csrf import ensure_csrf_cookie
 from drf_spectacular.utils import extend_schema
 from rest_framework import serializers, status
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from .models import UserPreferences
+from .serializers import UserPreferencesSerializer
+
+
+class UserPreferencesView(APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_preferences(self, request):
+        preferences, _ = UserPreferences.objects.get_or_create(
+            user=request.user,
+        )
+        return preferences
+
+    @extend_schema(
+        request=None,
+        responses=UserPreferencesSerializer,
+    )
+    def get(self, request):
+        preferences = self.get_preferences(request)
+
+        return Response(
+            UserPreferencesSerializer(preferences).data,
+            status=status.HTTP_200_OK,
+        )
+
+    @extend_schema(
+        request=UserPreferencesSerializer,
+        responses=UserPreferencesSerializer,
+    )
+    def patch(self, request):
+        preferences = self.get_preferences(request)
+
+        serializer = UserPreferencesSerializer(
+            preferences,
+            data=request.data,
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK,
+        )
 
 
 class LoginSerializer(serializers.Serializer):

@@ -45,7 +45,7 @@ export default function Modal({
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="modal-responsive bg-white rounded-3 shadow-lg d-flex flex-column p-4"
+          className="modal-responsive bg-body rounded-3 shadow-lg d-flex flex-column p-4"
           style={{
             maxHeight: "80vh",
           }}

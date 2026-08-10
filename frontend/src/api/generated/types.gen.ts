@@ -401,6 +401,11 @@ export type PatchedTag = {
     name?: string;
 };
 
+export type PatchedUserPreferences = {
+    dark_mode?: boolean;
+    theme_color?: string;
+};
+
 export type Recipe = {
     readonly id: number;
     name: string;
@@ -491,6 +496,11 @@ export type User = {
     id: number;
     username: string;
     email: string;
+};
+
+export type UserPreferences = {
+    dark_mode?: boolean;
+    theme_color?: string;
 };
 
 /**
@@ -874,6 +884,32 @@ export type AccountsMeRetrieveResponses = {
 };
 
 export type AccountsMeRetrieveResponse = AccountsMeRetrieveResponses[keyof AccountsMeRetrieveResponses];
+
+export type AccountsPreferencesRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/accounts/preferences/';
+};
+
+export type AccountsPreferencesRetrieveResponses = {
+    200: UserPreferences;
+};
+
+export type AccountsPreferencesRetrieveResponse = AccountsPreferencesRetrieveResponses[keyof AccountsPreferencesRetrieveResponses];
+
+export type AccountsPreferencesPartialUpdateData = {
+    body?: PatchedUserPreferences;
+    path?: never;
+    query?: never;
+    url: '/api/accounts/preferences/';
+};
+
+export type AccountsPreferencesPartialUpdateResponses = {
+    200: UserPreferences;
+};
+
+export type AccountsPreferencesPartialUpdateResponse = AccountsPreferencesPartialUpdateResponses[keyof AccountsPreferencesPartialUpdateResponses];
 
 export type FoodsListData = {
     body?: never;

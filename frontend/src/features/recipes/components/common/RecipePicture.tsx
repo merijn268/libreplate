@@ -101,7 +101,6 @@ export default function RecipeCardPicture({ recipeId, width, height }: Props) {
         className="
           btn
           btn-sm
-          btn-light
           position-absolute
           top-0
           end-0

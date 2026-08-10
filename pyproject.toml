@@ -13,6 +13,7 @@ dependencies = [
     "charset-normalizer==3.4.7",
     "click==8.4.2",
     "django==5.2.15",
+    "django-colorfield>=0.14.0",
     "django-cors-headers>=4.9.0",
     "django-environ==0.14.0",
     "django-htmx==1.27.0",

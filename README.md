@@ -2,7 +2,7 @@
 
 A free and open-source food tracker and meal planner.
 
-librePlate exists because many existing food tracking services are closed source, web-only or app-only, have limited features, or lock users into their platform. This project aims to provide a modern, feature-rich, and transparent alternative that anyone can use, self-host, and contribute to.
+LibrePlate exists because many existing food tracking services are closed source, app-only, have limited features, or lock users into their platform. This project aims to provide a modern, feature-rich, configurable, and transparent alternative that anyone can use, self-host, and contribute to.
 
 ## Getting Started
 

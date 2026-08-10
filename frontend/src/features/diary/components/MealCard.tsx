@@ -75,7 +75,7 @@ export default function MealCard({ meal, onAdd, onDiaryChanged }: Props) {
             <div className="d-flex align-items-center gap-2 flex-grow-1">
               <button
                 type="button"
-                className="btn btn-sm btn-light"
+                className="btn btn-sm"
                 onClick={() => setOpen((current) => !current)}
               >
                 <i

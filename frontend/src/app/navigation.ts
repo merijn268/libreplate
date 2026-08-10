@@ -1,4 +1,10 @@
-import { Book, Cake2, JournalText, type Icon } from "react-bootstrap-icons";
+import {
+  Book,
+  Cake2,
+  Gear,
+  JournalText,
+  type Icon,
+} from "react-bootstrap-icons";
 
 export interface NavigationItem {
   label: string;
@@ -45,11 +51,11 @@ export const mainNavigation: NavigationItem[] = [
 ];
 
 export const bottomNavigation: NavigationItem[] = [
-  // {
-  //     label: "Settings",
-  //     path: "/settings",
-  //     icon: Gear,
-  // },
+  {
+    label: "Settings",
+    path: "/settings",
+    icon: Gear,
+  },
   // {
   //     label: "Account",
   //     path: "/account",

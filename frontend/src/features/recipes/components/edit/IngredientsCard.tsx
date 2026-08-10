@@ -168,21 +168,14 @@ function IngredientTotals({
         />
       ))}
 
-      <tfoot className="table-light fw-semibold">
+      <tfoot className="table fw-semibold">
         <tr style={{ cursor: "pointer" }} onClick={() => onTotalsClick(totals)}>
           <td>Totals</td>
-
           <td colSpan={2} />
-
           <td>{Math.round(totals.energy)} kcal</td>
-
           <td>{Math.round(totals.protein)} P</td>
-
           <td>{Math.round(totals.fat)} F</td>
-
           <td>{Math.round(totals.carbohydrates)} C</td>
-
-          <td />
         </tr>
       </tfoot>
     </>

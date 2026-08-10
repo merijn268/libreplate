@@ -10,12 +10,14 @@ import RecipeEditPage from "../features/recipes/RecipeEditPage";
 import FoodEditPage from "../features/foods/FoodEditPage";
 import FoodsPage from "../features/foods/FoodsPage";
 import DiaryPage from "../features/diary/DiaryPage";
+import SettingsPage from "../features/settings/SettingsPage";
+import AppearanceSettingsPage from "../features/settings/AppearanceSettingsPage";
 
 function placeholder(title: string) {
   return (
     <>
-      <h1>{title}</h1>
-      <p>Coming soon.</p>
+      {title}
+      Coming soon.
     </>
   );
 }
@@ -119,9 +121,17 @@ const router = createBrowserRouter([
 
       {
         path: "settings",
-        element: placeholder("Settings"),
+        element: <SettingsPage />,
         handle: {
           title: "Settings",
+        },
+      },
+
+      {
+        path: "settings/appearance",
+        element: <AppearanceSettingsPage />,
+        handle: {
+          title: "Appearance",
         },
       },
 

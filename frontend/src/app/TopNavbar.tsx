@@ -11,17 +11,13 @@ export default function TopNavbar({ onMenuClick, title }: Props) {
     <Navbar bg="body" className="border-bottom sticky-top">
       <Container fluid>
         <div className="d-flex align-items-center">
-          <Button variant="light" className="me-3" onClick={onMenuClick}>
+          <Button
+            variant="link"
+            className="me-3 p-2 text-body border-0"
+            onClick={onMenuClick}
+          >
             <List size={24} />
           </Button>
-
-          <img
-            src="/logo.png"
-            height={50}
-            alt="LibrePlate"
-            className="me-3 d-none d-md-block"
-          />
-
           <Navbar.Brand>{title}</Navbar.Brand>
         </div>
       </Container>

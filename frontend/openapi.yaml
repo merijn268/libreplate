@@ -79,6 +79,44 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
           description: ''
+  /api/accounts/preferences/:
+    get:
+      operationId: accounts_preferences_retrieve
+      tags:
+      - accounts
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreferences'
+          description: ''
+    patch:
+      operationId: accounts_preferences_partial_update
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserPreferences'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserPreferences'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserPreferences'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreferences'
+          description: ''
   /api/foods/:
     get:
       operationId: foods_list
@@ -3312,6 +3350,15 @@ components:
           type: integer
         name:
           type: string
+    PatchedUserPreferences:
+      type: object
+      properties:
+        dark_mode:
+          type: boolean
+        theme_color:
+          type: string
+          pattern: ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$
+          maxLength: 25
     Recipe:
       type: object
       properties:
@@ -3533,6 +3580,15 @@ components:
       - email
       - id
       - username
+    UserPreferences:
+      type: object
+      properties:
+        dark_mode:
+          type: boolean
+        theme_color:
+          type: string
+          pattern: ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$
+          maxLength: 25
   securitySchemes:
     cookieAuth:
       type: apiKey

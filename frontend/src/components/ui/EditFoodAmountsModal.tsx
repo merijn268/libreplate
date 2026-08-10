@@ -168,7 +168,7 @@ export default function EditFoodAmountsModal({
           </div>
         </div>
 
-        <div className="border rounded p-3 bg-light">
+        <div className="border rounded p-3">
           <MacroPieChart
             protein={nutrients.protein}
             fat={nutrients.fat}

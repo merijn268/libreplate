@@ -65,7 +65,7 @@ export default function RecipeCardTags({ recipe }: Props) {
 
           <button
             type="button"
-            className="btn btn-sm p-0 text-white border-0 lh-1"
+            className="btn btn-sm p-0 text-body border-0 lh-1"
             title="Remove tag"
             onClick={(e) => {
               stop(e);

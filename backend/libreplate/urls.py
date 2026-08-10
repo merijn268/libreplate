@@ -38,9 +38,9 @@ def react_app(request):
 
 
 urlpatterns = [
-    path("api/accounts/", include("apps.accounts.api_urls")),
+    path("api/accounts/", include("apps.accounts.urls")),
     path("api/foods/", include("apps.foods.urls")),
-    path("api/groceries/", include("apps.groceries.api_urls")),
+    path("api/groceries/", include("apps.groceries.urls")),
     path("api/integrations/", include("apps.integrations.urls")),
     path("api/meals/", include("apps.meals.urls")),
     path("api/nutrients/", include("apps.nutrients.urls")),

@@ -13,8 +13,19 @@ export default function Sidebar({ show, onHide }: Props) {
   return (
     <Offcanvas show={show} onHide={onHide} placement="start">
       <Offcanvas.Header closeButton>
-        <img src="/logo.png" height={48} alt="LibrePlate" className="me-2" />
-
+        <span
+          className="me-2"
+          style={{
+            display: "inline-block",
+            width: 50,
+            height: 50,
+            backgroundColor: "var(--bs-primary)",
+            mask: "url('/logo.png') center / contain no-repeat",
+            WebkitMask: "url('/logo.png') center / contain no-repeat",
+          }}
+          aria-label="LibrePlate"
+          role="img"
+        />
         <Offcanvas.Title>LibrePlate</Offcanvas.Title>
       </Offcanvas.Header>
 
