@@ -113,7 +113,6 @@ class PlannedMealViewSet(viewsets.ModelViewSet):
 class PlannedMealFoodViewSet(viewsets.ModelViewSet):
     """CRUD for food entries within the current user's meal plans."""
 
-    queryset = PlannedMealFood.objects.all()
     serializer_class = PlannedMealFoodSerializer
     permission_classes = [
         permissions.IsAuthenticated,

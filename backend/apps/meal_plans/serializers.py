@@ -29,6 +29,11 @@ class PlannedMealEntryRecurrenceSerializer(serializers.ModelSerializer):
 
 
 class PlannedMealFoodSerializer(serializers.ModelSerializer):
+
+    planned_meal_id = serializers.PrimaryKeyRelatedField(
+        queryset=PlannedMeal.objects.all(),
+        source="planned_meal",
+    )
     food_id = serializers.PrimaryKeyRelatedField(
         queryset=Food.objects.all(),
         source="food",
@@ -45,6 +50,7 @@ class PlannedMealFoodSerializer(serializers.ModelSerializer):
         model = PlannedMealFood
         fields = [
             "id",
+            "planned_meal_id",
             "food_id",
             "food_name",
             "serving_size",
@@ -58,10 +64,7 @@ class PlannedMealFoodSerializer(serializers.ModelSerializer):
             None,
         )
 
-        planned_meal = self.context["planned_meal"]
-
         entry = PlannedMealFood.objects.create(
-            planned_meal=planned_meal,
             **validated_data,
         )
 
@@ -72,6 +75,7 @@ class PlannedMealFoodSerializer(serializers.ModelSerializer):
             )
 
         return entry
+
 
 
 class PlannedMealRecipeSerializer(serializers.ModelSerializer):
