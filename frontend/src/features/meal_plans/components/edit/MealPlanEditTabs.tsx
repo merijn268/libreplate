@@ -30,7 +30,7 @@ export default function MealPlanEditTabs({
             fontWeight: activeTab === "details" ? 600 : 400,
           }}
         >
-          Details
+          Setup
           {activeTab === "details" && (
             <span
               style={{

@@ -12,6 +12,7 @@ type MealPlanEditFieldsProps = {
     field: K,
     value: MealPlanEditFormState[K],
   ) => void;
+  onDurationChange: (duration: number) => void;
   onCancel: () => void;
   onDelete: () => void;
   isSaving: boolean;
@@ -39,6 +40,7 @@ export default function MealPlanEditFields({
   formState,
   onFieldChange,
   onFieldBlur,
+  onDurationChange,
   onCancel,
   onDelete,
   isSaving,
@@ -92,13 +94,13 @@ export default function MealPlanEditFields({
             type="number"
             className="form-control"
             min={1}
+            step={1}
             value={formState.duration}
-            onChange={(event) =>
-              onFieldChange("duration", Number(event.target.value))
-            }
-            onBlur={(event) =>
-              onFieldBlur("duration", Number(event.target.value))
-            }
+            onChange={(event) => {
+              const value = Number(event.target.value);
+
+              onDurationChange(value);
+            }}
             disabled={isSaving}
             required
           />

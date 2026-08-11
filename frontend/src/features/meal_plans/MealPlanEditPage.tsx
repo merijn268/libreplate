@@ -125,7 +125,9 @@ export default function MealPlanEditPage() {
         />
       )}
 
-      {activeTab === "meals-foods" && <MealPlanMealsFoodsTab />}
+      {activeTab === "meals-foods" && (
+        <MealPlanMealsFoodsTab mealPlan={mealPlan} />
+      )}
     </div>
   );
 }

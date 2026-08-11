@@ -65,7 +65,7 @@ export default function MealPlanEditForm({
     field: K,
     value: MealPlanEditFormState[K],
   ) {
-    let nextState = {
+    const nextState: MealPlanEditFormState = {
       ...formState,
       [field]: value,
     };
@@ -73,22 +73,22 @@ export default function MealPlanEditForm({
     if (field === "duration_period") {
       const nextPeriod = value as MealPlanPeriodUnitEnum;
 
-      if (
-        formState.duration_period === "day" &&
-        nextPeriod === "week" &&
-        formState.duration % 7 === 0
-      ) {
-        nextState = {
-          ...nextState,
-          duration: formState.duration / 7,
-        };
-      } else if (formState.duration_period === "week" && nextPeriod === "day") {
-        nextState = {
-          ...nextState,
-          duration: formState.duration * 7,
-        };
+      if (formState.duration_period === "week" && nextPeriod === "day") {
+        nextState.duration = formState.duration * 7;
+      } else if (formState.duration_period === "day" && nextPeriod === "week") {
+        nextState.duration = Math.ceil(formState.duration / 7);
       }
     }
+
+    setFormState(nextState);
+    save(nextState);
+  }
+
+  function updateDurationAndSave(duration: number) {
+    const nextState: MealPlanEditFormState = {
+      ...formState,
+      duration,
+    };
 
     setFormState(nextState);
     save(nextState);
@@ -100,6 +100,7 @@ export default function MealPlanEditForm({
         formState={formState}
         onFieldChange={updateField}
         onFieldBlur={updateAndSave}
+        onDurationChange={updateDurationAndSave}
         onCancel={onCancel}
         onDelete={onDelete}
         isSaving={isSaving}
