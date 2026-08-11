@@ -51,6 +51,10 @@ export default function MealPlanEditForm({
     });
   }
 
+  // Updates local form state only, with no save. Used for fields that
+  // change on every keystroke (text inputs, the duration number field) so
+  // typing feels instant and doesn't trigger a request - and the re-render
+  // that comes with it - on every character.
   function updateField<K extends keyof MealPlanEditFormState>(
     field: K,
     value: MealPlanEditFormState[K],
@@ -61,6 +65,10 @@ export default function MealPlanEditForm({
     }));
   }
 
+  // Updates local state AND persists it. Used when a field is "committed"
+  // by the user - on blur for text/number fields, or immediately for
+  // discrete controls (selects, checkboxes) where every change is already
+  // a deliberate, complete choice rather than a keystroke.
   function updateAndSave<K extends keyof MealPlanEditFormState>(
     field: K,
     value: MealPlanEditFormState[K],
@@ -84,23 +92,12 @@ export default function MealPlanEditForm({
     save(nextState);
   }
 
-  function updateDurationAndSave(duration: number) {
-    const nextState: MealPlanEditFormState = {
-      ...formState,
-      duration,
-    };
-
-    setFormState(nextState);
-    save(nextState);
-  }
-
   return (
-    <div className="container py-4">
+    <div className="container">
       <MealPlanEditFields
         formState={formState}
         onFieldChange={updateField}
         onFieldBlur={updateAndSave}
-        onDurationChange={updateDurationAndSave}
         onCancel={onCancel}
         onDelete={onDelete}
         isSaving={isSaving}

@@ -12,7 +12,6 @@ type MealPlanEditFieldsProps = {
     field: K,
     value: MealPlanEditFormState[K],
   ) => void;
-  onDurationChange: (duration: number) => void;
   onCancel: () => void;
   onDelete: () => void;
   isSaving: boolean;
@@ -40,7 +39,6 @@ export default function MealPlanEditFields({
   formState,
   onFieldChange,
   onFieldBlur,
-  onDurationChange,
   onCancel,
   onDelete,
   isSaving,
@@ -60,7 +58,6 @@ export default function MealPlanEditFields({
           value={formState.name}
           onChange={(event) => onFieldChange("name", event.target.value)}
           onBlur={(event) => onFieldBlur("name", event.target.value)}
-          disabled={isSaving}
           required
         />
       </div>
@@ -78,7 +75,6 @@ export default function MealPlanEditFields({
           value={formState.description}
           onChange={(event) => onFieldChange("description", event.target.value)}
           onBlur={(event) => onFieldBlur("description", event.target.value)}
-          disabled={isSaving}
         />
       </div>
 
@@ -99,9 +95,21 @@ export default function MealPlanEditFields({
             onChange={(event) => {
               const value = Number(event.target.value);
 
-              onDurationChange(value);
+              // Only update local state while typing - don't save yet.
+              // Ignore NaN so an in-progress/empty value doesn't clobber
+              // the last valid number.
+              if (!Number.isNaN(value)) {
+                onFieldChange("duration", value);
+              }
             }}
-            disabled={isSaving}
+            onBlur={(event) => {
+              const value = Number(event.target.value);
+
+              onFieldBlur(
+                "duration",
+                Number.isNaN(value) ? formState.duration : value,
+              );
+            }}
             required
           />
 
@@ -116,7 +124,6 @@ export default function MealPlanEditFields({
                 event.target.value as MealPlanPeriodUnitEnum,
               )
             }
-            disabled={isSaving}
           >
             {durationPeriods.map((period) => (
               <option key={period.value} value={period.value}>
@@ -140,7 +147,6 @@ export default function MealPlanEditFields({
           onChange={(event) =>
             onFieldBlur("start_day", Number(event.target.value))
           }
-          disabled={isSaving}
         >
           {days.map((day) => (
             <option key={day.value} value={day.value}>
@@ -158,7 +164,6 @@ export default function MealPlanEditFields({
           className="form-check-input"
           checked={formState.is_favorite}
           onChange={(event) => onFieldBlur("is_favorite", event.target.checked)}
-          disabled={isSaving}
         />
 
         <label htmlFor="meal-plan-favorite" className="form-check-label">
@@ -166,7 +171,7 @@ export default function MealPlanEditFields({
         </label>
       </div>
 
-      <div className="d-flex justify-content-between align-items-center mt-2">
+      <div className="d-flex justify-content-between align-items-center ">
         <button
           type="button"
           className="btn btn-secondary"
