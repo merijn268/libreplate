@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type {
   MealPlan,
+  MealPlanPeriodUnitEnum,
   PatchedMealPlanWritable,
-  StartDayEnum,
 } from "@/api/generated";
 
 import MealPlanEditFields from "./MealPlanEditFields";
@@ -11,6 +11,7 @@ type MealPlanEditFormProps = {
   mealPlan: MealPlan;
   onSubmit: (data: PatchedMealPlanWritable) => void;
   onCancel: () => void;
+  onDelete: () => void;
   isSaving: boolean;
 };
 
@@ -18,19 +19,23 @@ export type MealPlanEditFormState = {
   name: string;
   description: string;
   duration: number;
+  duration_period: MealPlanPeriodUnitEnum;
   is_favorite: boolean;
-  start_day: StartDayEnum;
+  start_day: number;
 };
 
 export default function MealPlanEditForm({
   mealPlan,
   onSubmit,
   onCancel,
+  onDelete,
+  isSaving,
 }: MealPlanEditFormProps) {
   const [formState, setFormState] = useState<MealPlanEditFormState>({
     name: mealPlan.name,
     description: mealPlan.description ?? "",
     duration: mealPlan.duration ?? 1,
+    duration_period: mealPlan.duration_period ?? "week",
     is_favorite: mealPlan.is_favorite ?? false,
     start_day: mealPlan.start_day ?? 0,
   });
@@ -40,6 +45,7 @@ export default function MealPlanEditForm({
       name: state.name.trim(),
       description: state.description.trim(),
       duration: state.duration,
+      duration_period: state.duration_period,
       is_favorite: state.is_favorite,
       start_day: state.start_day,
     });
@@ -59,10 +65,30 @@ export default function MealPlanEditForm({
     field: K,
     value: MealPlanEditFormState[K],
   ) {
-    const nextState = {
+    let nextState = {
       ...formState,
       [field]: value,
     };
+
+    if (field === "duration_period") {
+      const nextPeriod = value as MealPlanPeriodUnitEnum;
+
+      if (
+        formState.duration_period === "day" &&
+        nextPeriod === "week" &&
+        formState.duration % 7 === 0
+      ) {
+        nextState = {
+          ...nextState,
+          duration: formState.duration / 7,
+        };
+      } else if (formState.duration_period === "week" && nextPeriod === "day") {
+        nextState = {
+          ...nextState,
+          duration: formState.duration * 7,
+        };
+      }
+    }
 
     setFormState(nextState);
     save(nextState);
@@ -75,6 +101,8 @@ export default function MealPlanEditForm({
         onFieldChange={updateField}
         onFieldBlur={updateAndSave}
         onCancel={onCancel}
+        onDelete={onDelete}
+        isSaving={isSaving}
       />
     </div>
   );

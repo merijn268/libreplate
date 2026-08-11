@@ -859,7 +859,7 @@ paths:
   /api/meal-plans/{id}/mark_used/:
     post:
       operationId: meal_plans_mark_used_create
-      description: Stamp `last_used_at` to now, e.g. when a plan is applied.
+      description: Stamp last_used_at to now.
       parameters:
       - in: path
         name: id
@@ -926,6 +926,7 @@ paths:
   /api/meal-plans/foods/:
     get:
       operationId: meal_plans_foods_list
+      description: CRUD for food entries within the current user's meal plans.
       tags:
       - meal-plans
       security:
@@ -937,23 +938,24 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MealPlanFood'
+                  $ref: '#/components/schemas/PlannedMealFood'
           description: ''
     post:
       operationId: meal_plans_foods_create
+      description: CRUD for food entries within the current user's meal plans.
       tags:
       - meal-plans
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MealPlanFood'
+              $ref: '#/components/schemas/PlannedMealFood'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/MealPlanFood'
+              $ref: '#/components/schemas/PlannedMealFood'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/MealPlanFood'
+              $ref: '#/components/schemas/PlannedMealFood'
         required: true
       security:
       - cookieAuth: []
@@ -962,17 +964,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MealPlanFood'
+                $ref: '#/components/schemas/PlannedMealFood'
           description: ''
   /api/meal-plans/foods/{id}/:
     get:
       operationId: meal_plans_foods_retrieve
+      description: CRUD for food entries within the current user's meal plans.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this meal plan food.
+        description: A unique integer value identifying this planned meal food.
         required: true
       tags:
       - meal-plans
@@ -983,16 +986,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MealPlanFood'
+                $ref: '#/components/schemas/PlannedMealFood'
           description: ''
     put:
       operationId: meal_plans_foods_update
+      description: CRUD for food entries within the current user's meal plans.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this meal plan food.
+        description: A unique integer value identifying this planned meal food.
         required: true
       tags:
       - meal-plans
@@ -1000,13 +1004,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MealPlanFood'
+              $ref: '#/components/schemas/PlannedMealFood'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/MealPlanFood'
+              $ref: '#/components/schemas/PlannedMealFood'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/MealPlanFood'
+              $ref: '#/components/schemas/PlannedMealFood'
         required: true
       security:
       - cookieAuth: []
@@ -1015,16 +1019,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MealPlanFood'
+                $ref: '#/components/schemas/PlannedMealFood'
           description: ''
     patch:
       operationId: meal_plans_foods_partial_update
+      description: CRUD for food entries within the current user's meal plans.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this meal plan food.
+        description: A unique integer value identifying this planned meal food.
         required: true
       tags:
       - meal-plans
@@ -1032,13 +1037,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedMealPlanFood'
+              $ref: '#/components/schemas/PatchedPlannedMealFood'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedMealPlanFood'
+              $ref: '#/components/schemas/PatchedPlannedMealFood'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedMealPlanFood'
+              $ref: '#/components/schemas/PatchedPlannedMealFood'
       security:
       - cookieAuth: []
       responses:
@@ -1046,16 +1051,164 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MealPlanFood'
+                $ref: '#/components/schemas/PlannedMealFood'
           description: ''
     delete:
       operationId: meal_plans_foods_destroy
+      description: CRUD for food entries within the current user's meal plans.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this meal plan food.
+        description: A unique integer value identifying this planned meal food.
+        required: true
+      tags:
+      - meal-plans
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/meal-plans/planned-meals/:
+    get:
+      operationId: meal_plans_planned_meals_list
+      description: CRUD for meals within the current user's meal plans.
+      tags:
+      - meal-plans
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PlannedMeal'
+          description: ''
+    post:
+      operationId: meal_plans_planned_meals_create
+      description: CRUD for meals within the current user's meal plans.
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlannedMeal'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PlannedMeal'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PlannedMeal'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlannedMeal'
+          description: ''
+  /api/meal-plans/planned-meals/{id}/:
+    get:
+      operationId: meal_plans_planned_meals_retrieve
+      description: CRUD for meals within the current user's meal plans.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this planned meal.
+        required: true
+      tags:
+      - meal-plans
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlannedMeal'
+          description: ''
+    put:
+      operationId: meal_plans_planned_meals_update
+      description: CRUD for meals within the current user's meal plans.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this planned meal.
+        required: true
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlannedMeal'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PlannedMeal'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PlannedMeal'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlannedMeal'
+          description: ''
+    patch:
+      operationId: meal_plans_planned_meals_partial_update
+      description: CRUD for meals within the current user's meal plans.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this planned meal.
+        required: true
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPlannedMeal'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPlannedMeal'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPlannedMeal'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlannedMeal'
+          description: ''
+    delete:
+      operationId: meal_plans_planned_meals_destroy
+      description: CRUD for meals within the current user's meal plans.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this planned meal.
         required: true
       tags:
       - meal-plans
@@ -1067,10 +1220,7 @@ paths:
   /api/meal-plans/recipes/:
     get:
       operationId: meal_plans_recipes_list
-      description: |-
-        CRUD for individual recipe entries within the current user's meal plans.
-
-        Optionally filter by `?meal_plan=<id>`.
+      description: CRUD for recipe entries within the current user's meal plans.
       tags:
       - meal-plans
       security:
@@ -1082,27 +1232,24 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MealPlanRecipe'
+                  $ref: '#/components/schemas/PlannedMealRecipe'
           description: ''
     post:
       operationId: meal_plans_recipes_create
-      description: |-
-        CRUD for individual recipe entries within the current user's meal plans.
-
-        Optionally filter by `?meal_plan=<id>`.
+      description: CRUD for recipe entries within the current user's meal plans.
       tags:
       - meal-plans
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MealPlanRecipe'
+              $ref: '#/components/schemas/PlannedMealRecipe'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/MealPlanRecipe'
+              $ref: '#/components/schemas/PlannedMealRecipe'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/MealPlanRecipe'
+              $ref: '#/components/schemas/PlannedMealRecipe'
         required: true
       security:
       - cookieAuth: []
@@ -1111,21 +1258,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MealPlanRecipe'
+                $ref: '#/components/schemas/PlannedMealRecipe'
           description: ''
   /api/meal-plans/recipes/{id}/:
     get:
       operationId: meal_plans_recipes_retrieve
-      description: |-
-        CRUD for individual recipe entries within the current user's meal plans.
-
-        Optionally filter by `?meal_plan=<id>`.
+      description: CRUD for recipe entries within the current user's meal plans.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this meal plan recipe.
+        description: A unique integer value identifying this planned meal recipe.
         required: true
       tags:
       - meal-plans
@@ -1136,20 +1280,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MealPlanRecipe'
+                $ref: '#/components/schemas/PlannedMealRecipe'
           description: ''
     put:
       operationId: meal_plans_recipes_update
-      description: |-
-        CRUD for individual recipe entries within the current user's meal plans.
-
-        Optionally filter by `?meal_plan=<id>`.
+      description: CRUD for recipe entries within the current user's meal plans.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this meal plan recipe.
+        description: A unique integer value identifying this planned meal recipe.
         required: true
       tags:
       - meal-plans
@@ -1157,13 +1298,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/MealPlanRecipe'
+              $ref: '#/components/schemas/PlannedMealRecipe'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/MealPlanRecipe'
+              $ref: '#/components/schemas/PlannedMealRecipe'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/MealPlanRecipe'
+              $ref: '#/components/schemas/PlannedMealRecipe'
         required: true
       security:
       - cookieAuth: []
@@ -1172,20 +1313,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MealPlanRecipe'
+                $ref: '#/components/schemas/PlannedMealRecipe'
           description: ''
     patch:
       operationId: meal_plans_recipes_partial_update
-      description: |-
-        CRUD for individual recipe entries within the current user's meal plans.
-
-        Optionally filter by `?meal_plan=<id>`.
+      description: CRUD for recipe entries within the current user's meal plans.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this meal plan recipe.
+        description: A unique integer value identifying this planned meal recipe.
         required: true
       tags:
       - meal-plans
@@ -1193,13 +1331,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/PatchedMealPlanRecipe'
+              $ref: '#/components/schemas/PatchedPlannedMealRecipe'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/PatchedMealPlanRecipe'
+              $ref: '#/components/schemas/PatchedPlannedMealRecipe'
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/PatchedMealPlanRecipe'
+              $ref: '#/components/schemas/PatchedPlannedMealRecipe'
       security:
       - cookieAuth: []
       responses:
@@ -1207,20 +1345,17 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MealPlanRecipe'
+                $ref: '#/components/schemas/PlannedMealRecipe'
           description: ''
     delete:
       operationId: meal_plans_recipes_destroy
-      description: |-
-        CRUD for individual recipe entries within the current user's meal plans.
-
-        Optionally filter by `?meal_plan=<id>`.
+      description: CRUD for recipe entries within the current user's meal plans.
       parameters:
       - in: path
         name: id
         schema:
           type: integer
-        description: A unique integer value identifying this meal plan recipe.
+        description: A unique integer value identifying this planned meal recipe.
         required: true
       tags:
       - meal-plans
@@ -2440,6 +2575,16 @@ components:
       required:
       - id
       - name
+    EndEnum:
+      enum:
+      - never
+      - on_day
+      - after
+      type: string
+      description: |-
+        * `never` - Never
+        * `on_day` - On day
+        * `after` - After
     Food:
       type: object
       properties:
@@ -2668,11 +2813,6 @@ components:
       - serving_size
     MealPlan:
       type: object
-      description: |-
-        Full read/write serializer for MealPlan.
-
-        Foods and recipes are serialized using their own domain serializers.
-        On write, food_id and recipe_id are used to reference existing objects.
       properties:
         id:
           type: integer
@@ -2682,11 +2822,27 @@ components:
           maxLength: 255
         description:
           type: string
+        start_day:
+          type: integer
+          maximum: 6
+          minimum: 0
+          description: Weekday number on which the meal plan starts (Monday=0).
+        start_day_display:
+          type: string
+          readOnly: true
         duration:
           type: integer
           maximum: 32767
           minimum: 1
-          description: Duration of the meal plan in days.
+          description: Length of the meal plan.
+        duration_period:
+          allOf:
+          - $ref: '#/components/schemas/MealPlanPeriodUnitEnum'
+          description: |-
+            Period used for the meal plan duration.
+
+            * `day` - Day
+            * `week` - Week
         user:
           type: integer
           readOnly: true
@@ -2696,24 +2852,6 @@ components:
             type: integer
         is_favorite:
           type: boolean
-        start_day:
-          allOf:
-          - $ref: '#/components/schemas/StartDayEnum'
-          description: |-
-            Weekday number on which the meal plan starts (Monday=0)
-
-            * `0` - Monday
-            * `1` - Tuesday
-            * `2` - Wednesday
-            * `3` - Thursday
-            * `4` - Friday
-            * `5` - Saturday
-            * `6` - Sunday
-          maximum: 6
-          minimum: 0
-        start_day_display:
-          type: string
-          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -2727,14 +2865,10 @@ components:
           format: date-time
           readOnly: true
           nullable: true
-        foods:
+        planned_meals:
           type: array
           items:
-            $ref: '#/components/schemas/MealPlanFood'
-        recipes:
-          type: array
-          items:
-            $ref: '#/components/schemas/MealPlanRecipe'
+            $ref: '#/components/schemas/PlannedMeal'
       required:
       - created_at
       - id
@@ -2743,53 +2877,8 @@ components:
       - start_day_display
       - updated_at
       - user
-    MealPlanFood:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        meal_plan:
-          type: integer
-        meal:
-          type: integer
-        food:
-          allOf:
-          - $ref: '#/components/schemas/Food'
-          readOnly: true
-        food_id:
-          type: integer
-          writeOnly: true
-        day:
-          type: integer
-          maximum: 32767
-          minimum: 0
-          description: Day offset from the meal plan's start day. 0 = start day, 1
-            = next day, etc.
-        weekday:
-          type: string
-          readOnly: true
-        serving_size:
-          type: number
-          format: double
-        number_of_servings:
-          type: number
-          format: double
-        item_name:
-          type: string
-          readOnly: true
-      required:
-      - day
-      - food
-      - food_id
-      - id
-      - item_name
-      - meal
-      - serving_size
-      - weekday
     MealPlanList:
       type: object
-      description: Lightweight serializer for list views.
       properties:
         id:
           type: integer
@@ -2806,23 +2895,26 @@ components:
         is_favorite:
           type: boolean
         start_day:
-          allOf:
-          - $ref: '#/components/schemas/StartDayEnum'
-          description: |-
-            Weekday number on which the meal plan starts (Monday=0)
-
-            * `0` - Monday
-            * `1` - Tuesday
-            * `2` - Wednesday
-            * `3` - Thursday
-            * `4` - Friday
-            * `5` - Saturday
-            * `6` - Sunday
+          type: integer
           maximum: 6
           minimum: 0
+          description: Weekday number on which the meal plan starts (Monday=0).
         start_day_display:
           type: string
           readOnly: true
+        duration:
+          type: integer
+          maximum: 32767
+          minimum: 1
+          description: Length of the meal plan.
+        duration_period:
+          allOf:
+          - $ref: '#/components/schemas/MealPlanPeriodUnitEnum'
+          description: |-
+            Period used for the meal plan duration.
+
+            * `day` - Day
+            * `week` - Week
         created_at:
           type: string
           format: date-time
@@ -2835,63 +2927,20 @@ components:
           type: string
           format: date-time
           nullable: true
-        food_count:
-          type: integer
-          readOnly: true
-        recipe_count:
-          type: integer
-          readOnly: true
       required:
       - created_at
-      - food_count
       - id
       - name
-      - recipe_count
       - start_day_display
       - updated_at
-    MealPlanRecipe:
-      type: object
-      properties:
-        id:
-          type: integer
-          readOnly: true
-        meal_plan:
-          type: integer
-        meal:
-          type: integer
-        recipe:
-          allOf:
-          - $ref: '#/components/schemas/Recipe'
-          readOnly: true
-        recipe_id:
-          type: integer
-          writeOnly: true
-        day:
-          type: integer
-          maximum: 32767
-          minimum: 0
-          description: Day offset from the meal plan's start day. 0 = start day, 1
-            = next day, etc.
-        weekday:
-          type: string
-          readOnly: true
-        serving_size:
-          type: number
-          format: double
-        number_of_servings:
-          type: number
-          format: double
-        item_name:
-          type: string
-          readOnly: true
-      required:
+    MealPlanPeriodUnitEnum:
+      enum:
       - day
-      - id
-      - item_name
-      - meal
-      - recipe
-      - recipe_id
-      - weekday
+      - week
+      type: string
+      description: |-
+        * `day` - Day
+        * `week` - Week
     Message:
       type: object
       properties:
@@ -3122,11 +3171,6 @@ components:
           format: double
     PatchedMealPlan:
       type: object
-      description: |-
-        Full read/write serializer for MealPlan.
-
-        Foods and recipes are serialized using their own domain serializers.
-        On write, food_id and recipe_id are used to reference existing objects.
       properties:
         id:
           type: integer
@@ -3136,11 +3180,27 @@ components:
           maxLength: 255
         description:
           type: string
+        start_day:
+          type: integer
+          maximum: 6
+          minimum: 0
+          description: Weekday number on which the meal plan starts (Monday=0).
+        start_day_display:
+          type: string
+          readOnly: true
         duration:
           type: integer
           maximum: 32767
           minimum: 1
-          description: Duration of the meal plan in days.
+          description: Length of the meal plan.
+        duration_period:
+          allOf:
+          - $ref: '#/components/schemas/MealPlanPeriodUnitEnum'
+          description: |-
+            Period used for the meal plan duration.
+
+            * `day` - Day
+            * `week` - Week
         user:
           type: integer
           readOnly: true
@@ -3150,24 +3210,6 @@ components:
             type: integer
         is_favorite:
           type: boolean
-        start_day:
-          allOf:
-          - $ref: '#/components/schemas/StartDayEnum'
-          description: |-
-            Weekday number on which the meal plan starts (Monday=0)
-
-            * `0` - Monday
-            * `1` - Tuesday
-            * `2` - Wednesday
-            * `3` - Thursday
-            * `4` - Friday
-            * `5` - Saturday
-            * `6` - Sunday
-          maximum: 6
-          minimum: 0
-        start_day_display:
-          type: string
-          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -3181,84 +3223,79 @@ components:
           format: date-time
           readOnly: true
           nullable: true
+        planned_meals:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlannedMeal'
+    PatchedPlannedMeal:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: Display order of the meal within the day.
+        day:
+          type: integer
+          maximum: 32767
+          minimum: 0
+          description: Day offset from the meal plan's start day. 0 = start day, 1
+            = next day, etc.
+        weekday:
+          type: string
+          readOnly: true
         foods:
           type: array
           items:
-            $ref: '#/components/schemas/MealPlanFood'
+            $ref: '#/components/schemas/PlannedMealFood'
         recipes:
           type: array
           items:
-            $ref: '#/components/schemas/MealPlanRecipe'
-    PatchedMealPlanFood:
+            $ref: '#/components/schemas/PlannedMealRecipe'
+    PatchedPlannedMealFood:
       type: object
       properties:
         id:
           type: integer
-          readOnly: true
-        meal_plan:
-          type: integer
-        meal:
-          type: integer
-        food:
-          allOf:
-          - $ref: '#/components/schemas/Food'
           readOnly: true
         food_id:
           type: integer
-          writeOnly: true
-        day:
-          type: integer
-          maximum: 32767
-          minimum: 0
-          description: Day offset from the meal plan's start day. 0 = start day, 1
-            = next day, etc.
-        weekday:
+        food_name:
           type: string
           readOnly: true
         serving_size:
           type: number
           format: double
+          minimum: 0
         number_of_servings:
           type: number
           format: double
-        item_name:
-          type: string
-          readOnly: true
-    PatchedMealPlanRecipe:
+          minimum: 0
+        recurrence:
+          $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+    PatchedPlannedMealRecipe:
       type: object
       properties:
         id:
           type: integer
           readOnly: true
-        meal_plan:
-          type: integer
-        meal:
-          type: integer
-        recipe:
-          allOf:
-          - $ref: '#/components/schemas/Recipe'
-          readOnly: true
         recipe_id:
           type: integer
-          writeOnly: true
-        day:
-          type: integer
-          maximum: 32767
-          minimum: 0
-          description: Day offset from the meal plan's start day. 0 = start day, 1
-            = next day, etc.
-        weekday:
+        recipe_name:
           type: string
           readOnly: true
-        serving_size:
-          type: number
-          format: double
         number_of_servings:
           type: number
           format: double
-        item_name:
-          type: string
-          readOnly: true
+          minimum: 0
+        recurrence:
+          $ref: '#/components/schemas/PlannedMealEntryRecurrence'
     PatchedRecipe:
       type: object
       properties:
@@ -3369,6 +3406,132 @@ components:
           type: string
           pattern: ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$
           maxLength: 25
+    PlannedMeal:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        order:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          description: Display order of the meal within the day.
+        day:
+          type: integer
+          maximum: 32767
+          minimum: 0
+          description: Day offset from the meal plan's start day. 0 = start day, 1
+            = next day, etc.
+        weekday:
+          type: string
+          readOnly: true
+        foods:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlannedMealFood'
+        recipes:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlannedMealRecipe'
+      required:
+      - day
+      - id
+      - name
+      - weekday
+    PlannedMealEntryRecurrence:
+      type: object
+      properties:
+        interval_count:
+          type: integer
+          maximum: 32767
+          minimum: 1
+          description: Number of intervals between repetitions. For example, 2 with
+            interval 'week' means every 2 weeks.
+        interval:
+          allOf:
+          - $ref: '#/components/schemas/MealPlanPeriodUnitEnum'
+          description: |-
+            Unit used by interval_count.
+
+            * `day` - Day
+            * `week` - Week
+        weekdays:
+          description: List of weekday numbers on which the entry repeats when interval
+            is 'week'. Values must be integers from 0 to 6, where Monday=0 and Sunday=6.
+            For example, [0, 2, 4] means Monday, Wednesday, and Friday.
+        end:
+          allOf:
+          - $ref: '#/components/schemas/EndEnum'
+          description: |-
+            Condition that determines when repetition ends.
+
+            * `never` - Never
+            * `on_day` - On day
+            * `after` - After
+        end_day:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          nullable: true
+          description: Day offset from the meal plan's start day on which repetition
+            ends.
+        end_after:
+          type: integer
+          maximum: 2147483647
+          minimum: 1
+          nullable: true
+          description: Number of occurrences after which repetition ends.
+    PlannedMealFood:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        food_id:
+          type: integer
+        food_name:
+          type: string
+          readOnly: true
+        serving_size:
+          type: number
+          format: double
+          minimum: 0
+        number_of_servings:
+          type: number
+          format: double
+          minimum: 0
+        recurrence:
+          $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+      required:
+      - food_id
+      - food_name
+      - id
+      - serving_size
+    PlannedMealRecipe:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        recipe_id:
+          type: integer
+        recipe_name:
+          type: string
+          readOnly: true
+        number_of_servings:
+          type: number
+          format: double
+          minimum: 0
+        recurrence:
+          $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+      required:
+      - id
+      - recipe_id
+      - recipe_name
     Recipe:
       type: object
       properties:
@@ -3509,24 +3672,6 @@ components:
       description: |-
         * `Dirk` - Dirk
         * `USDA` - USDA
-    StartDayEnum:
-      enum:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
-      - 5
-      - 6
-      type: integer
-      description: |-
-        * `0` - Monday
-        * `1` - Tuesday
-        * `2` - Wednesday
-        * `3` - Thursday
-        * `4` - Friday
-        * `5` - Saturday
-        * `6` - Sunday
     Tag:
       type: object
       properties:

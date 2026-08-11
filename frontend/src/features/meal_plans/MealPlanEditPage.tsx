@@ -2,7 +2,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
-import { mealPlansPartialUpdate, mealPlansRetrieve } from "@/api/generated";
+import {
+  mealPlansDestroy,
+  mealPlansPartialUpdate,
+  mealPlansRetrieve,
+} from "@/api/generated";
 import type { PatchedMealPlanWritable } from "@/api/generated";
 
 import MealPlanEditForm from "./components/edit/MealPlanEditForm";
@@ -51,6 +55,26 @@ export default function MealPlanEditPage() {
     },
   });
 
+  const deleteMealPlan = useMutation({
+    mutationFn: () =>
+      mealPlansDestroy({
+        path: {
+          id: mealPlanId,
+        },
+      }),
+    onSuccess: () => {
+      queryClient.removeQueries({
+        queryKey: ["meal-plan", mealPlanId],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["meal-plans"],
+      });
+
+      navigate("/meal-plans");
+    },
+  });
+
   if (!Number.isInteger(mealPlanId)) {
     return <div className="alert alert-danger">Invalid meal plan.</div>;
   }
@@ -69,6 +93,24 @@ export default function MealPlanEditPage() {
     return <div className="alert alert-danger">Meal plan not found.</div>;
   }
 
+  const isSaving = updateMealPlan.isPending || deleteMealPlan.isPending;
+
+  function handleDelete(mealPlanName: string) {
+    if (deleteMealPlan.isPending) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete "${mealPlanName}"? This cannot be undone.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    deleteMealPlan.mutate();
+  }
+
   return (
     <div className="container">
       <MealPlanEditTabs activeTab={activeTab} onTabChange={setActiveTab} />
@@ -78,7 +120,8 @@ export default function MealPlanEditPage() {
           mealPlan={mealPlan}
           onSubmit={(data) => updateMealPlan.mutate(data)}
           onCancel={() => navigate("/meal-plans")}
-          isSaving={updateMealPlan.isPending}
+          onDelete={() => handleDelete(mealPlan.name)}
+          isSaving={isSaving}
         />
       )}
 

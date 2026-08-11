@@ -16,7 +16,7 @@ class Graph(
         LINE = "line", "Line Graph"
         BAR = "bar", "Bar Graph"
 
-    class PeriodUnit(models.TextChoices):
+    class MealPlanPeriodUnit(models.TextChoices):
         ALL = "all", "All Data"
         DAY = "day", "Day"
         WEEK = "week", "Week"
@@ -39,8 +39,8 @@ class Graph(
 
     period_unit = models.CharField(
         max_length=20,
-        choices=PeriodUnit.choices,
-        default=PeriodUnit.ALL,
+        choices=MealPlanPeriodUnit.choices,
+        default=MealPlanPeriodUnit.ALL,
     )
     period_amount = models.PositiveIntegerField(default=1)
 

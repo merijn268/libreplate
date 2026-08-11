@@ -30,6 +30,13 @@ export type DefaultMeal = {
     order?: number;
 };
 
+/**
+ * * `never` - Never
+ * * `on_day` - On day
+ * * `after` - After
+ */
+export type EndEnum = 'never' | 'on_day' | 'after';
+
 export type Food = {
     readonly id: number;
     name: string;
@@ -101,61 +108,35 @@ export type MealFoodCreate = {
     number_of_servings: number;
 };
 
-/**
- * Full read/write serializer for MealPlan.
- *
- * Foods and recipes are serialized using their own domain serializers.
- * On write, food_id and recipe_id are used to reference existing objects.
- */
 export type MealPlan = {
     readonly id: number;
     name: string;
     description?: string;
     /**
-     * Duration of the meal plan in days.
+     * Weekday number on which the meal plan starts (Monday=0).
+     */
+    start_day?: number;
+    readonly start_day_display: string;
+    /**
+     * Length of the meal plan.
      */
     duration?: number;
+    /**
+     * Period used for the meal plan duration.
+     *
+     * * `day` - Day
+     * * `week` - Week
+     */
+    duration_period?: MealPlanPeriodUnitEnum;
     readonly user: number;
     tags?: Array<number>;
     is_favorite?: boolean;
-    /**
-     * Weekday number on which the meal plan starts (Monday=0)
-     *
-     * * `0` - Monday
-     * * `1` - Tuesday
-     * * `2` - Wednesday
-     * * `3` - Thursday
-     * * `4` - Friday
-     * * `5` - Saturday
-     * * `6` - Sunday
-     */
-    start_day?: StartDayEnum;
-    readonly start_day_display: string;
     readonly created_at: string;
     readonly updated_at: string;
     readonly last_used_at: string | null;
-    foods?: Array<MealPlanFood>;
-    recipes?: Array<MealPlanRecipe>;
+    planned_meals?: Array<PlannedMeal>;
 };
 
-export type MealPlanFood = {
-    readonly id: number;
-    meal_plan?: number;
-    meal: number;
-    food: Food;
-    /**
-     * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
-     */
-    day: number;
-    readonly weekday: string;
-    serving_size: number;
-    number_of_servings?: number;
-    readonly item_name: string;
-};
-
-/**
- * Lightweight serializer for list views.
- */
 export type MealPlanList = {
     readonly id: number;
     name: string;
@@ -163,39 +144,31 @@ export type MealPlanList = {
     tags?: Array<number>;
     is_favorite?: boolean;
     /**
-     * Weekday number on which the meal plan starts (Monday=0)
-     *
-     * * `0` - Monday
-     * * `1` - Tuesday
-     * * `2` - Wednesday
-     * * `3` - Thursday
-     * * `4` - Friday
-     * * `5` - Saturday
-     * * `6` - Sunday
+     * Weekday number on which the meal plan starts (Monday=0).
      */
-    start_day?: StartDayEnum;
+    start_day?: number;
     readonly start_day_display: string;
+    /**
+     * Length of the meal plan.
+     */
+    duration?: number;
+    /**
+     * Period used for the meal plan duration.
+     *
+     * * `day` - Day
+     * * `week` - Week
+     */
+    duration_period?: MealPlanPeriodUnitEnum;
     readonly created_at: string;
     readonly updated_at: string;
     last_used_at?: string | null;
-    readonly food_count: number;
-    readonly recipe_count: number;
 };
 
-export type MealPlanRecipe = {
-    readonly id: number;
-    meal_plan?: number;
-    meal: number;
-    recipe: Recipe;
-    /**
-     * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
-     */
-    day: number;
-    readonly weekday: string;
-    serving_size?: number;
-    number_of_servings?: number;
-    readonly item_name: string;
-};
+/**
+ * * `day` - Day
+ * * `week` - Week
+ */
+export type MealPlanPeriodUnitEnum = 'day' | 'week';
 
 export type Message = {
     detail: string;
@@ -302,71 +275,66 @@ export type PatchedMealFoodCreate = {
     number_of_servings?: number;
 };
 
-/**
- * Full read/write serializer for MealPlan.
- *
- * Foods and recipes are serialized using their own domain serializers.
- * On write, food_id and recipe_id are used to reference existing objects.
- */
 export type PatchedMealPlan = {
     readonly id?: number;
     name?: string;
     description?: string;
     /**
-     * Duration of the meal plan in days.
+     * Weekday number on which the meal plan starts (Monday=0).
+     */
+    start_day?: number;
+    readonly start_day_display?: string;
+    /**
+     * Length of the meal plan.
      */
     duration?: number;
+    /**
+     * Period used for the meal plan duration.
+     *
+     * * `day` - Day
+     * * `week` - Week
+     */
+    duration_period?: MealPlanPeriodUnitEnum;
     readonly user?: number;
     tags?: Array<number>;
     is_favorite?: boolean;
-    /**
-     * Weekday number on which the meal plan starts (Monday=0)
-     *
-     * * `0` - Monday
-     * * `1` - Tuesday
-     * * `2` - Wednesday
-     * * `3` - Thursday
-     * * `4` - Friday
-     * * `5` - Saturday
-     * * `6` - Sunday
-     */
-    start_day?: StartDayEnum;
-    readonly start_day_display?: string;
     readonly created_at?: string;
     readonly updated_at?: string;
     readonly last_used_at?: string | null;
-    foods?: Array<MealPlanFood>;
-    recipes?: Array<MealPlanRecipe>;
+    planned_meals?: Array<PlannedMeal>;
 };
 
-export type PatchedMealPlanFood = {
+export type PatchedPlannedMeal = {
     readonly id?: number;
-    meal_plan?: number;
-    meal?: number;
-    food?: Food;
+    name?: string;
+    /**
+     * Display order of the meal within the day.
+     */
+    order?: number;
     /**
      * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
      */
     day?: number;
     readonly weekday?: string;
-    serving_size?: number;
-    number_of_servings?: number;
-    readonly item_name?: string;
+    foods?: Array<PlannedMealFood>;
+    recipes?: Array<PlannedMealRecipe>;
 };
 
-export type PatchedMealPlanRecipe = {
+export type PatchedPlannedMealFood = {
     readonly id?: number;
-    meal_plan?: number;
-    meal?: number;
-    recipe?: Recipe;
-    /**
-     * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
-     */
-    day?: number;
-    readonly weekday?: string;
+    food_id?: number;
+    readonly food_name?: string;
     serving_size?: number;
     number_of_servings?: number;
-    readonly item_name?: string;
+    recurrence?: PlannedMealEntryRecurrence;
+};
+
+export type PatchedPlannedMealRecipe = {
+    readonly id?: number;
+    recipe_id?: number;
+    readonly recipe_name?: string;
+    number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence;
 };
 
 export type PatchedRecipe = {
@@ -412,6 +380,73 @@ export type PatchedTag = {
 export type PatchedUserPreferences = {
     dark_mode?: boolean;
     theme_color?: string;
+};
+
+export type PlannedMeal = {
+    readonly id: number;
+    name: string;
+    /**
+     * Display order of the meal within the day.
+     */
+    order?: number;
+    /**
+     * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
+     */
+    day: number;
+    readonly weekday: string;
+    foods?: Array<PlannedMealFood>;
+    recipes?: Array<PlannedMealRecipe>;
+};
+
+export type PlannedMealEntryRecurrence = {
+    /**
+     * Number of intervals between repetitions. For example, 2 with interval 'week' means every 2 weeks.
+     */
+    interval_count?: number;
+    /**
+     * Unit used by interval_count.
+     *
+     * * `day` - Day
+     * * `week` - Week
+     */
+    interval?: MealPlanPeriodUnitEnum;
+    /**
+     * List of weekday numbers on which the entry repeats when interval is 'week'. Values must be integers from 0 to 6, where Monday=0 and Sunday=6. For example, [0, 2, 4] means Monday, Wednesday, and Friday.
+     */
+    weekdays?: unknown;
+    /**
+     * Condition that determines when repetition ends.
+     *
+     * * `never` - Never
+     * * `on_day` - On day
+     * * `after` - After
+     */
+    end?: EndEnum;
+    /**
+     * Day offset from the meal plan's start day on which repetition ends.
+     */
+    end_day?: number | null;
+    /**
+     * Number of occurrences after which repetition ends.
+     */
+    end_after?: number | null;
+};
+
+export type PlannedMealFood = {
+    readonly id: number;
+    food_id: number;
+    readonly food_name: string;
+    serving_size: number;
+    number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence;
+};
+
+export type PlannedMealRecipe = {
+    readonly id: number;
+    recipe_id: number;
+    readonly recipe_name: string;
+    number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence;
 };
 
 export type Recipe = {
@@ -464,17 +499,6 @@ export type RecipeTag = {
  * * `USDA` - USDA
  */
 export type ServiceEnum = 'Dirk' | 'USDA';
-
-/**
- * * `0` - Monday
- * * `1` - Tuesday
- * * `2` - Wednesday
- * * `3` - Thursday
- * * `4` - Friday
- * * `5` - Saturday
- * * `6` - Sunday
- */
-export type StartDayEnum = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 export type Tag = {
     id: number;
@@ -589,82 +613,50 @@ export type MealFoodCreateWritable = {
     number_of_servings: number;
 };
 
-/**
- * Full read/write serializer for MealPlan.
- *
- * Foods and recipes are serialized using their own domain serializers.
- * On write, food_id and recipe_id are used to reference existing objects.
- */
 export type MealPlanWritable = {
     name: string;
     description?: string;
     /**
-     * Duration of the meal plan in days.
+     * Weekday number on which the meal plan starts (Monday=0).
+     */
+    start_day?: number;
+    /**
+     * Length of the meal plan.
      */
     duration?: number;
+    /**
+     * Period used for the meal plan duration.
+     *
+     * * `day` - Day
+     * * `week` - Week
+     */
+    duration_period?: MealPlanPeriodUnitEnum;
     tags?: Array<number>;
     is_favorite?: boolean;
-    /**
-     * Weekday number on which the meal plan starts (Monday=0)
-     *
-     * * `0` - Monday
-     * * `1` - Tuesday
-     * * `2` - Wednesday
-     * * `3` - Thursday
-     * * `4` - Friday
-     * * `5` - Saturday
-     * * `6` - Sunday
-     */
-    start_day?: StartDayEnum;
-    foods?: Array<MealPlanFoodWritable>;
-    recipes?: Array<MealPlanRecipeWritable>;
+    planned_meals?: Array<PlannedMealWritable>;
 };
 
-export type MealPlanFoodWritable = {
-    meal_plan?: number;
-    meal: number;
-    food_id: number;
-    /**
-     * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
-     */
-    day: number;
-    serving_size: number;
-    number_of_servings?: number;
-};
-
-/**
- * Lightweight serializer for list views.
- */
 export type MealPlanListWritable = {
     name: string;
     description?: string;
     tags?: Array<number>;
     is_favorite?: boolean;
     /**
-     * Weekday number on which the meal plan starts (Monday=0)
-     *
-     * * `0` - Monday
-     * * `1` - Tuesday
-     * * `2` - Wednesday
-     * * `3` - Thursday
-     * * `4` - Friday
-     * * `5` - Saturday
-     * * `6` - Sunday
+     * Weekday number on which the meal plan starts (Monday=0).
      */
-    start_day?: StartDayEnum;
-    last_used_at?: string | null;
-};
-
-export type MealPlanRecipeWritable = {
-    meal_plan?: number;
-    meal: number;
-    recipe_id: number;
+    start_day?: number;
     /**
-     * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
+     * Length of the meal plan.
      */
-    day: number;
-    serving_size?: number;
-    number_of_servings?: number;
+    duration?: number;
+    /**
+     * Period used for the meal plan duration.
+     *
+     * * `day` - Day
+     * * `week` - Week
+     */
+    duration_period?: MealPlanPeriodUnitEnum;
+    last_used_at?: string | null;
 };
 
 /**
@@ -719,59 +711,54 @@ export type PatchedMealFoodCreateWritable = {
     number_of_servings?: number;
 };
 
-/**
- * Full read/write serializer for MealPlan.
- *
- * Foods and recipes are serialized using their own domain serializers.
- * On write, food_id and recipe_id are used to reference existing objects.
- */
 export type PatchedMealPlanWritable = {
     name?: string;
     description?: string;
     /**
-     * Duration of the meal plan in days.
+     * Weekday number on which the meal plan starts (Monday=0).
+     */
+    start_day?: number;
+    /**
+     * Length of the meal plan.
      */
     duration?: number;
+    /**
+     * Period used for the meal plan duration.
+     *
+     * * `day` - Day
+     * * `week` - Week
+     */
+    duration_period?: MealPlanPeriodUnitEnum;
     tags?: Array<number>;
     is_favorite?: boolean;
-    /**
-     * Weekday number on which the meal plan starts (Monday=0)
-     *
-     * * `0` - Monday
-     * * `1` - Tuesday
-     * * `2` - Wednesday
-     * * `3` - Thursday
-     * * `4` - Friday
-     * * `5` - Saturday
-     * * `6` - Sunday
-     */
-    start_day?: StartDayEnum;
-    foods?: Array<MealPlanFoodWritable>;
-    recipes?: Array<MealPlanRecipeWritable>;
+    planned_meals?: Array<PlannedMealWritable>;
 };
 
-export type PatchedMealPlanFoodWritable = {
-    meal_plan?: number;
-    meal?: number;
+export type PatchedPlannedMealWritable = {
+    name?: string;
+    /**
+     * Display order of the meal within the day.
+     */
+    order?: number;
+    /**
+     * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
+     */
+    day?: number;
+    foods?: Array<PlannedMealFoodWritable>;
+    recipes?: Array<PlannedMealRecipeWritable>;
+};
+
+export type PatchedPlannedMealFoodWritable = {
     food_id?: number;
-    /**
-     * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
-     */
-    day?: number;
     serving_size?: number;
     number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence;
 };
 
-export type PatchedMealPlanRecipeWritable = {
-    meal_plan?: number;
-    meal?: number;
+export type PatchedPlannedMealRecipeWritable = {
     recipe_id?: number;
-    /**
-     * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
-     */
-    day?: number;
-    serving_size?: number;
     number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence;
 };
 
 export type PatchedRecipeWritable = {
@@ -798,6 +785,33 @@ export type PatchedRecipeIngredientWritable = {
 
 export type PatchedRecipeTagWritable = {
     name?: string;
+};
+
+export type PlannedMealWritable = {
+    name: string;
+    /**
+     * Display order of the meal within the day.
+     */
+    order?: number;
+    /**
+     * Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.
+     */
+    day: number;
+    foods?: Array<PlannedMealFoodWritable>;
+    recipes?: Array<PlannedMealRecipeWritable>;
+};
+
+export type PlannedMealFoodWritable = {
+    food_id: number;
+    serving_size: number;
+    number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence;
+};
+
+export type PlannedMealRecipeWritable = {
+    recipe_id: number;
+    number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence;
 };
 
 export type RecipeWritable = {
@@ -1471,20 +1485,20 @@ export type MealPlansFoodsListData = {
 };
 
 export type MealPlansFoodsListResponses = {
-    200: Array<MealPlanFood>;
+    200: Array<PlannedMealFood>;
 };
 
 export type MealPlansFoodsListResponse = MealPlansFoodsListResponses[keyof MealPlansFoodsListResponses];
 
 export type MealPlansFoodsCreateData = {
-    body: MealPlanFoodWritable;
+    body: PlannedMealFoodWritable;
     path?: never;
     query?: never;
     url: '/api/meal-plans/foods/';
 };
 
 export type MealPlansFoodsCreateResponses = {
-    201: MealPlanFood;
+    201: PlannedMealFood;
 };
 
 export type MealPlansFoodsCreateResponse = MealPlansFoodsCreateResponses[keyof MealPlansFoodsCreateResponses];
@@ -1493,7 +1507,7 @@ export type MealPlansFoodsDestroyData = {
     body?: never;
     path: {
         /**
-         * A unique integer value identifying this meal plan food.
+         * A unique integer value identifying this planned meal food.
          */
         id: number;
     };
@@ -1514,7 +1528,7 @@ export type MealPlansFoodsRetrieveData = {
     body?: never;
     path: {
         /**
-         * A unique integer value identifying this meal plan food.
+         * A unique integer value identifying this planned meal food.
          */
         id: number;
     };
@@ -1523,16 +1537,16 @@ export type MealPlansFoodsRetrieveData = {
 };
 
 export type MealPlansFoodsRetrieveResponses = {
-    200: MealPlanFood;
+    200: PlannedMealFood;
 };
 
 export type MealPlansFoodsRetrieveResponse = MealPlansFoodsRetrieveResponses[keyof MealPlansFoodsRetrieveResponses];
 
 export type MealPlansFoodsPartialUpdateData = {
-    body?: PatchedMealPlanFoodWritable;
+    body?: PatchedPlannedMealFoodWritable;
     path: {
         /**
-         * A unique integer value identifying this meal plan food.
+         * A unique integer value identifying this planned meal food.
          */
         id: number;
     };
@@ -1541,16 +1555,16 @@ export type MealPlansFoodsPartialUpdateData = {
 };
 
 export type MealPlansFoodsPartialUpdateResponses = {
-    200: MealPlanFood;
+    200: PlannedMealFood;
 };
 
 export type MealPlansFoodsPartialUpdateResponse = MealPlansFoodsPartialUpdateResponses[keyof MealPlansFoodsPartialUpdateResponses];
 
 export type MealPlansFoodsUpdateData = {
-    body: MealPlanFoodWritable;
+    body: PlannedMealFoodWritable;
     path: {
         /**
-         * A unique integer value identifying this meal plan food.
+         * A unique integer value identifying this planned meal food.
          */
         id: number;
     };
@@ -1559,10 +1573,111 @@ export type MealPlansFoodsUpdateData = {
 };
 
 export type MealPlansFoodsUpdateResponses = {
-    200: MealPlanFood;
+    200: PlannedMealFood;
 };
 
 export type MealPlansFoodsUpdateResponse = MealPlansFoodsUpdateResponses[keyof MealPlansFoodsUpdateResponses];
+
+export type MealPlansPlannedMealsListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/meal-plans/planned-meals/';
+};
+
+export type MealPlansPlannedMealsListResponses = {
+    200: Array<PlannedMeal>;
+};
+
+export type MealPlansPlannedMealsListResponse = MealPlansPlannedMealsListResponses[keyof MealPlansPlannedMealsListResponses];
+
+export type MealPlansPlannedMealsCreateData = {
+    body: PlannedMealWritable;
+    path?: never;
+    query?: never;
+    url: '/api/meal-plans/planned-meals/';
+};
+
+export type MealPlansPlannedMealsCreateResponses = {
+    201: PlannedMeal;
+};
+
+export type MealPlansPlannedMealsCreateResponse = MealPlansPlannedMealsCreateResponses[keyof MealPlansPlannedMealsCreateResponses];
+
+export type MealPlansPlannedMealsDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this planned meal.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/planned-meals/{id}/';
+};
+
+export type MealPlansPlannedMealsDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type MealPlansPlannedMealsDestroyResponse = MealPlansPlannedMealsDestroyResponses[keyof MealPlansPlannedMealsDestroyResponses];
+
+export type MealPlansPlannedMealsRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this planned meal.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/planned-meals/{id}/';
+};
+
+export type MealPlansPlannedMealsRetrieveResponses = {
+    200: PlannedMeal;
+};
+
+export type MealPlansPlannedMealsRetrieveResponse = MealPlansPlannedMealsRetrieveResponses[keyof MealPlansPlannedMealsRetrieveResponses];
+
+export type MealPlansPlannedMealsPartialUpdateData = {
+    body?: PatchedPlannedMealWritable;
+    path: {
+        /**
+         * A unique integer value identifying this planned meal.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/planned-meals/{id}/';
+};
+
+export type MealPlansPlannedMealsPartialUpdateResponses = {
+    200: PlannedMeal;
+};
+
+export type MealPlansPlannedMealsPartialUpdateResponse = MealPlansPlannedMealsPartialUpdateResponses[keyof MealPlansPlannedMealsPartialUpdateResponses];
+
+export type MealPlansPlannedMealsUpdateData = {
+    body: PlannedMealWritable;
+    path: {
+        /**
+         * A unique integer value identifying this planned meal.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/planned-meals/{id}/';
+};
+
+export type MealPlansPlannedMealsUpdateResponses = {
+    200: PlannedMeal;
+};
+
+export type MealPlansPlannedMealsUpdateResponse = MealPlansPlannedMealsUpdateResponses[keyof MealPlansPlannedMealsUpdateResponses];
 
 export type MealPlansRecipesListData = {
     body?: never;
@@ -1572,20 +1687,20 @@ export type MealPlansRecipesListData = {
 };
 
 export type MealPlansRecipesListResponses = {
-    200: Array<MealPlanRecipe>;
+    200: Array<PlannedMealRecipe>;
 };
 
 export type MealPlansRecipesListResponse = MealPlansRecipesListResponses[keyof MealPlansRecipesListResponses];
 
 export type MealPlansRecipesCreateData = {
-    body: MealPlanRecipeWritable;
+    body: PlannedMealRecipeWritable;
     path?: never;
     query?: never;
     url: '/api/meal-plans/recipes/';
 };
 
 export type MealPlansRecipesCreateResponses = {
-    201: MealPlanRecipe;
+    201: PlannedMealRecipe;
 };
 
 export type MealPlansRecipesCreateResponse = MealPlansRecipesCreateResponses[keyof MealPlansRecipesCreateResponses];
@@ -1594,7 +1709,7 @@ export type MealPlansRecipesDestroyData = {
     body?: never;
     path: {
         /**
-         * A unique integer value identifying this meal plan recipe.
+         * A unique integer value identifying this planned meal recipe.
          */
         id: number;
     };
@@ -1615,7 +1730,7 @@ export type MealPlansRecipesRetrieveData = {
     body?: never;
     path: {
         /**
-         * A unique integer value identifying this meal plan recipe.
+         * A unique integer value identifying this planned meal recipe.
          */
         id: number;
     };
@@ -1624,16 +1739,16 @@ export type MealPlansRecipesRetrieveData = {
 };
 
 export type MealPlansRecipesRetrieveResponses = {
-    200: MealPlanRecipe;
+    200: PlannedMealRecipe;
 };
 
 export type MealPlansRecipesRetrieveResponse = MealPlansRecipesRetrieveResponses[keyof MealPlansRecipesRetrieveResponses];
 
 export type MealPlansRecipesPartialUpdateData = {
-    body?: PatchedMealPlanRecipeWritable;
+    body?: PatchedPlannedMealRecipeWritable;
     path: {
         /**
-         * A unique integer value identifying this meal plan recipe.
+         * A unique integer value identifying this planned meal recipe.
          */
         id: number;
     };
@@ -1642,16 +1757,16 @@ export type MealPlansRecipesPartialUpdateData = {
 };
 
 export type MealPlansRecipesPartialUpdateResponses = {
-    200: MealPlanRecipe;
+    200: PlannedMealRecipe;
 };
 
 export type MealPlansRecipesPartialUpdateResponse = MealPlansRecipesPartialUpdateResponses[keyof MealPlansRecipesPartialUpdateResponses];
 
 export type MealPlansRecipesUpdateData = {
-    body: MealPlanRecipeWritable;
+    body: PlannedMealRecipeWritable;
     path: {
         /**
-         * A unique integer value identifying this meal plan recipe.
+         * A unique integer value identifying this planned meal recipe.
          */
         id: number;
     };
@@ -1660,7 +1775,7 @@ export type MealPlansRecipesUpdateData = {
 };
 
 export type MealPlansRecipesUpdateResponses = {
-    200: MealPlanRecipe;
+    200: PlannedMealRecipe;
 };
 
 export type MealPlansRecipesUpdateResponse = MealPlansRecipesUpdateResponses[keyof MealPlansRecipesUpdateResponses];

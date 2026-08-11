@@ -2,7 +2,7 @@
 
 import { type Client, type ClientMeta, formDataBodySerializer, type Options as Options2, type RequestResult, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AccountsCsrfRetrieveData, AccountsCsrfRetrieveResponses, AccountsLoginCreateData, AccountsLoginCreateErrors, AccountsLoginCreateResponses, AccountsLogoutCreateData, AccountsLogoutCreateResponses, AccountsMeRetrieveData, AccountsMeRetrieveResponses, AccountsPreferencesPartialUpdateData, AccountsPreferencesPartialUpdateResponses, AccountsPreferencesRetrieveData, AccountsPreferencesRetrieveResponses, FoodsCreateData, FoodsCreateResponses, FoodsDestroyData, FoodsDestroyResponses, FoodsListData, FoodsListResponses, FoodsPartialUpdateData, FoodsPartialUpdateResponses, FoodsRetrieveData, FoodsRetrieveResponses, FoodsTagsCreateData, FoodsTagsCreateResponses, FoodsTagsDestroyData, FoodsTagsDestroyResponses, FoodsTagsListData, FoodsTagsListResponses, FoodsTagsPartialUpdateData, FoodsTagsPartialUpdateResponses, FoodsTagsRetrieveData, FoodsTagsRetrieveResponses, FoodsTagsUpdateData, FoodsTagsUpdateResponses, FoodsUpdateData, FoodsUpdateResponses, GroceriesCreateData, GroceriesCreateResponses, GroceriesDestroyData, GroceriesDestroyResponses, GroceriesItemsCreateData, GroceriesItemsCreateResponses, GroceriesItemsDestroyData, GroceriesItemsDestroyResponses, GroceriesItemsListData, GroceriesItemsListResponses, GroceriesItemsPartialUpdateData, GroceriesItemsPartialUpdateResponses, GroceriesItemsToggleCreateData, GroceriesItemsToggleCreateResponses, GroceriesListData, GroceriesListResponses, GroceriesRetrieveData, GroceriesRetrieveResponses, IntegrationsAddCreateData, IntegrationsAddCreateResponses, IntegrationsSearchListData, IntegrationsSearchListResponses, MealPlansCreateData, MealPlansCreateResponses, MealPlansDestroyData, MealPlansDestroyResponses, MealPlansFoodsCreateData, MealPlansFoodsCreateResponses, MealPlansFoodsDestroyData, MealPlansFoodsDestroyResponses, MealPlansFoodsListData, MealPlansFoodsListResponses, MealPlansFoodsPartialUpdateData, MealPlansFoodsPartialUpdateResponses, MealPlansFoodsRetrieveData, MealPlansFoodsRetrieveResponses, MealPlansFoodsUpdateData, MealPlansFoodsUpdateResponses, MealPlansListData, MealPlansListResponses, MealPlansMarkFavoriteCreateData, MealPlansMarkFavoriteCreateResponses, MealPlansMarkUsedCreateData, MealPlansMarkUsedCreateResponses, MealPlansPartialUpdateData, MealPlansPartialUpdateResponses, MealPlansRecipesCreateData, MealPlansRecipesCreateResponses, MealPlansRecipesDestroyData, MealPlansRecipesDestroyResponses, MealPlansRecipesListData, MealPlansRecipesListResponses, MealPlansRecipesPartialUpdateData, MealPlansRecipesPartialUpdateResponses, MealPlansRecipesRetrieveData, MealPlansRecipesRetrieveResponses, MealPlansRecipesUpdateData, MealPlansRecipesUpdateResponses, MealPlansRetrieveData, MealPlansRetrieveResponses, MealPlansUnmarkFavoriteCreateData, MealPlansUnmarkFavoriteCreateResponses, MealPlansUpdateData, MealPlansUpdateResponses, MealsCreateData, MealsCreateResponses, MealsDayListData, MealsDayListResponses, MealsDefaultsCreateData, MealsDefaultsCreateResponses, MealsDefaultsDestroyData, MealsDefaultsDestroyResponses, MealsDefaultsListData, MealsDefaultsListResponses, MealsDefaultsPartialUpdateData, MealsDefaultsPartialUpdateResponses, MealsDefaultsRetrieveData, MealsDefaultsRetrieveResponses, MealsDefaultsUpdateData, MealsDefaultsUpdateResponses, MealsDestroyData, MealsDestroyResponses, MealsListData, MealsListResponses, MealsMealFoodsCreateData, MealsMealFoodsCreateResponses, MealsMealFoodsDestroyData, MealsMealFoodsDestroyResponses, MealsMealFoodsPartialUpdateData, MealsMealFoodsPartialUpdateResponses, MealsMealFoodsUpdateData, MealsMealFoodsUpdateResponses, MealsPartialUpdateData, MealsPartialUpdateResponses, MealsRetrieveData, MealsRetrieveResponses, MealsUpdateData, MealsUpdateResponses, NutrientsListData, NutrientsListResponses, NutrientsRetrieveData, NutrientsRetrieveResponses, RecipesCopyCreateData, RecipesCopyCreateResponses, RecipesCreateData, RecipesCreateResponses, RecipesDestroyData, RecipesDestroyResponses, RecipesIngredientsCreateData, RecipesIngredientsCreateResponses, RecipesIngredientsDestroyData, RecipesIngredientsDestroyResponses, RecipesIngredientsListData, RecipesIngredientsListResponses, RecipesIngredientsPartialUpdateData, RecipesIngredientsPartialUpdateResponses, RecipesIngredientsRetrieveData, RecipesIngredientsRetrieveResponses, RecipesIngredientsUpdateData, RecipesIngredientsUpdateResponses, RecipesListData, RecipesListResponses, RecipesPartialUpdateData, RecipesPartialUpdateResponses, RecipesPictureCreateData, RecipesPictureCreateResponses, RecipesPictureDestroyData, RecipesPictureDestroyResponses, RecipesPictureRetrieveData, RecipesPictureRetrieveResponses, RecipesRetrieveData, RecipesRetrieveResponses, RecipesTagsCreateData, RecipesTagsCreateResponses, RecipesTagsDestroyData, RecipesTagsDestroyResponses, RecipesTagsListData, RecipesTagsListResponses, RecipesTagsPartialUpdateData, RecipesTagsPartialUpdateResponses, RecipesTagsUpdateData, RecipesTagsUpdateResponses, RecipesToggleFavoriteCreateData, RecipesToggleFavoriteCreateResponses, RecipesUpdateData, RecipesUpdateResponses, SchemaRetrieveData, SchemaRetrieveResponses, UnitsListData, UnitsListResponses } from './types.gen';
+import type { AccountsCsrfRetrieveData, AccountsCsrfRetrieveResponses, AccountsLoginCreateData, AccountsLoginCreateErrors, AccountsLoginCreateResponses, AccountsLogoutCreateData, AccountsLogoutCreateResponses, AccountsMeRetrieveData, AccountsMeRetrieveResponses, AccountsPreferencesPartialUpdateData, AccountsPreferencesPartialUpdateResponses, AccountsPreferencesRetrieveData, AccountsPreferencesRetrieveResponses, FoodsCreateData, FoodsCreateResponses, FoodsDestroyData, FoodsDestroyResponses, FoodsListData, FoodsListResponses, FoodsPartialUpdateData, FoodsPartialUpdateResponses, FoodsRetrieveData, FoodsRetrieveResponses, FoodsTagsCreateData, FoodsTagsCreateResponses, FoodsTagsDestroyData, FoodsTagsDestroyResponses, FoodsTagsListData, FoodsTagsListResponses, FoodsTagsPartialUpdateData, FoodsTagsPartialUpdateResponses, FoodsTagsRetrieveData, FoodsTagsRetrieveResponses, FoodsTagsUpdateData, FoodsTagsUpdateResponses, FoodsUpdateData, FoodsUpdateResponses, GroceriesCreateData, GroceriesCreateResponses, GroceriesDestroyData, GroceriesDestroyResponses, GroceriesItemsCreateData, GroceriesItemsCreateResponses, GroceriesItemsDestroyData, GroceriesItemsDestroyResponses, GroceriesItemsListData, GroceriesItemsListResponses, GroceriesItemsPartialUpdateData, GroceriesItemsPartialUpdateResponses, GroceriesItemsToggleCreateData, GroceriesItemsToggleCreateResponses, GroceriesListData, GroceriesListResponses, GroceriesRetrieveData, GroceriesRetrieveResponses, IntegrationsAddCreateData, IntegrationsAddCreateResponses, IntegrationsSearchListData, IntegrationsSearchListResponses, MealPlansCreateData, MealPlansCreateResponses, MealPlansDestroyData, MealPlansDestroyResponses, MealPlansFoodsCreateData, MealPlansFoodsCreateResponses, MealPlansFoodsDestroyData, MealPlansFoodsDestroyResponses, MealPlansFoodsListData, MealPlansFoodsListResponses, MealPlansFoodsPartialUpdateData, MealPlansFoodsPartialUpdateResponses, MealPlansFoodsRetrieveData, MealPlansFoodsRetrieveResponses, MealPlansFoodsUpdateData, MealPlansFoodsUpdateResponses, MealPlansListData, MealPlansListResponses, MealPlansMarkFavoriteCreateData, MealPlansMarkFavoriteCreateResponses, MealPlansMarkUsedCreateData, MealPlansMarkUsedCreateResponses, MealPlansPartialUpdateData, MealPlansPartialUpdateResponses, MealPlansPlannedMealsCreateData, MealPlansPlannedMealsCreateResponses, MealPlansPlannedMealsDestroyData, MealPlansPlannedMealsDestroyResponses, MealPlansPlannedMealsListData, MealPlansPlannedMealsListResponses, MealPlansPlannedMealsPartialUpdateData, MealPlansPlannedMealsPartialUpdateResponses, MealPlansPlannedMealsRetrieveData, MealPlansPlannedMealsRetrieveResponses, MealPlansPlannedMealsUpdateData, MealPlansPlannedMealsUpdateResponses, MealPlansRecipesCreateData, MealPlansRecipesCreateResponses, MealPlansRecipesDestroyData, MealPlansRecipesDestroyResponses, MealPlansRecipesListData, MealPlansRecipesListResponses, MealPlansRecipesPartialUpdateData, MealPlansRecipesPartialUpdateResponses, MealPlansRecipesRetrieveData, MealPlansRecipesRetrieveResponses, MealPlansRecipesUpdateData, MealPlansRecipesUpdateResponses, MealPlansRetrieveData, MealPlansRetrieveResponses, MealPlansUnmarkFavoriteCreateData, MealPlansUnmarkFavoriteCreateResponses, MealPlansUpdateData, MealPlansUpdateResponses, MealsCreateData, MealsCreateResponses, MealsDayListData, MealsDayListResponses, MealsDefaultsCreateData, MealsDefaultsCreateResponses, MealsDefaultsDestroyData, MealsDefaultsDestroyResponses, MealsDefaultsListData, MealsDefaultsListResponses, MealsDefaultsPartialUpdateData, MealsDefaultsPartialUpdateResponses, MealsDefaultsRetrieveData, MealsDefaultsRetrieveResponses, MealsDefaultsUpdateData, MealsDefaultsUpdateResponses, MealsDestroyData, MealsDestroyResponses, MealsListData, MealsListResponses, MealsMealFoodsCreateData, MealsMealFoodsCreateResponses, MealsMealFoodsDestroyData, MealsMealFoodsDestroyResponses, MealsMealFoodsPartialUpdateData, MealsMealFoodsPartialUpdateResponses, MealsMealFoodsUpdateData, MealsMealFoodsUpdateResponses, MealsPartialUpdateData, MealsPartialUpdateResponses, MealsRetrieveData, MealsRetrieveResponses, MealsUpdateData, MealsUpdateResponses, NutrientsListData, NutrientsListResponses, NutrientsRetrieveData, NutrientsRetrieveResponses, RecipesCopyCreateData, RecipesCopyCreateResponses, RecipesCreateData, RecipesCreateResponses, RecipesDestroyData, RecipesDestroyResponses, RecipesIngredientsCreateData, RecipesIngredientsCreateResponses, RecipesIngredientsDestroyData, RecipesIngredientsDestroyResponses, RecipesIngredientsListData, RecipesIngredientsListResponses, RecipesIngredientsPartialUpdateData, RecipesIngredientsPartialUpdateResponses, RecipesIngredientsRetrieveData, RecipesIngredientsRetrieveResponses, RecipesIngredientsUpdateData, RecipesIngredientsUpdateResponses, RecipesListData, RecipesListResponses, RecipesPartialUpdateData, RecipesPartialUpdateResponses, RecipesPictureCreateData, RecipesPictureCreateResponses, RecipesPictureDestroyData, RecipesPictureDestroyResponses, RecipesPictureRetrieveData, RecipesPictureRetrieveResponses, RecipesRetrieveData, RecipesRetrieveResponses, RecipesTagsCreateData, RecipesTagsCreateResponses, RecipesTagsDestroyData, RecipesTagsDestroyResponses, RecipesTagsListData, RecipesTagsListResponses, RecipesTagsPartialUpdateData, RecipesTagsPartialUpdateResponses, RecipesTagsUpdateData, RecipesTagsUpdateResponses, RecipesToggleFavoriteCreateData, RecipesToggleFavoriteCreateResponses, RecipesUpdateData, RecipesUpdateResponses, SchemaRetrieveData, SchemaRetrieveResponses, UnitsListData, UnitsListResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -447,7 +447,7 @@ export const mealPlansMarkFavoriteCreate = <ThrowOnError extends boolean = false
 });
 
 /**
- * Stamp `last_used_at` to now, e.g. when a plan is applied.
+ * Stamp last_used_at to now.
  */
 export const mealPlansMarkUsedCreate = <ThrowOnError extends boolean = false>(options: Options<MealPlansMarkUsedCreateData, ThrowOnError>): RequestResult<MealPlansMarkUsedCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<MealPlansMarkUsedCreateResponses, unknown, ThrowOnError>({
     security: [{
@@ -477,6 +477,9 @@ export const mealPlansUnmarkFavoriteCreate = <ThrowOnError extends boolean = fal
     }
 });
 
+/**
+ * CRUD for food entries within the current user's meal plans.
+ */
 export const mealPlansFoodsList = <ThrowOnError extends boolean = false>(options?: Options<MealPlansFoodsListData, ThrowOnError>): RequestResult<MealPlansFoodsListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<MealPlansFoodsListResponses, unknown, ThrowOnError>({
     security: [{
             in: 'cookie',
@@ -487,6 +490,9 @@ export const mealPlansFoodsList = <ThrowOnError extends boolean = false>(options
     ...options
 });
 
+/**
+ * CRUD for food entries within the current user's meal plans.
+ */
 export const mealPlansFoodsCreate = <ThrowOnError extends boolean = false>(options: Options<MealPlansFoodsCreateData, ThrowOnError>): RequestResult<MealPlansFoodsCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<MealPlansFoodsCreateResponses, unknown, ThrowOnError>({
     security: [{
             in: 'cookie',
@@ -501,6 +507,9 @@ export const mealPlansFoodsCreate = <ThrowOnError extends boolean = false>(optio
     }
 });
 
+/**
+ * CRUD for food entries within the current user's meal plans.
+ */
 export const mealPlansFoodsDestroy = <ThrowOnError extends boolean = false>(options: Options<MealPlansFoodsDestroyData, ThrowOnError>): RequestResult<MealPlansFoodsDestroyResponses, unknown, ThrowOnError> => (options.client ?? client).delete<MealPlansFoodsDestroyResponses, unknown, ThrowOnError>({
     security: [{
             in: 'cookie',
@@ -511,6 +520,9 @@ export const mealPlansFoodsDestroy = <ThrowOnError extends boolean = false>(opti
     ...options
 });
 
+/**
+ * CRUD for food entries within the current user's meal plans.
+ */
 export const mealPlansFoodsRetrieve = <ThrowOnError extends boolean = false>(options: Options<MealPlansFoodsRetrieveData, ThrowOnError>): RequestResult<MealPlansFoodsRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<MealPlansFoodsRetrieveResponses, unknown, ThrowOnError>({
     security: [{
             in: 'cookie',
@@ -521,6 +533,9 @@ export const mealPlansFoodsRetrieve = <ThrowOnError extends boolean = false>(opt
     ...options
 });
 
+/**
+ * CRUD for food entries within the current user's meal plans.
+ */
 export const mealPlansFoodsPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<MealPlansFoodsPartialUpdateData, ThrowOnError>): RequestResult<MealPlansFoodsPartialUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).patch<MealPlansFoodsPartialUpdateResponses, unknown, ThrowOnError>({
     security: [{
             in: 'cookie',
@@ -535,6 +550,9 @@ export const mealPlansFoodsPartialUpdate = <ThrowOnError extends boolean = false
     }
 });
 
+/**
+ * CRUD for food entries within the current user's meal plans.
+ */
 export const mealPlansFoodsUpdate = <ThrowOnError extends boolean = false>(options: Options<MealPlansFoodsUpdateData, ThrowOnError>): RequestResult<MealPlansFoodsUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<MealPlansFoodsUpdateResponses, unknown, ThrowOnError>({
     security: [{
             in: 'cookie',
@@ -550,9 +568,97 @@ export const mealPlansFoodsUpdate = <ThrowOnError extends boolean = false>(optio
 });
 
 /**
- * CRUD for individual recipe entries within the current user's meal plans.
- *
- * Optionally filter by `?meal_plan=<id>`.
+ * CRUD for meals within the current user's meal plans.
+ */
+export const mealPlansPlannedMealsList = <ThrowOnError extends boolean = false>(options?: Options<MealPlansPlannedMealsListData, ThrowOnError>): RequestResult<MealPlansPlannedMealsListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<MealPlansPlannedMealsListResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/meal-plans/planned-meals/',
+    ...options
+});
+
+/**
+ * CRUD for meals within the current user's meal plans.
+ */
+export const mealPlansPlannedMealsCreate = <ThrowOnError extends boolean = false>(options: Options<MealPlansPlannedMealsCreateData, ThrowOnError>): RequestResult<MealPlansPlannedMealsCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<MealPlansPlannedMealsCreateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/meal-plans/planned-meals/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for meals within the current user's meal plans.
+ */
+export const mealPlansPlannedMealsDestroy = <ThrowOnError extends boolean = false>(options: Options<MealPlansPlannedMealsDestroyData, ThrowOnError>): RequestResult<MealPlansPlannedMealsDestroyResponses, unknown, ThrowOnError> => (options.client ?? client).delete<MealPlansPlannedMealsDestroyResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/meal-plans/planned-meals/{id}/',
+    ...options
+});
+
+/**
+ * CRUD for meals within the current user's meal plans.
+ */
+export const mealPlansPlannedMealsRetrieve = <ThrowOnError extends boolean = false>(options: Options<MealPlansPlannedMealsRetrieveData, ThrowOnError>): RequestResult<MealPlansPlannedMealsRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<MealPlansPlannedMealsRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/meal-plans/planned-meals/{id}/',
+    ...options
+});
+
+/**
+ * CRUD for meals within the current user's meal plans.
+ */
+export const mealPlansPlannedMealsPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<MealPlansPlannedMealsPartialUpdateData, ThrowOnError>): RequestResult<MealPlansPlannedMealsPartialUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).patch<MealPlansPlannedMealsPartialUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/meal-plans/planned-meals/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for meals within the current user's meal plans.
+ */
+export const mealPlansPlannedMealsUpdate = <ThrowOnError extends boolean = false>(options: Options<MealPlansPlannedMealsUpdateData, ThrowOnError>): RequestResult<MealPlansPlannedMealsUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<MealPlansPlannedMealsUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/meal-plans/planned-meals/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for recipe entries within the current user's meal plans.
  */
 export const mealPlansRecipesList = <ThrowOnError extends boolean = false>(options?: Options<MealPlansRecipesListData, ThrowOnError>): RequestResult<MealPlansRecipesListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<MealPlansRecipesListResponses, unknown, ThrowOnError>({
     security: [{
@@ -565,9 +671,7 @@ export const mealPlansRecipesList = <ThrowOnError extends boolean = false>(optio
 });
 
 /**
- * CRUD for individual recipe entries within the current user's meal plans.
- *
- * Optionally filter by `?meal_plan=<id>`.
+ * CRUD for recipe entries within the current user's meal plans.
  */
 export const mealPlansRecipesCreate = <ThrowOnError extends boolean = false>(options: Options<MealPlansRecipesCreateData, ThrowOnError>): RequestResult<MealPlansRecipesCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<MealPlansRecipesCreateResponses, unknown, ThrowOnError>({
     security: [{
@@ -584,9 +688,7 @@ export const mealPlansRecipesCreate = <ThrowOnError extends boolean = false>(opt
 });
 
 /**
- * CRUD for individual recipe entries within the current user's meal plans.
- *
- * Optionally filter by `?meal_plan=<id>`.
+ * CRUD for recipe entries within the current user's meal plans.
  */
 export const mealPlansRecipesDestroy = <ThrowOnError extends boolean = false>(options: Options<MealPlansRecipesDestroyData, ThrowOnError>): RequestResult<MealPlansRecipesDestroyResponses, unknown, ThrowOnError> => (options.client ?? client).delete<MealPlansRecipesDestroyResponses, unknown, ThrowOnError>({
     security: [{
@@ -599,9 +701,7 @@ export const mealPlansRecipesDestroy = <ThrowOnError extends boolean = false>(op
 });
 
 /**
- * CRUD for individual recipe entries within the current user's meal plans.
- *
- * Optionally filter by `?meal_plan=<id>`.
+ * CRUD for recipe entries within the current user's meal plans.
  */
 export const mealPlansRecipesRetrieve = <ThrowOnError extends boolean = false>(options: Options<MealPlansRecipesRetrieveData, ThrowOnError>): RequestResult<MealPlansRecipesRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<MealPlansRecipesRetrieveResponses, unknown, ThrowOnError>({
     security: [{
@@ -614,9 +714,7 @@ export const mealPlansRecipesRetrieve = <ThrowOnError extends boolean = false>(o
 });
 
 /**
- * CRUD for individual recipe entries within the current user's meal plans.
- *
- * Optionally filter by `?meal_plan=<id>`.
+ * CRUD for recipe entries within the current user's meal plans.
  */
 export const mealPlansRecipesPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<MealPlansRecipesPartialUpdateData, ThrowOnError>): RequestResult<MealPlansRecipesPartialUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).patch<MealPlansRecipesPartialUpdateResponses, unknown, ThrowOnError>({
     security: [{
@@ -633,9 +731,7 @@ export const mealPlansRecipesPartialUpdate = <ThrowOnError extends boolean = fal
 });
 
 /**
- * CRUD for individual recipe entries within the current user's meal plans.
- *
- * Optionally filter by `?meal_plan=<id>`.
+ * CRUD for recipe entries within the current user's meal plans.
  */
 export const mealPlansRecipesUpdate = <ThrowOnError extends boolean = false>(options: Options<MealPlansRecipesUpdateData, ThrowOnError>): RequestResult<MealPlansRecipesUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<MealPlansRecipesUpdateResponses, unknown, ThrowOnError>({
     security: [{

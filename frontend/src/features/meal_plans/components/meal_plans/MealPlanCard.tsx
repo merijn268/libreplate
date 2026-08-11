@@ -29,14 +29,7 @@ export default function MealPlanCard({
           onToggleFavorite={onToggleFavorite}
         />
       }
-      meta={
-        <>
-          {mealPlan.food_count} {mealPlan.food_count === 1 ? "food" : "foods"}
-          {" · "}
-          {mealPlan.recipe_count}{" "}
-          {mealPlan.recipe_count === 1 ? "recipe" : "recipes"}
-        </>
-      }
+      meta={<>{mealPlan.description}</>}
     />
   );
 }

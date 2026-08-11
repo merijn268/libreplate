@@ -1,4 +1,4 @@
-import type { StartDayEnum } from "@/api/generated";
+import type { MealPlanPeriodUnitEnum } from "@/api/generated";
 
 import type { MealPlanEditFormState } from "./MealPlanEditForm";
 
@@ -13,6 +13,8 @@ type MealPlanEditFieldsProps = {
     value: MealPlanEditFormState[K],
   ) => void;
   onCancel: () => void;
+  onDelete: () => void;
+  isSaving: boolean;
 };
 
 const days = [
@@ -25,11 +27,21 @@ const days = [
   { value: 6, label: "Sunday" },
 ] as const;
 
+const durationPeriods: Array<{
+  value: MealPlanPeriodUnitEnum;
+  label: string;
+}> = [
+  { value: "day", label: "days" },
+  { value: "week", label: "weeks" },
+];
+
 export default function MealPlanEditFields({
   formState,
   onFieldChange,
   onFieldBlur,
   onCancel,
+  onDelete,
+  isSaving,
 }: MealPlanEditFieldsProps) {
   return (
     <div className="d-flex flex-column gap-3">
@@ -46,6 +58,7 @@ export default function MealPlanEditFields({
           value={formState.name}
           onChange={(event) => onFieldChange("name", event.target.value)}
           onBlur={(event) => onFieldBlur("name", event.target.value)}
+          disabled={isSaving}
           required
         />
       </div>
@@ -63,6 +76,7 @@ export default function MealPlanEditFields({
           value={formState.description}
           onChange={(event) => onFieldChange("description", event.target.value)}
           onBlur={(event) => onFieldBlur("description", event.target.value)}
+          disabled={isSaving}
         />
       </div>
 
@@ -85,10 +99,29 @@ export default function MealPlanEditFields({
             onBlur={(event) =>
               onFieldBlur("duration", Number(event.target.value))
             }
+            disabled={isSaving}
             required
           />
 
-          <span className="input-group-text">days</span>
+          <select
+            id="meal-plan-duration-period"
+            name="duration_period"
+            className="form-select w-auto flex-grow-0"
+            value={formState.duration_period}
+            onChange={(event) =>
+              onFieldBlur(
+                "duration_period",
+                event.target.value as MealPlanPeriodUnitEnum,
+              )
+            }
+            disabled={isSaving}
+          >
+            {durationPeriods.map((period) => (
+              <option key={period.value} value={period.value}>
+                {period.label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
@@ -102,13 +135,10 @@ export default function MealPlanEditFields({
           name="start_day"
           className="form-select"
           value={formState.start_day}
-          onChange={(event) => {
-            const value = Number(event.target.value);
-
-            if (value >= 0 && value <= 6) {
-              onFieldBlur("start_day", value as StartDayEnum);
-            }
-          }}
+          onChange={(event) =>
+            onFieldBlur("start_day", Number(event.target.value))
+          }
+          disabled={isSaving}
         >
           {days.map((day) => (
             <option key={day.value} value={day.value}>
@@ -126,6 +156,7 @@ export default function MealPlanEditFields({
           className="form-check-input"
           checked={formState.is_favorite}
           onChange={(event) => onFieldBlur("is_favorite", event.target.checked)}
+          disabled={isSaving}
         />
 
         <label htmlFor="meal-plan-favorite" className="form-check-label">
@@ -133,9 +164,23 @@ export default function MealPlanEditFields({
         </label>
       </div>
 
-      <div className="mt-2">
-        <button type="button" className="btn btn-secondary" onClick={onCancel}>
+      <div className="d-flex justify-content-between align-items-center mt-2">
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={onCancel}
+          disabled={isSaving}
+        >
           Back
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-outline-danger"
+          onClick={onDelete}
+          disabled={isSaving}
+        >
+          Delete meal plan
         </button>
       </div>
     </div>

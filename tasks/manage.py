@@ -13,6 +13,9 @@ from .utils import info
 # TODO There should be a task that makes proper migrations for release. Some
 # fields don't get the proper values automatically.
 
+# TODO manage is misleader, since it can imply manage.py is called with these
+# tasks
+
 
 def latest_master_sha():
     """

@@ -206,6 +206,12 @@ CSRF_COOKIE_SECURE = not DEBUG
 SPECTACULAR_SETTINGS = {
     "TITLE": "LibrePlate API",
     "VERSION": "0.0.0",
+    # TODO overwritting Enums in settings file is ugly. Without this it gives
+    # a warning `encountered multiple names for the same choice set
+    # (IntervalEnum).`
+    "ENUM_NAME_OVERRIDES": {
+        "MealPlanPeriodUnitEnum": "apps.meal_plans.models.MealPlanPeriodUnit",
+    },
     "APPEND_COMPONENTS": {
         "securitySchemes": {
             "cookieAuth": {
@@ -218,21 +224,21 @@ SPECTACULAR_SETTINGS = {
     "SWAGGER_UI_SETTINGS": {
         "withCredentials": True,
         "requestInterceptor": """
-        function(request) {
-            console.log("INTERCEPTOR RUNNING", request);
+function(request) {
+    console.log("INTERCEPTOR RUNNING", request);
 
-            const csrf = document.cookie
-                .split("; ")
-                .find(row => row.startsWith("csrftoken="));
+    const csrf = document.cookie
+        .split("; ")
+        .find(row => row.startsWith("csrftoken="));
 
-            if (csrf) {
-                request.headers["X-CSRFToken"] = csrf.split("=")[1];
-            }
+    if (csrf) {
+        request.headers["X-CSRFToken"] = csrf.split("=")[1];
+    }
 
-            request.credentials = "include";
+    request.credentials = "include";
 
-            return request;
-        }
-        """,
+    return request;
+}
+""",
     },
 }

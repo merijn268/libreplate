@@ -2,15 +2,20 @@ import calendar
 
 from apps.core import models as core_models
 from apps.foods.models import Food
-from apps.meals.models import DefaultMeal
 from apps.recipes.models import Recipe
 from apps.tags.models import BaseTag
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
 class MealPlanTag(BaseTag):
     pass
+
+
+class MealPlanPeriodUnit(models.TextChoices):
+    DAY = "day", "Day"
+    WEEK = "week", "Week"
 
 
 class MealPlan(
@@ -28,37 +33,67 @@ class MealPlan(
     )
 
     start_day = models.PositiveSmallIntegerField(
-        choices=[(day.value, day.name.title()) for day in calendar.Day],
         default=calendar.Day.MONDAY.value,
-        validators=[MaxValueValidator(6)],
-        help_text="Weekday number on which the meal plan starts (Monday=0)",
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(6),
+        ],
+        help_text="Weekday number on which the meal plan starts (Monday=0).",
     )
 
     duration = models.PositiveSmallIntegerField(
-        default=7,
+        default=1,
         validators=[MinValueValidator(1)],
-        help_text="Duration of the meal plan in days.",
+        help_text="Length of the meal plan.",
     )
 
+    duration_period = models.CharField(
+        max_length=4,
+        choices=MealPlanPeriodUnit.choices,
+        default=MealPlanPeriodUnit.WEEK,
+        help_text="Period used for the meal plan duration.",
+    )
 
-class MealPlanEntry(models.Model):
+    def get_duration_days(self) -> int:
+        if self.duration_period == MealPlanPeriodUnit.WEEK:
+            return self.duration * 7
+
+        return self.duration
+
+
+class PlannedMeal(
+    core_models.HasName,
+):
     """
-    Abstract base class for entries in a meal plan.
+    A meal scheduled within a meal plan.
     """
 
-    meal_plan = models.ForeignKey(MealPlan, on_delete=models.CASCADE)
-    number_of_servings = models.FloatField(default=1)
+    meal_plan = models.ForeignKey(
+        MealPlan,
+        on_delete=models.CASCADE,
+        related_name="planned_meals",
+    )
 
-    meal = models.ForeignKey(DefaultMeal, on_delete=models.CASCADE)
     day = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(0)],
         help_text=(
             "Day offset from the meal plan's start day. "
             "0 = start day, 1 = next day, etc."
         ),
     )
 
-    class Meta:
-        abstract = True
+    order = models.PositiveIntegerField(
+        default=0,
+        help_text="Display order of the meal within the day.",
+    )
+
+    def clean(self):
+        super().clean()
+
+        if self.meal_plan_id and self.day >= self.meal_plan.get_duration_days():
+            raise ValidationError(
+                {"day": ("Day offset must be less than the meal plan duration.")}
+            )
 
     def get_weekday(self) -> int:
         return (self.meal_plan.start_day + self.day) % 7
@@ -66,55 +101,135 @@ class MealPlanEntry(models.Model):
     def get_weekday_display(self) -> str:
         return calendar.day_name[self.get_weekday()]
 
+
+class PlannedMealEntry(models.Model):
+    """
+    An item served as part of a planned meal.
+    """
+
+    planned_meal = models.ForeignKey(
+        PlannedMeal,
+        on_delete=models.CASCADE,
+        related_name="entries",
+    )
+
+    number_of_servings = models.FloatField(
+        default=1,
+        validators=[MinValueValidator(0)],
+    )
+
+    def get_day_of_week(self, day: int | None = None) -> int:
+        """
+        Return the weekday for a day offset.
+
+        Monday=0 through Sunday=6.
+        """
+        if day is None:
+            day = self.planned_meal.day
+
+        return (self.planned_meal.meal_plan.start_day + day) % 7
+
+    def get_day_of_week_display(self, day: int | None = None) -> str:
+        return calendar.day_name[self.get_day_of_week(day)]
+
     def get_item(self):
         raise NotImplementedError
 
 
-class MealPlanFood(MealPlanEntry):
-    meal_plan = models.ForeignKey(
-        MealPlan,
+class PlannedMealEntryRecurrence(models.Model):
+    """
+    Defines how a planned meal entry repeats.
+
+    A recurrence is expressed relative to the planned meal's day.
+    """
+
+    class End(models.TextChoices):
+        NEVER = "never", "Never"
+        ON_DAY = "on_day", "On day"
+        AFTER = "after", "After"
+
+    planned_meal_entry = models.OneToOneField(
+        PlannedMealEntry,
         on_delete=models.CASCADE,
-        related_name="foods",
+        related_name="recurrence",
     )
 
-    meal = models.ForeignKey(
-        DefaultMeal,
-        on_delete=models.CASCADE,
-        related_name="meal_plan_foods",
+    interval_count = models.PositiveSmallIntegerField(
+        default=1,
+        validators=[MinValueValidator(1)],
+        help_text=(
+            "Number of intervals between repetitions. "
+            "For example, 2 with interval 'week' means every 2 weeks."
+        ),
     )
 
+    interval = models.CharField(
+        max_length=10,
+        choices=MealPlanPeriodUnit.choices,
+        default=MealPlanPeriodUnit.WEEK,
+        help_text="Unit used by interval_count.",
+    )
+
+    weekdays = models.JSONField(
+        default=list,
+        blank=True,
+        help_text=(
+            "List of weekday numbers on which the entry repeats when "
+            "interval is 'week'. Values must be integers from 0 to 6, "
+            "where Monday=0 and Sunday=6. For example, [0, 2, 4] "
+            "means Monday, Wednesday, and Friday."
+        ),
+    )
+
+    end = models.CharField(
+        max_length=10,
+        choices=End.choices,
+        default=End.NEVER,
+        help_text="Condition that determines when repetition ends.",
+    )
+
+    end_day = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0)],
+        help_text=(
+            "Day offset from the meal plan's start day on which repetition ends."
+        ),
+    )
+
+    end_after = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(1)],
+        help_text=("Number of occurrences after which repetition ends."),
+    )
+
+
+class PlannedMealFood(PlannedMealEntry):
     food = models.ForeignKey(
-        "foods.Food",
+        Food,
         on_delete=models.CASCADE,
         related_name="meal_plan_entries",
     )
 
-    serving_size = models.FloatField()
+    serving_size = models.FloatField(
+        validators=[MinValueValidator(0)],
+    )
 
     def get_item(self) -> Food:
         return self.food
 
 
-class MealPlanRecipe(MealPlanEntry):
-    meal_plan = models.ForeignKey(
-        MealPlan,
-        on_delete=models.CASCADE,
-        related_name="recipes",
-    )
-
-    meal = models.ForeignKey(
-        DefaultMeal,
-        on_delete=models.CASCADE,
-        related_name="meal_plan_recipes",
-    )
+class PlannedMealRecipe(PlannedMealEntry):
+    """
+    A recipe served as part of a planned meal.
+    """
 
     recipe = models.ForeignKey(
-        "recipes.Recipe",
+        Recipe,
         on_delete=models.CASCADE,
         related_name="meal_plan_entries",
     )
-
-    serving_size = models.FloatField(default=100)
 
     def get_item(self) -> Recipe:
         return self.recipe

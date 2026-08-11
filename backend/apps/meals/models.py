@@ -26,6 +26,7 @@ class DefaultMeal(models.Model):
         return self.name
 
 
+# TODO user core mixins here.
 class Meal(models.Model):
     """
     A real meal on a specific date.
@@ -48,15 +49,6 @@ class Meal(models.Model):
         blank=True,
         related_name="meals",
     )
-
-    class Meta:
-        ordering = [
-            "order",
-            "id",
-        ]
-
-    def __str__(self):
-        return self.name
 
 
 class MealFood(models.Model):

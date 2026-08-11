@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import MealPlanList from "./components/recipes/MealPlanList";
+import MealPlanList from "./components/meal_plans/MealPlanList";
 import MealPlanSearchBar, {
   type MealPlanSortMethod,
-} from "./components/recipes/MealPlanSearchBar";
+} from "./components/meal_plans/MealPlanSearchBar";
 import RoundAddButton from "@/components/ui/RoundAddButton";
 
 import {
