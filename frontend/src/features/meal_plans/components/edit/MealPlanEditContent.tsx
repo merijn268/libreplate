@@ -42,6 +42,7 @@ export default function MealPlanEditContent({
         onDateChange={handleDateChange}
       />
 
+      {/* TODO nutrient bar should get a list of nutrients instead. */}
       <NutrientTotalsBar
         energy={getNutrientAmount("energy")}
         protein={getNutrientAmount("protein")}

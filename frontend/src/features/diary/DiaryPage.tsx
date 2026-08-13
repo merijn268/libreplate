@@ -12,7 +12,7 @@ import type { DayMeal, Food, Recipe } from "@/api/generated";
 import NutrientTotalsBar from "../../components/ui/bars/NutrientsTotalBar";
 import FoodPickerModal from "../foods/components/FoodPickerModal";
 import RecipePickerModal from "../recipes/components/common/Recipepickermodal";
-import AddToMealModal from "./components/AddToMealModal";
+import AddToMealModal from "../../components/AddToMealModal";
 
 import DiaryHeader from "../../components/ui/DateSelector";
 import MealList from "./components/MealList";
@@ -211,8 +211,10 @@ export default function DiaryPage() {
         onSelect={handleRecipeSelect}
       />
 
+      {/* TODO this should be in a component not in diary page. */}
       <AddToMealModal
         isOpen={isAddModalOpen}
+        title="Add to meals"
         onClose={closeAddModal}
         onFood={openFoodPicker}
         onRecipe={openRecipePicker}

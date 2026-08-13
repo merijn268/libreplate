@@ -2,6 +2,7 @@ import Modal from "@/components/ui/modals/Modal";
 
 type Props = {
   isOpen: boolean;
+  title: string;
   onClose: () => void;
   onFood: () => void;
   onRecipe: () => void;
@@ -9,12 +10,13 @@ type Props = {
 
 export default function AddToMealModal({
   isOpen,
+  title,
   onClose,
   onFood,
   onRecipe,
 }: Props) {
   return (
-    <Modal isOpen={isOpen} title="Add to meal" onClose={onClose}>
+    <Modal isOpen={isOpen} title={title} onClose={onClose}>
       <div className="d-grid gap-3">
         <button className="btn btn-outline-primary" onClick={onRecipe}>
           <i className="bi bi-journal-text me-2" />
