@@ -61,9 +61,7 @@ class MealPlan(
         return self.duration
 
 
-class PlannedMeal(
-    core_models.HasName,
-):
+class PlannedMeal(core_models.HasName):
     """
     A meal scheduled within a meal plan.
     """

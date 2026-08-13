@@ -120,10 +120,7 @@ class PlannedMealFoodViewSet(viewsets.ModelViewSet):
     """
     queryset = PlannedMealFood.objects.all()
     serializer_class = PlannedMealFoodSerializer
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwner,
-    ]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_queryset(self):
         queryset = PlannedMealFood.objects.filter(
@@ -131,14 +128,12 @@ class PlannedMealFoodViewSet(viewsets.ModelViewSet):
         )
 
         meal_plan_id = self.request.query_params.get("meal_plan")
-
         if meal_plan_id is not None:
             queryset = queryset.filter(
                 planned_meal__meal_plan_id=meal_plan_id,
             )
 
         planned_meal_id = self.request.query_params.get("planned_meal")
-
         if planned_meal_id is not None:
             queryset = queryset.filter(
                 planned_meal_id=planned_meal_id,
