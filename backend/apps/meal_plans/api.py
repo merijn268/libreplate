@@ -113,6 +113,12 @@ class PlannedMealViewSet(viewsets.ModelViewSet):
 class PlannedMealFoodViewSet(viewsets.ModelViewSet):
     """CRUD for food entries within the current user's meal plans."""
 
+    """
+    `queryset` declares the model/queryset for DRF and schema generation.
+    `get_queryset()` is used for actual requests and restricts results
+    to meal-plan foods owned by the authenticated user.
+    """
+    queryset = PlannedMealFood.objects.all()
     serializer_class = PlannedMealFoodSerializer
     permission_classes = [
         permissions.IsAuthenticated,

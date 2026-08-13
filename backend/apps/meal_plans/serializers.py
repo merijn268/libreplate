@@ -1,8 +1,10 @@
 import calendar
 
 from apps.foods.models import Food
+from apps.foods.serializers import FoodSerializer
 from apps.meals.models import DefaultMeal
 from apps.recipes.models import Recipe
+from apps.recipes.serializers import RecipeSerializer
 from rest_framework import serializers
 
 from .models import (
@@ -29,7 +31,6 @@ class PlannedMealEntryRecurrenceSerializer(serializers.ModelSerializer):
 
 
 class PlannedMealFoodSerializer(serializers.ModelSerializer):
-
     planned_meal_id = serializers.PrimaryKeyRelatedField(
         queryset=PlannedMeal.objects.all(),
         source="planned_meal",
@@ -38,13 +39,8 @@ class PlannedMealFoodSerializer(serializers.ModelSerializer):
         queryset=Food.objects.all(),
         source="food",
     )
-    food_name = serializers.CharField(
-        source="food.name",
-        read_only=True,
-    )
-    recurrence = PlannedMealEntryRecurrenceSerializer(
-        required=False,
-    )
+    food = FoodSerializer(read_only=True)
+    recurrence = PlannedMealEntryRecurrenceSerializer(required=False)
 
     class Meta:
         model = PlannedMealFood
@@ -52,30 +48,22 @@ class PlannedMealFoodSerializer(serializers.ModelSerializer):
             "id",
             "planned_meal_id",
             "food_id",
-            "food_name",
+            "food",
             "serving_size",
             "number_of_servings",
             "recurrence",
         ]
 
     def create(self, validated_data):
-        recurrence_data = validated_data.pop(
-            "recurrence",
-            None,
-        )
-
-        entry = PlannedMealFood.objects.create(
-            **validated_data,
-        )
+        recurrence_data = validated_data.pop("recurrence", None)
+        entry = PlannedMealFood.objects.create(**validated_data)
 
         if recurrence_data is not None:
             PlannedMealEntryRecurrence.objects.create(
                 planned_meal_entry=entry,
                 **recurrence_data,
             )
-
         return entry
-
 
 
 class PlannedMealRecipeSerializer(serializers.ModelSerializer):
@@ -83,20 +71,15 @@ class PlannedMealRecipeSerializer(serializers.ModelSerializer):
         queryset=Recipe.objects.all(),
         source="recipe",
     )
-    recipe_name = serializers.CharField(
-        source="recipe.name",
-        read_only=True,
-    )
-    recurrence = PlannedMealEntryRecurrenceSerializer(
-        required=False,
-    )
+    recipe = RecipeSerializer(read_only=True)
+    recurrence = PlannedMealEntryRecurrenceSerializer(required=False)
 
     class Meta:
         model = PlannedMealRecipe
         fields = [
             "id",
             "recipe_id",
-            "recipe_name",
+            "recipe",
             "number_of_servings",
             "recurrence",
         ]

@@ -11,6 +11,8 @@ from rest_framework import serializers
 from .models import Food, FoodNutrient, FoodTag
 
 
+# TODO Should also be a recipe nutrient serializer that uses the same serializer.
+# Makes it easier to work with in react
 class FoodNutrientSerializer(serializers.ModelSerializer):
     nutrient = NutrientBriefSerializer(read_only=True)
     nutrient_id = serializers.PrimaryKeyRelatedField(

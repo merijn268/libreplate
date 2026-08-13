@@ -6,6 +6,7 @@ import MealPlanDateSelectorModal from "./MealPlanDateSelectorModal";
 
 type MealPlanDateSelectorProps = {
   mealPlan: MealPlan;
+  onDateChange?: (day: number, weekday: string) => void;
 };
 
 const WEEKDAYS = [
@@ -20,8 +21,9 @@ const WEEKDAYS = [
 
 export default function MealPlanDateSelector({
   mealPlan,
+  onDateChange,
 }: MealPlanDateSelectorProps) {
-  const [selectedDay, setSelectedDay] = useState(1);
+  const [selectedDay, setSelectedDay] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const duration = mealPlan.duration ?? 1;
@@ -36,30 +38,32 @@ export default function MealPlanDateSelector({
 
   const hasMultipleWeeks = mealPlan.duration_period === "week" && duration > 1;
 
-  useEffect(() => {
-    setSelectedDay((day) => Math.min(day, durationInDays));
-  }, [durationInDays]);
-
   const weekday = useMemo(() => {
     const startDay = mealPlan.start_day ?? 0;
+    const weekdayIndex = (startDay + selectedDay) % 7;
 
-    const weekdayIndex = (startDay + selectedDay - 1) % 7;
-
-    return WEEKDAYS[weekdayIndex];
+    return WEEKDAYS[weekdayIndex] ?? "";
   }, [mealPlan.start_day, selectedDay]);
 
-  const displayDay = hasMultipleWeeks
-    ? ((selectedDay - 1) % 7) + 1
-    : selectedDay;
+  useEffect(() => {
+    setSelectedDay((day) => Math.min(day, durationInDays - 1));
+  }, [durationInDays]);
 
-  const weekNumber = hasMultipleWeeks ? Math.ceil(selectedDay / 7) : null;
+  useEffect(() => {
+    onDateChange?.(selectedDay, weekday);
+  }, [selectedDay, weekday, onDateChange]);
+
+  // Convert the zero-based API value to a human-friendly number.
+  const displayDay = hasMultipleWeeks ? (selectedDay % 7) + 1 : selectedDay + 1;
+
+  const weekNumber = hasMultipleWeeks ? Math.floor(selectedDay / 7) + 1 : null;
 
   const handlePrevious = () => {
-    setSelectedDay((day) => Math.max(1, day - 1));
+    setSelectedDay((day) => Math.max(0, day - 1));
   };
 
   const handleNext = () => {
-    setSelectedDay((day) => Math.min(durationInDays, day + 1));
+    setSelectedDay((day) => Math.min(durationInDays - 1, day + 1));
   };
 
   const handleSelectDay = (day: number) => {

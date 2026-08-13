@@ -3264,10 +3264,13 @@ components:
         id:
           type: integer
           readOnly: true
+        planned_meal_id:
+          type: integer
         food_id:
           type: integer
-        food_name:
-          type: string
+        food:
+          allOf:
+          - $ref: '#/components/schemas/Food'
           readOnly: true
         serving_size:
           type: number
@@ -3287,8 +3290,9 @@ components:
           readOnly: true
         recipe_id:
           type: integer
-        recipe_name:
-          type: string
+        recipe:
+          allOf:
+          - $ref: '#/components/schemas/Recipe'
           readOnly: true
         number_of_servings:
           type: number
@@ -3491,10 +3495,13 @@ components:
         id:
           type: integer
           readOnly: true
+        planned_meal_id:
+          type: integer
         food_id:
           type: integer
-        food_name:
-          type: string
+        food:
+          allOf:
+          - $ref: '#/components/schemas/Food'
           readOnly: true
         serving_size:
           type: number
@@ -3507,9 +3514,10 @@ components:
         recurrence:
           $ref: '#/components/schemas/PlannedMealEntryRecurrence'
       required:
+      - food
       - food_id
-      - food_name
       - id
+      - planned_meal_id
       - serving_size
     PlannedMealRecipe:
       type: object
@@ -3519,8 +3527,9 @@ components:
           readOnly: true
         recipe_id:
           type: integer
-        recipe_name:
-          type: string
+        recipe:
+          allOf:
+          - $ref: '#/components/schemas/Recipe'
           readOnly: true
         number_of_servings:
           type: number
@@ -3530,8 +3539,8 @@ components:
           $ref: '#/components/schemas/PlannedMealEntryRecurrence'
       required:
       - id
+      - recipe
       - recipe_id
-      - recipe_name
     Recipe:
       type: object
       properties:

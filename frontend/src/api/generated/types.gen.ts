@@ -322,8 +322,9 @@ export type PatchedPlannedMeal = {
 
 export type PatchedPlannedMealFood = {
     readonly id?: number;
+    planned_meal_id?: number;
     food_id?: number;
-    readonly food_name?: string;
+    food?: Food;
     serving_size?: number;
     number_of_servings?: number;
     recurrence?: PlannedMealEntryRecurrence;
@@ -332,7 +333,7 @@ export type PatchedPlannedMealFood = {
 export type PatchedPlannedMealRecipe = {
     readonly id?: number;
     recipe_id?: number;
-    readonly recipe_name?: string;
+    recipe?: Recipe;
     number_of_servings?: number;
     recurrence?: PlannedMealEntryRecurrence;
 };
@@ -434,8 +435,9 @@ export type PlannedMealEntryRecurrence = {
 
 export type PlannedMealFood = {
     readonly id: number;
+    planned_meal_id: number;
     food_id: number;
-    readonly food_name: string;
+    food: Food;
     serving_size: number;
     number_of_servings?: number;
     recurrence?: PlannedMealEntryRecurrence;
@@ -444,7 +446,7 @@ export type PlannedMealFood = {
 export type PlannedMealRecipe = {
     readonly id: number;
     recipe_id: number;
-    readonly recipe_name: string;
+    recipe: Recipe;
     number_of_servings?: number;
     recurrence?: PlannedMealEntryRecurrence;
 };
@@ -749,6 +751,7 @@ export type PatchedPlannedMealWritable = {
 };
 
 export type PatchedPlannedMealFoodWritable = {
+    planned_meal_id?: number;
     food_id?: number;
     serving_size?: number;
     number_of_servings?: number;
@@ -802,6 +805,7 @@ export type PlannedMealWritable = {
 };
 
 export type PlannedMealFoodWritable = {
+    planned_meal_id: number;
     food_id: number;
     serving_size: number;
     number_of_servings?: number;

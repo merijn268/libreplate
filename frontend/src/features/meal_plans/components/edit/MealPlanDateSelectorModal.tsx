@@ -41,7 +41,7 @@ export default function MealPlanDateSelectorModal({
   const hasMultipleWeeks = mealPlan.duration_period === "week" && duration > 1;
 
   const days = useMemo(() => {
-    return Array.from({ length: durationInDays }, (_, index) => index + 1);
+    return Array.from({ length: durationInDays }, (_, index) => index);
   }, [durationInDays]);
 
   return (
@@ -62,23 +62,19 @@ export default function MealPlanDateSelectorModal({
       onClose={onClose}
     >
       <div className="list-group">
-        {days.map((absoluteDay) => {
-          const dayInWeek = ((absoluteDay - 1) % 7) + 1;
-
-          const weekNumber = Math.ceil(absoluteDay / 7);
+        {days.map((day) => {
+          const dayInWeek = (day % 7) + 1;
+          const weekNumber = Math.floor(day / 7) + 1;
 
           const startDay = mealPlan.start_day ?? 0;
+          const weekdayIndex = (startDay + day) % 7;
+          const weekday = WEEKDAYS[weekdayIndex] ?? "";
 
-          const weekdayIndex = (startDay + absoluteDay - 1) % 7;
-
-          const weekday = WEEKDAYS[weekdayIndex];
-
-          const isSelected = absoluteDay === selectedDay;
-
+          const isSelected = day === selectedDay;
           const showWeekHeading = hasMultipleWeeks && dayInWeek === 1;
 
           return (
-            <div key={absoluteDay}>
+            <div key={day}>
               {showWeekHeading && (
                 <div className="px-3 py-2 mt-2 text-body-secondary small fw-semibold">
                   Week {weekNumber}
@@ -90,7 +86,7 @@ export default function MealPlanDateSelectorModal({
                 className={`list-group-item list-group-item-action d-flex align-items-center justify-content-between ${
                   isSelected ? "active" : ""
                 }`}
-                onClick={() => onSelectDay(absoluteDay)}
+                onClick={() => onSelectDay(day)}
               >
                 <span>{weekday}</span>
 
