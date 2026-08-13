@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import type { MealPlan } from "@/api/generated";
 
 import MealPlanDateSelector from "./MealPlanDateSelector";
@@ -21,9 +21,23 @@ export default function MealPlanEditContent({
     weekday: "",
   });
 
-  const handleDateChange = (day: number, weekday: string) => {
-    setSelectedDate({ day, weekday });
-  };
+  /*
+   * Keep the callback identity stable.
+   *
+   * Without useCallback, MealPlanDateSelector receives a new
+   * onDateChange function on every render. Its effect would then
+   * run again, update this state, cause another render, create
+   * another callback, and repeat indefinitely.
+   */
+  const handleDateChange = useCallback((day: number, weekday: string) => {
+    setSelectedDate((current) => {
+      if (current.day === day && current.weekday === weekday) {
+        return current;
+      }
+
+      return { day, weekday };
+    });
+  }, []);
 
   const dayNutrients = useMemo(
     () => getDayNutrients(mealPlan, selectedDate.day),
@@ -42,7 +56,6 @@ export default function MealPlanEditContent({
         onDateChange={handleDateChange}
       />
 
-      {/* TODO nutrient bar should get a list of nutrients instead. */}
       <NutrientTotalsBar
         energy={getNutrientAmount("energy")}
         protein={getNutrientAmount("protein")}

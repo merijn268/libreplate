@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import SelectorBar from "@/components/ui/bars/SelectorBar";
 import type { MealPlan } from "@/api/generated";
 
@@ -28,48 +28,79 @@ export default function MealPlanDateSelector({
 
   const duration = mealPlan.duration ?? 1;
 
-  const durationInDays = useMemo(() => {
-    if (mealPlan.duration_period === "week") {
-      return duration * 7;
-    }
-
-    return duration;
-  }, [duration, mealPlan.duration_period]);
+  const durationInDays =
+    mealPlan.duration_period === "week" ? duration * 7 : duration;
 
   const hasMultipleWeeks = mealPlan.duration_period === "week" && duration > 1;
 
-  const weekday = useMemo(() => {
+  const getWeekday = (day: number) => {
     const startDay = mealPlan.start_day ?? 0;
-    const weekdayIndex = (startDay + selectedDay) % 7;
+    const weekdayIndex = (startDay + day) % 7;
 
     return WEEKDAYS[weekdayIndex] ?? "";
-  }, [mealPlan.start_day, selectedDay]);
+  };
+
+  const weekday = getWeekday(selectedDay);
 
   useEffect(() => {
-    setSelectedDay((day) => Math.min(day, durationInDays - 1));
+    setSelectedDay((currentDay) => {
+      const nextDay = Math.min(
+        Math.max(currentDay, 0),
+        Math.max(durationInDays - 1, 0),
+      );
+
+      return currentDay === nextDay ? currentDay : nextDay;
+    });
   }, [durationInDays]);
 
-  useEffect(() => {
-    onDateChange?.(selectedDay, weekday);
-  }, [selectedDay, weekday, onDateChange]);
-
-  // Convert the zero-based API value to a human-friendly number.
-  const displayDay = hasMultipleWeeks ? (selectedDay % 7) + 1 : selectedDay + 1;
-
-  const weekNumber = hasMultipleWeeks ? Math.floor(selectedDay / 7) + 1 : null;
+  const notifyDateChange = (day: number) => {
+    onDateChange?.(day, getWeekday(day));
+  };
 
   const handlePrevious = () => {
-    setSelectedDay((day) => Math.max(0, day - 1));
+    setSelectedDay((currentDay) => {
+      const nextDay = Math.max(0, currentDay - 1);
+
+      if (nextDay !== currentDay) {
+        notifyDateChange(nextDay);
+      }
+
+      return nextDay;
+    });
   };
 
   const handleNext = () => {
-    setSelectedDay((day) => Math.min(durationInDays - 1, day + 1));
+    setSelectedDay((currentDay) => {
+      const nextDay = Math.min(durationInDays - 1, currentDay + 1);
+
+      if (nextDay !== currentDay) {
+        notifyDateChange(nextDay);
+      }
+
+      return nextDay;
+    });
   };
 
   const handleSelectDay = (day: number) => {
-    setSelectedDay(day);
+    const clampedDay = Math.min(
+      Math.max(day, 0),
+      Math.max(durationInDays - 1, 0),
+    );
+
+    setSelectedDay((currentDay) => {
+      if (currentDay !== clampedDay) {
+        notifyDateChange(clampedDay);
+      }
+
+      return clampedDay;
+    });
+
     setIsModalOpen(false);
   };
+
+  const displayDay = hasMultipleWeeks ? (selectedDay % 7) + 1 : selectedDay + 1;
+
+  const weekNumber = hasMultipleWeeks ? Math.floor(selectedDay / 7) + 1 : null;
 
   return (
     <>
