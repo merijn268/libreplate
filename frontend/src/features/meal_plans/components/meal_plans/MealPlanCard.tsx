@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { MealPlanMinimal } from "@/api/generated/types.gen";
 
 import ItemCard from "@/components/ItemCard";
-import MealPlanCardActions from "../MealPlanCardActions";
+import MealPlanCardActions from "./MealPlanCardActions";
 
 interface Props {
   mealPlan: MealPlanMinimal;
