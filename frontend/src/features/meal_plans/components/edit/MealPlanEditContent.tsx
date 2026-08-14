@@ -50,7 +50,7 @@ export default function MealPlanEditContent({
     )?.amount ?? 0;
 
   return (
-    <div className="container">
+    <div>
       <MealPlanDateSelector
         mealPlan={mealPlan}
         onDateChange={handleDateChange}

@@ -93,7 +93,7 @@ export default function MealPlanEditForm({
   }
 
   return (
-    <div className="container">
+    <div>
       <MealPlanEditFields
         formState={formState}
         onFieldChange={updateField}

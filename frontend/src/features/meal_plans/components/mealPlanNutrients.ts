@@ -7,6 +7,8 @@ import type {
   RecipeNutrient,
 } from "@/api/generated";
 
+import { entryOccursOnDay } from "@/components/ui/meal_card/mealEntryRecurrence";
+
 type NutrientTotal = {
   name: string;
   amount: number;
@@ -75,8 +77,10 @@ export function getPlannedMealNutrients(
 /**
  * Gets the total nutrients for a day in a meal plan.
  *
- * Combines the nutrients from every planned meal whose `day`
- * matches the supplied day offset.
+ * Foods and recipes can recur onto a different day than
+ * their source planned meal. Recurring entries therefore
+ * contribute to the selected day's totals whenever their
+ * recurrence says they occur on that day.
  */
 export function getDayNutrients(
   mealPlan: MealPlan,
@@ -85,12 +89,44 @@ export function getDayNutrients(
   const totals = new Map<string, NutrientTotal>();
 
   for (const plannedMeal of mealPlan.planned_meals ?? []) {
-    if (plannedMeal.day !== day) {
-      continue;
+    /*
+     * Foods
+     */
+    for (const food of plannedMeal.foods ?? []) {
+      const occurs = entryOccursOnDay({
+        sourceDay: plannedMeal.day,
+        targetDay: day,
+        recurrence: food.recurrence,
+        mealPlanStartDay: mealPlan.start_day,
+      });
+
+      if (!occurs) {
+        continue;
+      }
+
+      for (const nutrient of getFoodNutrients(food)) {
+        addNutrient(totals, nutrient.name, nutrient.amount);
+      }
     }
 
-    for (const nutrient of getPlannedMealNutrients(plannedMeal)) {
-      addNutrient(totals, nutrient.name, nutrient.amount);
+    /*
+     * Recipes
+     */
+    for (const recipe of plannedMeal.recipes ?? []) {
+      const occurs = entryOccursOnDay({
+        sourceDay: plannedMeal.day,
+        targetDay: day,
+        recurrence: recipe.recurrence,
+        mealPlanStartDay: mealPlan.start_day,
+      });
+
+      if (!occurs) {
+        continue;
+      }
+
+      for (const nutrient of getRecipeNutrients(recipe)) {
+        addNutrient(totals, nutrient.name, nutrient.amount);
+      }
     }
   }
 

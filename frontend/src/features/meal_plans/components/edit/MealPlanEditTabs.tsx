@@ -10,7 +10,7 @@ export default function MealPlanEditTabs({
   onTabChange,
 }: MealPlanEditTabsProps) {
   return (
-    <div className="mb-3">
+    <div className="mb-2">
       <div
         className="d-flex"
         style={{

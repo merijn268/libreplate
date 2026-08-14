@@ -3294,7 +3294,9 @@ components:
           format: double
           minimum: 0
         recurrence:
-          $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+          allOf:
+          - $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+          nullable: true
     PatchedPlannedMealRecipe:
       type: object
       properties:
@@ -3314,7 +3316,9 @@ components:
           format: double
           minimum: 0
         recurrence:
-          $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+          allOf:
+          - $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+          nullable: true
     PatchedRecipe:
       type: object
       properties:
@@ -3534,7 +3538,9 @@ components:
           format: double
           minimum: 0
         recurrence:
-          $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+          allOf:
+          - $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+          nullable: true
       required:
       - food
       - food_id
@@ -3560,7 +3566,9 @@ components:
           format: double
           minimum: 0
         recurrence:
-          $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+          allOf:
+          - $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+          nullable: true
       required:
       - id
       - planned_meal_id

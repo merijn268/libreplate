@@ -38,7 +38,10 @@ class PlannedMealEntrySerializer(serializers.ModelSerializer):
         queryset=PlannedMeal.objects.all(),
         source="planned_meal",
     )
-    recurrence = PlannedMealEntryRecurrenceSerializer(required=False)
+    recurrence = PlannedMealEntryRecurrenceSerializer(
+        required=False,
+        allow_null=True,
+    )
 
     def create(self, validated_data: dict[str, Any]):
         recurrence_data = validated_data.pop("recurrence", None)
@@ -52,6 +55,34 @@ class PlannedMealEntrySerializer(serializers.ModelSerializer):
             )
 
         return entry
+
+    def update(
+        self,
+        instance,
+        validated_data: dict[str, Any],
+    ):
+        recurrence_data = validated_data.pop(
+            "recurrence",
+            serializers.empty,
+        )
+
+        instance = super().update(
+            instance,
+            validated_data,
+        )
+
+        if recurrence_data is not serializers.empty:
+            if recurrence_data is None:
+                PlannedMealEntryRecurrence.objects.filter(
+                    planned_meal_entry=instance,
+                ).delete()
+            else:
+                recurrence, _ = PlannedMealEntryRecurrence.objects.update_or_create(
+                    planned_meal_entry=instance,
+                    defaults=recurrence_data,
+                )
+
+        return instance
 
 
 class PlannedMealFoodSerializer(PlannedMealEntrySerializer):

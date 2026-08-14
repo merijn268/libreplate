@@ -1,14 +1,24 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { MealPlan, PlannedMeal } from "@/api/generated";
-import type { Food, Recipe } from "@/api/generated/types.gen";
+
+import type {
+  Food,
+  MealPlan,
+  PlannedMeal,
+  PlannedMealEntryRecurrence,
+  Recipe,
+} from "@/api/generated";
+
 import {
   mealPlansFoodsCreate,
   mealPlansFoodsDestroy,
+  mealPlansFoodsPartialUpdate,
   mealPlansPlannedMealsCreate,
   mealPlansRecipesCreate,
   mealPlansRecipesDestroy,
+  mealPlansRecipesPartialUpdate,
 } from "@/api/generated";
+
 import type {
   PlannedMealFoodWritable,
   PlannedMealRecipeWritable,
@@ -17,11 +27,19 @@ import type {
 
 import MealCard from "@/components/ui/meal_card/MealCard";
 import AmountItem from "@/components/ui/meal_card/AmountItem";
+
 import TotalsModal from "@/components/ui/modals/NutrientsTotalsModal";
 import AddToMealModal from "@/components/ui/modals/AddToMealModal";
+import EditFoodAmountModal from "@/components/ui/modals/EditFoodAmountModal";
+import EditRecipeAmountModal from "@/components/ui/modals/EditRecipeAmountModal";
+import EditRecurrenceModal from "@/components/ui/modals/EditRecurrenceModal";
+
 import FoodPickerModal from "@/features/foods/components/FoodPickerModal";
 import RecipePickerModal from "@/features/recipes/components/common/RecipePickermodal";
+
 import { getPlannedMealNutrients } from "@/features/meal_plans/components/mealPlanNutrients";
+
+import { entryOccursOnDay } from "@/components/ui/meal_card/mealEntryRecurrence";
 
 type Props = {
   mealPlan: MealPlan;
@@ -37,37 +55,75 @@ type MealTotals = {
 
 type AddModal = "none" | "type" | "food" | "recipe";
 
+type EditModal = "none" | "food" | "recipe" | "recurrence";
+
+type EditEntry =
+  | {
+      type: "food";
+      id: number;
+      food: Food;
+      servingSize: number;
+      numberOfServings: number;
+      recurrence?: PlannedMealEntryRecurrence;
+    }
+  | {
+      type: "recipe";
+      id: number;
+      recipe: Recipe;
+      numberOfServings: number;
+      recurrence?: PlannedMealEntryRecurrence;
+    };
+
+function normalizeRecurrence(
+  recurrence: PlannedMealEntryRecurrence | null | undefined,
+): PlannedMealEntryRecurrence | undefined {
+  return recurrence ?? undefined;
+}
+
 export default function PlannedMealsList({ mealPlan, day }: Props) {
   const queryClient = useQueryClient();
 
-  const [openMeals, setOpenMeals] = useState<Set<string>>(() => new Set());
+  /*
+   * Meal cards are open by default.
+   * We only keep track of the cards the user explicitly collapsed.
+   */
+  const [collapsedMeals, setCollapsedMeals] = useState<Set<string>>(
+    () => new Set(),
+  );
 
   const [totalsMeal, setTotalsMeal] = useState<PlannedMeal | null>(null);
   const [addMeal, setAddMeal] = useState<PlannedMeal | null>(null);
   const [addModal, setAddModal] = useState<AddModal>("none");
+  const [editEntry, setEditEntry] = useState<EditEntry | null>(null);
+  const [editModal, setEditModal] = useState<EditModal>("none");
 
-  const invalidateMealPlan = () =>
-    queryClient.invalidateQueries({ queryKey: ["meal-plan", mealPlan.id] });
+  const invalidateMealPlan = () => {
+    return queryClient.invalidateQueries({
+      queryKey: ["meal-plan", mealPlan.id],
+    });
+  };
 
   /*
-   * Virtual meals (meal.id == null) don't exist on the server yet — they're
-   * placeholders generated client-side for a day/slot that has no planned
-   * meal. Before we can attach a food or recipe to one, we have to create
-   * the real PlannedMeal first and use the id it comes back with.
+   * Virtual meals don't exist on the server yet.
+   * Materialize them before adding a food/recipe.
    */
   const materializeMeal = async (meal: PlannedMeal): Promise<number> => {
     if (meal.id != null) {
       return meal.id;
     }
 
-    const body: PlannedMealWritable & { meal_plan_id: number } = {
+    const body: PlannedMealWritable & {
+      meal_plan_id: number;
+    } = {
       meal_plan_id: mealPlan.id,
       name: meal.name,
       day: meal.day,
       order: meal.order,
     };
 
-    const response = await mealPlansPlannedMealsCreate({ body });
+    const response = await mealPlansPlannedMealsCreate({
+      body,
+    });
 
     if (response.data?.id == null) {
       throw new Error("Failed to create planned meal.");
@@ -95,10 +151,13 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
             number_of_servings: 1,
           };
 
-          return mealPlansFoodsCreate({ body });
+          return mealPlansFoodsCreate({
+            body,
+          });
         }),
       );
     },
+
     onSuccess: invalidateMealPlan,
   });
 
@@ -120,28 +179,170 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
         number_of_servings: servings,
       };
 
-      await mealPlansRecipesCreate({ body });
+      await mealPlansRecipesCreate({
+        body,
+      });
     },
+
     onSuccess: invalidateMealPlan,
   });
 
   const deleteFoodMutation = useMutation({
     mutationFn: (plannedFoodId: number) =>
-      mealPlansFoodsDestroy({ path: { id: plannedFoodId } }),
+      mealPlansFoodsDestroy({
+        path: {
+          id: plannedFoodId,
+        },
+      }),
+
     onSuccess: invalidateMealPlan,
   });
 
   const deleteRecipeMutation = useMutation({
     mutationFn: (plannedRecipeId: number) =>
-      mealPlansRecipesDestroy({ path: { id: plannedRecipeId } }),
+      mealPlansRecipesDestroy({
+        path: {
+          id: plannedRecipeId,
+        },
+      }),
+
+    onSuccess: invalidateMealPlan,
+  });
+
+  const editFoodMutation = useMutation({
+    mutationFn: async ({
+      id,
+      servingSize,
+      numberOfServings,
+      recurrence,
+    }: {
+      id: number;
+      servingSize: number;
+      numberOfServings: number;
+      recurrence?: PlannedMealEntryRecurrence;
+    }) => {
+      await mealPlansFoodsPartialUpdate({
+        path: {
+          id,
+        },
+        body: {
+          serving_size: servingSize,
+          number_of_servings: numberOfServings,
+          recurrence,
+        },
+      });
+    },
+
+    onSuccess: invalidateMealPlan,
+  });
+
+  const editRecipeMutation = useMutation({
+    mutationFn: async ({
+      id,
+      numberOfServings,
+      recurrence,
+    }: {
+      id: number;
+      numberOfServings: number;
+      recurrence?: PlannedMealEntryRecurrence;
+    }) => {
+      await mealPlansRecipesPartialUpdate({
+        path: {
+          id,
+        },
+        body: {
+          number_of_servings: numberOfServings,
+          recurrence,
+        },
+      });
+    },
+
     onSuccess: invalidateMealPlan,
   });
 
   const plannedMeals = useMemo(() => {
-    return [...(mealPlan.planned_meals ?? [])]
-      .filter((meal) => meal.day === day)
-      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  }, [mealPlan.planned_meals, day]);
+    const sourceMeals = [...(mealPlan.planned_meals ?? [])];
+
+    const mealsByKey = new Map<string, PlannedMeal>();
+
+    /*
+     * First, add meals that actually belong to this day.
+     */
+    for (const meal of sourceMeals) {
+      if (meal.day !== day) {
+        continue;
+      }
+
+      const key = `${meal.name}-${meal.order ?? 0}`;
+
+      mealsByKey.set(key, {
+        ...meal,
+        foods: [...(meal.foods ?? [])],
+        recipes: [...(meal.recipes ?? [])],
+      });
+    }
+
+    /*
+     * Then project recurring entries from other days.
+     */
+    for (const sourceMeal of sourceMeals) {
+      if (sourceMeal.day === day) {
+        continue;
+      }
+
+      const recurringFoods = (sourceMeal.foods ?? []).filter((plannedFood) =>
+        entryOccursOnDay({
+          sourceDay: sourceMeal.day,
+          targetDay: day,
+          recurrence: normalizeRecurrence(plannedFood.recurrence),
+          mealPlanStartDay: mealPlan.start_day,
+        }),
+      );
+
+      const recurringRecipes = (sourceMeal.recipes ?? []).filter(
+        (plannedRecipe) =>
+          entryOccursOnDay({
+            sourceDay: sourceMeal.day,
+            targetDay: day,
+            recurrence: normalizeRecurrence(plannedRecipe.recurrence),
+            mealPlanStartDay: mealPlan.start_day,
+          }),
+      );
+
+      if (recurringFoods.length === 0 && recurringRecipes.length === 0) {
+        continue;
+      }
+
+      const key = `${sourceMeal.name}-${sourceMeal.order ?? 0}`;
+
+      const existing = mealsByKey.get(key);
+
+      if (existing != null) {
+        existing.foods = [...(existing.foods ?? []), ...recurringFoods];
+
+        existing.recipes = [...(existing.recipes ?? []), ...recurringRecipes];
+
+        continue;
+      }
+
+      /*
+       * Client-side display copy.
+       *
+       * The entries retain their original database IDs,
+       * allowing edit/delete to operate on the source entry.
+       */
+      mealsByKey.set(key, {
+        ...sourceMeal,
+        day,
+        foods: recurringFoods,
+        recipes: recurringRecipes,
+      });
+    }
+
+    return [...mealsByKey.values()].sort(
+      (a, b) => (a.order ?? 0) - (b.order ?? 0),
+    );
+  }, [mealPlan.planned_meals, mealPlan.start_day, day]);
 
   const getMealKey = (meal: PlannedMeal, index: number) => {
     if (meal.id != null) {
@@ -152,7 +353,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
   };
 
   const toggleMeal = (key: string) => {
-    setOpenMeals((current) => {
+    setCollapsedMeals((current) => {
       const next = new Set(current);
 
       if (next.has(key)) {
@@ -210,10 +411,14 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
     }
 
     const meal = addMeal;
+
     closeAddFlow();
 
     try {
-      await addFoodMutation.mutateAsync({ meal, foods });
+      await addFoodMutation.mutateAsync({
+        meal,
+        foods,
+      });
     } catch (error) {
       console.error("Failed to add foods to planned meal", error);
     }
@@ -225,10 +430,15 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
     }
 
     const meal = addMeal;
+
     closeAddFlow();
 
     try {
-      await addRecipeMutation.mutateAsync({ meal, recipe, servings });
+      await addRecipeMutation.mutateAsync({
+        meal,
+        recipe,
+        servings,
+      });
     } catch (error) {
       console.error("Failed to add recipe to planned meal", error);
     }
@@ -262,18 +472,118 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
     deleteRecipeMutation.mutate(plannedRecipeId);
   };
 
+  const openFoodEditor = (
+    plannedFood: NonNullable<PlannedMeal["foods"]>[number],
+  ) => {
+    setEditEntry({
+      type: "food",
+      id: plannedFood.id,
+      food: plannedFood.food,
+      servingSize: plannedFood.serving_size,
+      numberOfServings: plannedFood.number_of_servings ?? 1,
+      recurrence: normalizeRecurrence(plannedFood.recurrence),
+    });
+
+    setEditModal("food");
+  };
+
+  const openRecipeEditor = (
+    plannedRecipe: NonNullable<PlannedMeal["recipes"]>[number],
+  ) => {
+    setEditEntry({
+      type: "recipe",
+      id: plannedRecipe.id,
+      recipe: plannedRecipe.recipe,
+      numberOfServings: plannedRecipe.number_of_servings ?? 1,
+      recurrence: normalizeRecurrence(plannedRecipe.recurrence),
+    });
+
+    setEditModal("recipe");
+  };
+
+  const closeEditFlow = () => {
+    setEditModal("none");
+    setEditEntry(null);
+  };
+
+  const openRecurrenceEditor = () => {
+    if (editEntry == null) {
+      return;
+    }
+
+    setEditModal("recurrence");
+  };
+
+  const handleRecurrenceSave = (recurrence?: PlannedMealEntryRecurrence) => {
+    if (editEntry == null) {
+      return;
+    }
+
+    setEditEntry({
+      ...editEntry,
+      recurrence,
+    });
+
+    setEditModal(editEntry.type === "food" ? "food" : "recipe");
+  };
+
+  const handleFoodSave = async (values: {
+    serving_size: number;
+    number_of_servings: number;
+    recurrence?: PlannedMealEntryRecurrence;
+  }) => {
+    if (editEntry == null || editEntry.type !== "food") {
+      return;
+    }
+
+    try {
+      await editFoodMutation.mutateAsync({
+        id: editEntry.id,
+        servingSize: values.serving_size,
+        numberOfServings: values.number_of_servings,
+        recurrence: values.recurrence,
+      });
+
+      closeEditFlow();
+    } catch (error) {
+      console.error("Failed to update planned food", error);
+    }
+  };
+
+  const handleRecipeSave = async (values: {
+    number_of_servings: number;
+    recurrence?: PlannedMealEntryRecurrence;
+  }) => {
+    if (editEntry == null || editEntry.type !== "recipe") {
+      return;
+    }
+
+    try {
+      await editRecipeMutation.mutateAsync({
+        id: editEntry.id,
+        numberOfServings: values.number_of_servings,
+        recurrence: values.recurrence,
+      });
+
+      closeEditFlow();
+    } catch (error) {
+      console.error("Failed to update planned recipe", error);
+    }
+  };
+
   return (
     <>
       <div className="mt-3">
         {plannedMeals.map((meal, mealIndex) => {
           const mealKey = getMealKey(meal, mealIndex);
+
           const mealTotals = getMealTotals(meal);
 
           return (
             <MealCard
               key={mealKey}
               name={meal.name}
-              open={openMeals.has(mealKey)}
+              open={!collapsedMeals.has(mealKey)}
               totals={mealTotals}
               onToggle={() => toggleMeal(mealKey)}
               onShowTotals={() => setTotalsMeal(meal)}
@@ -291,9 +601,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
                       key={foodKey}
                       label={plannedFood.food.name}
                       amount={`${plannedFood.serving_size} ${plannedFood.food.unit.name}`}
-                      onClick={() => {
-                        // TODO: edit planned food
-                      }}
+                      onClick={() => openFoodEditor(plannedFood)}
                       onDelete={() => handleDeleteFood(plannedFood.id)}
                     />
                   );
@@ -312,9 +620,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
                       key={recipeKey}
                       label={plannedRecipe.recipe.name}
                       amount={`${servings} serving${servings === 1 ? "" : "s"}`}
-                      onClick={() => {
-                        // TODO: edit planned recipe
-                      }}
+                      onClick={() => openRecipeEditor(plannedRecipe)}
                       onDelete={() => handleDeleteRecipe(plannedRecipe.id)}
                     />
                   );
@@ -345,9 +651,43 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
         onSelect={handleRecipeSelect}
       />
 
+      {editEntry?.type === "food" && editModal === "food" && (
+        <EditFoodAmountModal
+          food={editEntry.food}
+          servingSize={editEntry.servingSize}
+          numberOfServings={editEntry.numberOfServings}
+          recurrence={editEntry.recurrence}
+          onClose={closeEditFlow}
+          onEditRecurrence={openRecurrenceEditor}
+          onSave={handleFoodSave}
+        />
+      )}
+
+      {editEntry?.type === "recipe" && editModal === "recipe" && (
+        <EditRecipeAmountModal
+          recipe={editEntry.recipe}
+          numberOfServings={editEntry.numberOfServings}
+          recurrence={editEntry.recurrence}
+          onClose={closeEditFlow}
+          onEditRecurrence={openRecurrenceEditor}
+          onSave={handleRecipeSave}
+        />
+      )}
+
+      {editEntry != null && editModal === "recurrence" && (
+        <EditRecurrenceModal
+          isOpen
+          recurrence={editEntry.recurrence}
+          onClose={() =>
+            setEditModal(editEntry.type === "food" ? "food" : "recipe")
+          }
+          onSave={handleRecurrenceSave}
+        />
+      )}
+
       {totalsMeal != null && totals != null && (
         <TotalsModal
-          isOpen={true}
+          isOpen
           onClose={() => setTotalsMeal(null)}
           title={totalsMeal.name}
           totals={totals}

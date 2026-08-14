@@ -344,7 +344,7 @@ export type PatchedPlannedMealFood = {
     food?: Food;
     serving_size?: number;
     number_of_servings?: number;
-    recurrence?: PlannedMealEntryRecurrence;
+    recurrence?: PlannedMealEntryRecurrence | null;
 };
 
 export type PatchedPlannedMealRecipe = {
@@ -353,7 +353,7 @@ export type PatchedPlannedMealRecipe = {
     recipe_id?: number;
     recipe?: Recipe;
     number_of_servings?: number;
-    recurrence?: PlannedMealEntryRecurrence;
+    recurrence?: PlannedMealEntryRecurrence | null;
 };
 
 export type PatchedRecipe = {
@@ -459,7 +459,7 @@ export type PlannedMealFood = {
     food: Food;
     serving_size: number;
     number_of_servings?: number;
-    recurrence?: PlannedMealEntryRecurrence;
+    recurrence?: PlannedMealEntryRecurrence | null;
 };
 
 export type PlannedMealRecipe = {
@@ -468,7 +468,7 @@ export type PlannedMealRecipe = {
     recipe_id: number;
     recipe: Recipe;
     number_of_servings?: number;
-    recurrence?: PlannedMealEntryRecurrence;
+    recurrence?: PlannedMealEntryRecurrence | null;
 };
 
 export type Recipe = {
@@ -793,14 +793,14 @@ export type PatchedPlannedMealFoodWritable = {
     food_id?: number;
     serving_size?: number;
     number_of_servings?: number;
-    recurrence?: PlannedMealEntryRecurrence;
+    recurrence?: PlannedMealEntryRecurrence | null;
 };
 
 export type PatchedPlannedMealRecipeWritable = {
     planned_meal_id?: number;
     recipe_id?: number;
     number_of_servings?: number;
-    recurrence?: PlannedMealEntryRecurrence;
+    recurrence?: PlannedMealEntryRecurrence | null;
 };
 
 export type PatchedRecipeWritable = {
@@ -849,14 +849,14 @@ export type PlannedMealFoodWritable = {
     food_id: number;
     serving_size: number;
     number_of_servings?: number;
-    recurrence?: PlannedMealEntryRecurrence;
+    recurrence?: PlannedMealEntryRecurrence | null;
 };
 
 export type PlannedMealRecipeWritable = {
     planned_meal_id: number;
     recipe_id: number;
     number_of_servings?: number;
-    recurrence?: PlannedMealEntryRecurrence;
+    recurrence?: PlannedMealEntryRecurrence | null;
 };
 
 export type RecipeWritable = {

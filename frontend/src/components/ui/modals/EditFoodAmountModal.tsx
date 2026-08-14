@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 
-import type { Food } from "@/api/generated";
+import type { Food, PlannedMealEntryRecurrence } from "@/api/generated";
 import Modal from "@/components/ui/modals/Modal";
 import MacroPieChart from "@/components/ui/MacroPieChart";
 
@@ -8,10 +8,13 @@ type Props = {
   food: Food;
   servingSize: number;
   numberOfServings: number;
+  recurrence?: PlannedMealEntryRecurrence;
   onClose: () => void;
+  onEditRecurrence?: () => void;
   onSave: (values: {
     serving_size: number;
     number_of_servings: number;
+    recurrence?: PlannedMealEntryRecurrence;
   }) => Promise<void>;
 };
 
@@ -70,11 +73,33 @@ function formatAmount(value: number) {
   return Number.isFinite(value) ? value.toFixed(0) : "—";
 }
 
+function formatRecurrence(recurrence?: PlannedMealEntryRecurrence): string {
+  if (recurrence == null) {
+    return "No recurrence";
+  }
+
+  const count = recurrence.interval_count ?? 1;
+  const interval = recurrence.interval ?? "week";
+
+  const intervalLabel =
+    interval === "day"
+      ? count === 1
+        ? "day"
+        : "days"
+      : count === 1
+        ? "week"
+        : "weeks";
+
+  return `Every ${count} ${intervalLabel}`;
+}
+
 export default function EditFoodAmountModal({
   food,
   servingSize,
   numberOfServings,
+  recurrence,
   onClose,
+  onEditRecurrence,
   onSave,
 }: Props) {
   const [currentServingSize, setCurrentServingSize] = useState(
@@ -110,6 +135,7 @@ export default function EditFoodAmountModal({
     await onSave({
       serving_size: parsedSize,
       number_of_servings: parsedServings,
+      recurrence,
     });
 
     onClose();
@@ -167,6 +193,27 @@ export default function EditFoodAmountModal({
             />
           </div>
         </div>
+
+        {onEditRecurrence != null && (
+          <div className="border rounded p-3">
+            <div className="d-flex align-items-center justify-content-between gap-3">
+              <div>
+                <div className="fw-semibold">Recurrence</div>
+                <div className="text-muted small">
+                  {formatRecurrence(recurrence)}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={onEditRecurrence}
+              >
+                Edit recurrence
+              </button>
+            </div>
+          </div>
+        )}
 
         <div className="border rounded p-3">
           <MacroPieChart
