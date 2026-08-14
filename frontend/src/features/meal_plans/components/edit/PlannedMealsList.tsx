@@ -381,7 +381,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
       energy: getAmount("energy"),
       protein: getAmount("protein"),
       fat: getAmount("fat"),
-      carbs: getAmount("carbs"),
+      carbs: getAmount("carbohydrates"),
     };
   };
 

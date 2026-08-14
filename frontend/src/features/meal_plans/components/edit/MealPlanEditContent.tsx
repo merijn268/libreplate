@@ -60,7 +60,7 @@ export default function MealPlanEditContent({
         energy={getNutrientAmount("energy")}
         protein={getNutrientAmount("protein")}
         fat={getNutrientAmount("fat")}
-        carbs={getNutrientAmount("carbs")}
+        carbs={getNutrientAmount("carbohydrates")}
       />
 
       <PlannedMealsList mealPlan={mealPlan} day={selectedDate.day} />
