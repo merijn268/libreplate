@@ -37,7 +37,7 @@ import EditRecurrenceModal from "@/components/ui/modals/EditRecurrenceModal";
 import FoodPickerModal from "@/features/foods/components/FoodPickerModal";
 import RecipePickerModal from "@/features/recipes/components/common/RecipePickermodal";
 
-import { getPlannedMealNutrients } from "@/features/meal_plans/components/mealPlanNutrients";
+import { getPlannedMealNutrients } from "@/features/meal_plans/components/utils/mealPlanNutrients";
 
 import { entryOccursOnDay } from "@/components/ui/meal_card/mealEntryRecurrence";
 
