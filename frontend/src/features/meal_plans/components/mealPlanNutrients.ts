@@ -32,14 +32,13 @@ function addNutrient(
 }
 
 function getFoodNutrients(food: PlannedMealFood): NutrientTotal[] {
-  const servings = food.number_of_servings ?? 1;
+  const numberOfServings = food.number_of_servings ?? 1;
 
   return (food.food.nutrients ?? []).map((nutrient: FoodNutrient) => ({
     name: nutrient.nutrient.name,
-    amount: nutrient.amount * servings,
+    amount: (nutrient.amount / 100) * food.serving_size * numberOfServings,
   }));
 }
-
 function getRecipeNutrients(recipe: PlannedMealRecipe): NutrientTotal[] {
   const servings = recipe.number_of_servings ?? 1;
 
