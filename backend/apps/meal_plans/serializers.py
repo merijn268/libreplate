@@ -312,6 +312,7 @@ class MealPlanSerializer(serializers.ModelSerializer):
             "duration_period",
             "user",
             "tags",
+            "is_active",
             "is_favorite",
             "created_at",
             "updated_at",
@@ -323,6 +324,7 @@ class MealPlanSerializer(serializers.ModelSerializer):
             "updated_at",
             "last_used_at",
             "user",
+            "is_active",
         ]
 
     def get_start_day_display(self, obj) -> str:
@@ -484,8 +486,13 @@ class MealPlanMinimalSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "tags",
+            "is_active",
             "is_favorite",
             "created_at",
             "updated_at",
             "last_used_at",
+        ]
+        read_only_fields = [
+            "id",
+            "is_active",
         ]

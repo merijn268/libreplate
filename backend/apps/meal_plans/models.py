@@ -6,7 +6,7 @@ from apps.recipes.models import Recipe
 from apps.tags.models import BaseTag
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db import models
+from django.db import models, transaction
 
 
 class MealPlanTag(BaseTag):
@@ -31,6 +31,8 @@ class MealPlan(
         blank=True,
         related_name="meal_plans",
     )
+
+    is_active = models.BooleanField(default=False)
 
     start_day = models.PositiveSmallIntegerField(
         default=calendar.Day.MONDAY.value,
@@ -59,6 +61,23 @@ class MealPlan(
             return self.duration * 7
 
         return self.duration
+
+    @transaction.atomic
+    def activate(self):
+        type(self).objects.filter(user=self.user, is_active=True).exclude(
+            pk=self.pk
+        ).update(is_active=False)
+        self.is_active = True
+        self.save(update_fields=["is_active"])
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user"],
+                condition=models.Q(is_active=True),
+                name="unique_active_meal_plan_per_user",
+            ),
+        ]
 
 
 class PlannedMeal(core_models.HasName):

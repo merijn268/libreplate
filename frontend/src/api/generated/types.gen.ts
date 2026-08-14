@@ -143,6 +143,7 @@ export type MealPlan = {
     duration_period?: MealPlanPeriodUnitEnum;
     readonly user: number;
     tags?: Array<number>;
+    readonly is_active: boolean;
     is_favorite?: boolean;
     readonly created_at: string;
     readonly updated_at: string;
@@ -161,6 +162,7 @@ export type MealPlanMinimal = {
     name: string;
     description?: string;
     tags?: Array<number>;
+    readonly is_active: boolean;
     is_favorite?: boolean;
     readonly created_at: string;
     readonly updated_at: string;
@@ -313,6 +315,7 @@ export type PatchedMealPlan = {
     duration_period?: MealPlanPeriodUnitEnum;
     readonly user?: number;
     tags?: Array<number>;
+    readonly is_active?: boolean;
     is_favorite?: boolean;
     readonly created_at?: string;
     readonly updated_at?: string;
@@ -1467,6 +1470,24 @@ export type MealPlansUpdateResponses = {
 };
 
 export type MealPlansUpdateResponse = MealPlansUpdateResponses[keyof MealPlansUpdateResponses];
+
+export type MealPlansActivateCreateData = {
+    body: MealPlanWritable;
+    path: {
+        /**
+         * A unique integer value identifying this meal plan.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/{id}/activate/';
+};
+
+export type MealPlansActivateCreateResponses = {
+    200: MealPlan;
+};
+
+export type MealPlansActivateCreateResponse = MealPlansActivateCreateResponses[keyof MealPlansActivateCreateResponses];
 
 export type MealPlansMarkFavoriteCreateData = {
     body: MealPlanWritable;

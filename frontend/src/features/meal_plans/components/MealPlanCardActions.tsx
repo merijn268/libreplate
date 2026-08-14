@@ -9,17 +9,28 @@ import ItemCardActions, {
 interface Props {
   mealPlan: MealPlanMinimal;
   onDelete?: (id: number) => void;
+  onActivate?: (id: number) => void;
   onToggleFavorite?: (id: number, isFavorite: boolean) => void;
 }
 
 export default function MealPlanCardActions({
   mealPlan,
   onDelete,
+  onActivate,
   onToggleFavorite,
 }: Props) {
   const navigate = useNavigate();
 
   const items: ItemCardMenuItem[] = [
+    ...(mealPlan.is_active
+      ? []
+      : [
+          {
+            key: "activate",
+            label: "Activate",
+            onClick: () => onActivate?.(mealPlan.id),
+          },
+        ]),
     {
       key: "favorite",
       label: mealPlan.is_favorite ? "Unfavorite" : "Favorite",

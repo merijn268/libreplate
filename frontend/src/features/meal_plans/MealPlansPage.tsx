@@ -9,6 +9,7 @@ import MealPlanSearchBar, {
 import FloatingAddButton from "@/components/buttons/FloatingAddButton";
 
 import {
+  mealPlansActivateCreate,
   mealPlansCreate,
   mealPlansDestroy,
   mealPlansList,
@@ -36,6 +37,17 @@ export default function MealPlansPage() {
         path: {
           id,
         },
+      }),
+    onSuccess: invalidateMealPlans,
+  });
+
+  const activateMealPlan = useMutation({
+    mutationFn: (id: number) =>
+      mealPlansActivateCreate({
+        path: {
+          id,
+        },
+        body: {} as never,
       }),
     onSuccess: invalidateMealPlans,
   });
@@ -158,6 +170,7 @@ export default function MealPlansPage() {
         <MealPlanList
           mealPlans={filteredMealPlans}
           onDelete={(id) => deleteMealPlan.mutate(id)}
+          onActivate={(id) => activateMealPlan.mutate(id)}
           onToggleFavorite={(id, isFavorite) =>
             toggleFavorite.mutate({
               id,

@@ -34,6 +34,20 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         return MealPlanSerializer
 
     @action(detail=True, methods=["post"])
+    def activate(self, request, pk=None):
+        """Make this meal plan the user's active meal plan."""
+
+        meal_plan = self.get_object()
+        meal_plan.activate()
+
+        serializer = MealPlanSerializer(
+            meal_plan,
+            context=self.get_serializer_context(),
+        )
+
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["post"])
     def mark_used(self, request, pk=None):
         """Stamp last_used_at to now."""
 
@@ -122,15 +136,14 @@ class PlannedMealRecipeViewSet(viewsets.ModelViewSet):
         queryset = PlannedMealRecipe.objects.filter(
             planned_meal__meal_plan__user=self.request.user,
         )
-        meal_plan_id = self.request.query_params.get("meal_plan")
 
+        meal_plan_id = self.request.query_params.get("meal_plan")
         if meal_plan_id is not None:
             queryset = queryset.filter(
                 planned_meal__meal_plan_id=meal_plan_id,
             )
 
         planned_meal_id = self.request.query_params.get("planned_meal")
-
         if planned_meal_id is not None:
             queryset = queryset.filter(
                 planned_meal_id=planned_meal_id,
