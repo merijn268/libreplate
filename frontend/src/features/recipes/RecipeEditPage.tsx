@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type { RecipeTag } from "@/api/generated/types.gen";
@@ -16,14 +16,21 @@ import RecipeDetailsForm from "./components/edit/RecipeDetailsForm";
 import IngredientsCard from "./components/edit/IngredientsCard";
 import TagModal from "../../components/ui/modals/TagModal";
 
+type LocationState = {
+  from?: string;
+};
+
 export default function RecipeEditPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const queryClient = useQueryClient();
 
   const recipeId = Number(id);
 
   const [showTagModal, setShowTagModal] = useState(false);
+
+  const locationState = location.state as LocationState | null;
 
   const { data: recipeResponse, isLoading } = useQuery({
     queryKey: ["recipe", recipeId],
@@ -80,6 +87,15 @@ export default function RecipeEditPage() {
     updateTags.mutate(tagIds);
   }
 
+  function handleBack() {
+    if (locationState?.from != null) {
+      navigate(locationState.from);
+      return;
+    }
+
+    navigate(-1);
+  }
+
   if (isLoading || !recipe) {
     return <div className="container py-4">Loading...</div>;
   }
@@ -89,13 +105,16 @@ export default function RecipeEditPage() {
       <div>
         <div className="d-flex gap-2 mb-2">
           <button
+            type="button"
             className="btn btn-outline-secondary"
-            onClick={() => navigate(-1)}
+            onClick={handleBack}
           >
             <i className="bi bi-arrow-left me-2" />
             Back
           </button>
+
           <button
+            type="button"
             className="btn btn-outline-secondary"
             onClick={() => setShowTagModal(true)}
           >

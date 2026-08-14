@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import type { PlannedMealEntryRecurrence, Recipe } from "@/api/generated";
 import Modal from "@/components/ui/modals/Modal";
@@ -15,26 +16,6 @@ type Props = {
   }) => Promise<void>;
 };
 
-function formatRecurrence(recurrence?: PlannedMealEntryRecurrence): string {
-  if (recurrence == null) {
-    return "No recurrence";
-  }
-
-  const count = recurrence.interval_count ?? 1;
-  const interval = recurrence.interval ?? "week";
-
-  const intervalLabel =
-    interval === "day"
-      ? count === 1
-        ? "day"
-        : "days"
-      : count === 1
-        ? "week"
-        : "weeks";
-
-  return `Every ${count} ${intervalLabel}`;
-}
-
 export default function EditRecipeAmountModal({
   recipe,
   numberOfServings,
@@ -43,12 +24,13 @@ export default function EditRecipeAmountModal({
   onEditRecurrence,
   onSave,
 }: Props) {
+  const navigate = useNavigate();
+
   const [currentNumberOfServings, setCurrentNumberOfServings] = useState(
     String(numberOfServings),
   );
 
   const parsedServings = Number.parseFloat(currentNumberOfServings);
-
   const hasValidInputs = !Number.isNaN(parsedServings) && parsedServings > 0;
 
   async function handleSave() {
@@ -64,6 +46,16 @@ export default function EditRecipeAmountModal({
     onClose();
   }
 
+  function handleEditRecipe() {
+    onClose();
+
+    navigate(`/recipes/${recipe.id}/edit`, {
+      state: {
+        from: window.location.pathname + window.location.search,
+      },
+    });
+  }
+
   return (
     <Modal
       isOpen
@@ -71,13 +63,17 @@ export default function EditRecipeAmountModal({
       onClose={onClose}
       footer={
         <div className="d-flex justify-content-end gap-2">
-          <button type="button" className="btn btn-secondary" onClick={onClose}>
+          <button
+            type="button"
+            className="btn btn-sm btn-light"
+            onClick={onClose}
+          >
             Cancel
           </button>
 
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-sm btn-primary px-3"
             disabled={!hasValidInputs}
             onClick={() => void handleSave()}
           >
@@ -88,38 +84,65 @@ export default function EditRecipeAmountModal({
     >
       <div className="d-flex flex-column gap-3">
         <div>
-          <label className="form-label">Number of servings</label>
+          <label htmlFor="number-of-servings" className="form-label small">
+            Servings
+          </label>
 
           <input
+            id="number-of-servings"
             type="number"
             min={0}
             step="any"
+            inputMode="decimal"
             className="form-control"
             value={currentNumberOfServings}
             onChange={(event) => setCurrentNumberOfServings(event.target.value)}
           />
         </div>
 
-        {onEditRecurrence != null && (
-          <div className="border rounded p-3">
-            <div className="d-flex align-items-center justify-content-between gap-3">
-              <div>
-                <div className="fw-semibold">Recurrence</div>
-                <div className="text-muted small">
-                  {formatRecurrence(recurrence)}
-                </div>
-              </div>
+        <div className="list-group list-group-flush border rounded overflow-hidden">
+          <button
+            type="button"
+            className="list-group-item list-group-item-action px-3 py-2"
+            onClick={handleEditRecipe}
+          >
+            <div className="d-flex align-items-center justify-content-between">
+              <span className="fw-medium">
+                <i className="bi bi-book me-2 text-primary"></i>
+                Edit recipe
+              </span>
 
-              <button
-                type="button"
-                className="btn btn-outline-primary"
-                onClick={onEditRecurrence}
-              >
-                Edit recurrence
-              </button>
+              <span className="text-muted small d-flex align-items-center gap-1">
+                <i
+                  className="bi bi-chevron-right text-primary"
+                  aria-hidden="true"
+                />
+              </span>
             </div>
-          </div>
-        )}
+          </button>
+
+          {onEditRecurrence != null && (
+            <button
+              type="button"
+              className="list-group-item list-group-item-action px-3 py-2"
+              onClick={onEditRecurrence}
+            >
+              <div className="d-flex align-items-center justify-content-between">
+                <div className="text-start">
+                  <i className="bi bi-arrow-repeat me-2 text-primary"></i>
+                  <span className="fw-medium">Recurrence</span>
+                </div>
+
+                <span className="text-muted small d-flex align-items-center gap-1">
+                  <i
+                    className="bi bi-chevron-right  text-primary"
+                    aria-hidden="true"
+                  />
+                </span>
+              </div>
+            </button>
+          )}
+        </div>
 
         {!hasValidInputs && (
           <div className="text-danger small">
