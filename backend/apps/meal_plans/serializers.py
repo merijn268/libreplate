@@ -269,6 +269,18 @@ class PlannedMealSerializer(serializers.ModelSerializer):
         return instance
 
 
+class MealPlanApplySerializer(serializers.Serializer):
+    """Input for MealPlanViewSet.apply()."""
+
+    start_date = serializers.DateField()
+    days = serializers.IntegerField(
+        min_value=1,
+        max_value=MealPlan.MAX_APPLY_DAYS,
+        default=MealPlan.MAX_APPLY_DAYS,
+        required=False,
+    )
+
+
 class MealPlanSerializer(serializers.ModelSerializer):
     """
     Full meal-plan representation.

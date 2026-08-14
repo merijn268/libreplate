@@ -1,7 +1,11 @@
 import calendar
+from collections import defaultdict
+from datetime import timedelta
+from decimal import Decimal
 
 from apps.core import models as core_models
 from apps.foods.models import Food
+from apps.meals.models import DefaultMeal, Meal, MealFood
 from apps.recipes.models import Recipe
 from apps.tags.models import BaseTag
 from django.core.exceptions import ValidationError
@@ -26,6 +30,9 @@ class MealPlan(
     core_models.HasTimestamps,
     core_models.TracksUsage,
 ):
+    # Hard cap on how many real days `apply()` can populate in one call.
+    MAX_APPLY_DAYS = 7
+
     tags = models.ManyToManyField(
         MealPlanTag,
         blank=True,
@@ -74,6 +81,194 @@ class MealPlan(
     def deactivate(self):
         self.is_active = False
         self.save(update_fields=["is_active"])
+
+    def get_effective_planned_meals(self):
+        """
+        Return persisted PlannedMeals for this plan, plus "virtual"
+        PlannedMeals generated from the user's DefaultMeals for any
+        (day, name) slot that isn't already covered by a real one.
+
+        Virtual meals are never saved to the database and have id=None.
+        Used both by MealPlanSerializer (to show them to the user) and
+        by apply() (to know what to copy onto real Meals).
+        """
+        planned_meals = list(self.planned_meals.all())
+
+        default_meals = list(
+            DefaultMeal.objects.filter(user=self.user).order_by("order", "id")
+        )
+
+        if not default_meals:
+            return planned_meals
+
+        existing = {
+            (planned_meal.day, planned_meal.name) for planned_meal in planned_meals
+        }
+
+        duration_days = self.get_duration_days()
+
+        for day in range(duration_days):
+            for default_meal in default_meals:
+                key = (day, default_meal.name)
+
+                if key in existing:
+                    continue
+
+                planned_meals.append(
+                    PlannedMeal(
+                        meal_plan=self,
+                        day=day,
+                        name=default_meal.name,
+                        order=default_meal.order,
+                    )
+                )
+                existing.add(key)
+
+        return planned_meals
+
+    @transaction.atomic
+    def apply(self, start_date, days=MAX_APPLY_DAYS):
+        """
+        Apply this meal plan onto real Meal slots for `days` consecutive
+        calendar dates, starting at `start_date`.
+
+        `start_date` is treated as meal-plan day 0, `start_date + 1` as
+        meal-plan day 1, and so on. If `days` is greater than the plan's
+        own duration, the plan's days repeat (the meal-plan day index
+        wraps with `% duration_days`).
+
+        For every (date, planned meal) pair:
+        - if no Meal exists yet for that user/date/name, one is created
+          and populated;
+        - if a Meal already exists but has no food entries, it's
+          populated;
+        - if a Meal already has food entries, it's left untouched.
+
+        Recipe entries are "unfolded" into their ingredients as MealFood
+        rows, since Meal/MealFood doesn't support recipes directly.
+
+        Returns a summary dict with "populated", "skipped_not_empty",
+        and "skipped_empty_plan" lists.
+        """
+        if not (1 <= days <= self.MAX_APPLY_DAYS):
+            raise ValueError(f"days must be between 1 and {self.MAX_APPLY_DAYS}.")
+
+        duration_days = self.get_duration_days()
+
+        planned_meals_by_day = defaultdict(list)
+        for planned_meal in self.get_effective_planned_meals():
+            planned_meals_by_day[planned_meal.day].append(planned_meal)
+
+        default_meals_by_name = {
+            default_meal.name: default_meal
+            for default_meal in DefaultMeal.objects.filter(user=self.user)
+        }
+
+        summary = {
+            "populated": [],
+            "skipped_not_empty": [],
+            "skipped_empty_plan": [],
+        }
+
+        for offset in range(days):
+            target_date = start_date + timedelta(days=offset)
+            plan_day = offset % duration_days
+
+            for planned_meal in planned_meals_by_day.get(plan_day, []):
+                self._apply_planned_meal_to_date(
+                    planned_meal=planned_meal,
+                    target_date=target_date,
+                    default_meals_by_name=default_meals_by_name,
+                    summary=summary,
+                )
+
+        return summary
+
+    def _apply_planned_meal_to_date(
+        self, planned_meal, target_date, default_meals_by_name, summary
+    ):
+        meal = Meal.objects.filter(
+            user=self.user,
+            date=target_date,
+            name=planned_meal.name,
+        ).first()
+
+        created = False
+
+        if meal is None:
+            meal = Meal.objects.create(
+                user=self.user,
+                date=target_date,
+                name=planned_meal.name,
+                order=planned_meal.order,
+                default_meal=default_meals_by_name.get(planned_meal.name),
+            )
+            created = True
+
+        if not created and meal.meal_foods.exists():
+            summary["skipped_not_empty"].append(
+                {"date": target_date, "meal_id": meal.id, "name": meal.name}
+            )
+            return
+
+        meal_foods = [
+            MealFood(
+                meal=meal,
+                food=planned_food.food,
+                serving_size=planned_food.serving_size,
+                number_of_servings=planned_food.number_of_servings,
+            )
+            for planned_food in planned_meal.foods()
+        ]
+
+        for planned_recipe in planned_meal.recipes():
+            meal_foods.extend(self._unfold_recipe(planned_recipe, meal))
+
+        if not meal_foods:
+            summary["skipped_empty_plan"].append(
+                {"date": target_date, "meal_id": meal.id, "name": meal.name}
+            )
+            return
+
+        MealFood.objects.bulk_create(meal_foods)
+
+        summary["populated"].append(
+            {
+                "date": target_date,
+                "meal_id": meal.id,
+                "name": meal.name,
+                "foods_added": len(meal_foods),
+            }
+        )
+
+    def _unfold_recipe(self, planned_recipe, meal):
+        """
+        Convert a PlannedMealRecipe into a list of unsaved MealFood
+        instances, one per RecipeIngredient - Meal/MealFood doesn't
+        support recipes directly, so recipes get "unfolded" into their
+        constituent foods.
+
+        Each ingredient's number_of_servings is scaled by
+        (planned_recipe.number_of_servings / recipe.portions) - i.e. how
+        many of the recipe's portions were planned, relative to how many
+        portions the whole recipe makes. serving_size (the ingredient's
+        serving_amount) carries over unchanged.
+        """
+        recipe = planned_recipe.recipe
+        portions = Decimal(str(recipe.portions or 1))
+        scale = Decimal(str(planned_recipe.number_of_servings)) / portions
+
+        return [
+            MealFood(
+                meal=meal,
+                food=ingredient.food,
+                serving_size=ingredient.serving_amount,
+                number_of_servings=float(
+                    Decimal(str(ingredient.number_of_servings)) * scale
+                ),
+            )
+            for ingredient in recipe.ingredients.select_related("food")
+        ]
 
     class Meta:
         constraints = [

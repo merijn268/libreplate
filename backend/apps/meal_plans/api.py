@@ -10,6 +10,7 @@ from .models import (
     PlannedMealRecipe,
 )
 from .serializers import (
+    MealPlanApplySerializer,
     MealPlanMinimalSerializer,
     MealPlanSerializer,
     PlannedMealFoodSerializer,
@@ -23,7 +24,9 @@ class MealPlanViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return MealPlan.objects.filter(user=self.request.user).prefetch_related(
+        return MealPlan.objects.filter(
+            user=self.request.user,
+        ).prefetch_related(
             "tags",
             "planned_meals",
         )
@@ -32,6 +35,31 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return MealPlanMinimalSerializer
         return MealPlanSerializer
+
+    @action(detail=False, methods=["get"])
+    def active(self, request):
+        """Return the user's currently active meal plan."""
+
+        meal_plan = (
+            self.get_queryset()
+            .filter(
+                is_active=True,
+            )
+            .first()
+        )
+
+        if meal_plan is None:
+            return Response(
+                {"detail": "No active meal plan."},
+                status=404,
+            )
+
+        serializer = MealPlanSerializer(
+            meal_plan,
+            context=self.get_serializer_context(),
+        )
+
+        return Response(serializer.data)
 
     @action(detail=True, methods=["post"])
     def activate(self, request, pk=None):
@@ -89,6 +117,31 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(meal_plan)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["post"])
+    def apply(self, request, pk=None):
+        """
+        Apply this meal plan onto real Meal slots.
+
+        Body: {"start_date": "YYYY-MM-DD", "days": 1-7 (default 7)}
+
+        `start_date` maps to the meal plan's own day 0; each following
+        day maps to the next meal-plan day (wrapping if `days` exceeds
+        the plan's duration). Meals that already have food entries are
+        left untouched; recipe entries are unfolded into foods, since
+        Meal/MealFood doesn't support recipes directly.
+        """
+        meal_plan = self.get_object()
+
+        input_serializer = MealPlanApplySerializer(data=request.data)
+        input_serializer.is_valid(raise_exception=True)
+
+        summary = meal_plan.apply(
+            start_date=input_serializer.validated_data["start_date"],
+            days=input_serializer.validated_data["days"],
+        )
+
+        return Response(summary)
 
 
 class PlannedMealViewSet(viewsets.ModelViewSet):

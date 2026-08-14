@@ -857,6 +857,49 @@ paths:
               schema:
                 $ref: '#/components/schemas/MealPlan'
           description: ''
+  /api/meal-plans/{id}/apply/:
+    post:
+      operationId: meal_plans_apply_create
+      description: |-
+        Apply this meal plan onto real Meal slots.
+
+        Body: {"start_date": "YYYY-MM-DD", "days": 1-7 (default 7)}
+
+        `start_date` maps to the meal plan's own day 0; each following
+        day maps to the next meal-plan day (wrapping if `days` exceeds
+        the plan's duration). Meals that already have food entries are
+        left untouched; recipe entries are unfolded into foods, since
+        Meal/MealFood doesn't support recipes directly.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this meal plan.
+        required: true
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+          description: ''
   /api/meal-plans/{id}/deactivate/:
     post:
       operationId: meal_plans_deactivate_create
@@ -982,6 +1025,21 @@ paths:
             schema:
               $ref: '#/components/schemas/MealPlan'
         required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+          description: ''
+  /api/meal-plans/active/:
+    get:
+      operationId: meal_plans_active_retrieve
+      description: Return the user's currently active meal plan.
+      tags:
+      - meal-plans
       security:
       - cookieAuth: []
       responses:

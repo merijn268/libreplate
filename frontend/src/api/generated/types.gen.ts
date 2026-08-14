@@ -1489,6 +1489,24 @@ export type MealPlansActivateCreateResponses = {
 
 export type MealPlansActivateCreateResponse = MealPlansActivateCreateResponses[keyof MealPlansActivateCreateResponses];
 
+export type MealPlansApplyCreateData = {
+    body: MealPlanWritable;
+    path: {
+        /**
+         * A unique integer value identifying this meal plan.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/{id}/apply/';
+};
+
+export type MealPlansApplyCreateResponses = {
+    200: MealPlan;
+};
+
+export type MealPlansApplyCreateResponse = MealPlansApplyCreateResponses[keyof MealPlansApplyCreateResponses];
+
 export type MealPlansDeactivateCreateData = {
     body: MealPlanWritable;
     path: {
@@ -1560,6 +1578,19 @@ export type MealPlansUnmarkFavoriteCreateResponses = {
 };
 
 export type MealPlansUnmarkFavoriteCreateResponse = MealPlansUnmarkFavoriteCreateResponses[keyof MealPlansUnmarkFavoriteCreateResponses];
+
+export type MealPlansActiveRetrieveData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/meal-plans/active/';
+};
+
+export type MealPlansActiveRetrieveResponses = {
+    200: MealPlan;
+};
+
+export type MealPlansActiveRetrieveResponse = MealPlansActiveRetrieveResponses[keyof MealPlansActiveRetrieveResponses];
 
 export type MealPlansFoodsListData = {
     body?: never;

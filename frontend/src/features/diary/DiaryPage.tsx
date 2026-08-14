@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+  mealPlansActiveRetrieve,
+  mealPlansApplyCreate,
   mealsDayList,
   mealsCreate,
   mealsMealFoodsCreate,
@@ -31,17 +33,12 @@ function formatDate(date: Date): string {
 
 export default function DiaryPage() {
   const queryClient = useQueryClient();
-
   const todayString = formatDate(new Date());
-
   const [selectedDate, setSelectedDate] = useState(todayString);
-
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isFoodPickerOpen, setIsFoodPickerOpen] = useState(false);
   const [isRecipePickerOpen, setIsRecipePickerOpen] = useState(false);
-
   const [selectedMeal, setSelectedMeal] = useState<DayMeal | null>(null);
-
   const diaryQueryKey = ["meals", "day", selectedDate] as const;
 
   const {
@@ -61,7 +58,20 @@ export default function DiaryPage() {
     },
   });
 
-  // DiaryPage is responsible for knowing how totals are calculated.
+  const {
+    data: activeMealPlan,
+    isLoading: isActiveMealPlanLoading,
+    isError: isActiveMealPlanError,
+  } = useQuery({
+    queryKey: ["meal-plans", "active"],
+    queryFn: async () => {
+      const response = await mealPlansActiveRetrieve();
+
+      return response.data;
+    },
+    retry: false,
+  });
+
   const totals = computeDailyTotals(meals);
 
   const createMeal = useMutation({
@@ -77,6 +87,33 @@ export default function DiaryPage() {
       const response = await mealsMealFoodsCreate(options);
 
       return response.data;
+    },
+  });
+
+  const applyMealPlan = useMutation({
+    mutationFn: async () => {
+      if (!activeMealPlan) {
+        throw new Error("No active meal plan.");
+      }
+
+      const body = {
+        start_date: selectedDate,
+        days: 1,
+      };
+
+      const response = await mealPlansApplyCreate({
+        path: {
+          id: activeMealPlan.id,
+        },
+        body: body as unknown as Parameters<
+          typeof mealPlansApplyCreate
+        >[0]["body"],
+      });
+
+      return response.data;
+    },
+    onSuccess: async () => {
+      await refreshDiary();
     },
   });
 
@@ -184,6 +221,14 @@ export default function DiaryPage() {
     setSelectedMeal(null);
   }
 
+  async function handleApplyMealPlan() {
+    if (!activeMealPlan || applyMealPlan.isPending) {
+      return;
+    }
+
+    await applyMealPlan.mutateAsync();
+  }
+
   function closeAddModal() {
     setIsAddModalOpen(false);
     setSelectedMeal(null);
@@ -245,12 +290,6 @@ export default function DiaryPage() {
         carbs={totals.carbs}
       />
 
-      <MealList
-        meals={meals}
-        onAdd={openAddModal}
-        onDiaryChanged={refreshDiary}
-      />
-
       <ActionPillButtonGroup>
         <ActionPillButton
           label="Enter body metrics"
@@ -260,23 +299,43 @@ export default function DiaryPage() {
             console.log("Enter body metrics clicked");
           }}
         />
+
         <ActionPillButton
-          label="Apply meal plan"
+          label={
+            applyMealPlan.isPending
+              ? "Applying meal plan..."
+              : "Apply meal plan"
+          }
           icon="bi-calendar2-check"
-          onClick={() => {
-            // TODO: apply meal plan mutation
-            console.log("Apply meal plan clicked");
-          }}
+          onClick={handleApplyMealPlan}
         />
+
         <ActionPillButton
           label="Add excersice"
           icon="bi bi-bicycle"
           onClick={() => {
-            // TODO: apply meal plan mutation
-            console.log("Apply meal plan clicked");
+            // TODO: add exercise
+            console.log("Add exercise clicked");
           }}
         />
       </ActionPillButtonGroup>
+      <MealList
+        meals={meals}
+        onAdd={openAddModal}
+        onDiaryChanged={refreshDiary}
+      />
+
+      {applyMealPlan.isError && (
+        <div className="alert alert-danger mt-3">
+          Failed to apply the meal plan.
+        </div>
+      )}
+
+      {!isActiveMealPlanLoading &&
+        !isActiveMealPlanError &&
+        !activeMealPlan && (
+          <div className="alert alert-secondary mt-3">No active meal plan.</div>
+        )}
     </div>
   );
 }
