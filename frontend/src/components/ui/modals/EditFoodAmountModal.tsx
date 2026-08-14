@@ -70,7 +70,7 @@ function formatAmount(value: number) {
   return Number.isFinite(value) ? value.toFixed(0) : "—";
 }
 
-export default function EditFoodAmountsModal({
+export default function EditFoodAmountModal({
   food,
   servingSize,
   numberOfServings,

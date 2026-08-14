@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import type { Food } from "@/api/generated";
 import AmountItem from "@/components/ui/meal_card/AmountItem";
-import EditFoodAmountsModal from "@/components/ui/modals/EditFoodAmountsModal";
+import EditFoodAmountModal from "@/components/ui/modals/EditFoodAmountModal";
 
 type Props = {
   item: {
@@ -48,7 +48,7 @@ export default function FoodAmountItem({ item, onSave, onDelete }: Props) {
       />
 
       {isEditOpen && (
-        <EditFoodAmountsModal
+        <EditFoodAmountModal
           food={item.food}
           servingSize={servingSize}
           numberOfServings={numberOfServings}
