@@ -1489,6 +1489,24 @@ export type MealPlansActivateCreateResponses = {
 
 export type MealPlansActivateCreateResponse = MealPlansActivateCreateResponses[keyof MealPlansActivateCreateResponses];
 
+export type MealPlansDeactivateCreateData = {
+    body: MealPlanWritable;
+    path: {
+        /**
+         * A unique integer value identifying this meal plan.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/{id}/deactivate/';
+};
+
+export type MealPlansDeactivateCreateResponses = {
+    200: MealPlan;
+};
+
+export type MealPlansDeactivateCreateResponse = MealPlansDeactivateCreateResponses[keyof MealPlansDeactivateCreateResponses];
+
 export type MealPlansMarkFavoriteCreateData = {
     body: MealPlanWritable;
     path: {

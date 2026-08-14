@@ -857,6 +857,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/MealPlan'
           description: ''
+  /api/meal-plans/{id}/deactivate/:
+    post:
+      operationId: meal_plans_deactivate_create
+      description: Deactivate this meal plan.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this meal plan.
+        required: true
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MealPlan'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MealPlan'
+          description: ''
   /api/meal-plans/{id}/mark_favorite/:
     post:
       operationId: meal_plans_mark_favorite_create

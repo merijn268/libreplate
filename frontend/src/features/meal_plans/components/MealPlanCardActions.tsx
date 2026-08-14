@@ -10,6 +10,7 @@ interface Props {
   mealPlan: MealPlanMinimal;
   onDelete?: (id: number) => void;
   onActivate?: (id: number) => void;
+  onDeactivate?: (id: number) => void;
   onToggleFavorite?: (id: number, isFavorite: boolean) => void;
 }
 
@@ -17,13 +18,20 @@ export default function MealPlanCardActions({
   mealPlan,
   onDelete,
   onActivate,
+  onDeactivate,
   onToggleFavorite,
 }: Props) {
   const navigate = useNavigate();
 
   const items: ItemCardMenuItem[] = [
     ...(mealPlan.is_active
-      ? []
+      ? [
+          {
+            key: "deactivate",
+            label: "Deactivate",
+            onClick: () => onDeactivate?.(mealPlan.id),
+          },
+        ]
       : [
           {
             key: "activate",

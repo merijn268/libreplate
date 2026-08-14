@@ -48,6 +48,20 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=["post"])
+    def deactivate(self, request, pk=None):
+        """Deactivate this meal plan."""
+
+        meal_plan = self.get_object()
+        meal_plan.deactivate()
+
+        serializer = MealPlanSerializer(
+            meal_plan,
+            context=self.get_serializer_context(),
+        )
+
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["post"])
     def mark_used(self, request, pk=None):
         """Stamp last_used_at to now."""
 

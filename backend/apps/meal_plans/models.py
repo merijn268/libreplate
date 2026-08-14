@@ -70,6 +70,11 @@ class MealPlan(
         self.is_active = True
         self.save(update_fields=["is_active"])
 
+    @transaction.atomic
+    def deactivate(self):
+        self.is_active = False
+        self.save(update_fields=["is_active"])
+
     class Meta:
         constraints = [
             models.UniqueConstraint(

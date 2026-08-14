@@ -6,6 +6,7 @@ interface Props {
   mealPlans: MealPlanListType[];
   onDelete?: (id: number) => void;
   onActivate?: (id: number) => void;
+  onDeactivate?: (id: number) => void;
   onToggleFavorite?: (id: number, isFavorite: boolean) => void;
 }
 
@@ -13,6 +14,7 @@ export default function MealPlanList({
   mealPlans,
   onDelete,
   onActivate,
+  onDeactivate,
   onToggleFavorite,
 }: Props) {
   return (
@@ -23,6 +25,7 @@ export default function MealPlanList({
           mealPlan={mealPlan}
           onDelete={onDelete}
           onActivate={onActivate}
+          onDeactivate={onDeactivate}
           onToggleFavorite={onToggleFavorite}
         />
       ))}

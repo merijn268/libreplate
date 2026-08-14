@@ -10,6 +10,7 @@ import FloatingAddButton from "@/components/buttons/FloatingAddButton";
 
 import {
   mealPlansActivateCreate,
+  mealPlansDeactivateCreate,
   mealPlansCreate,
   mealPlansDestroy,
   mealPlansList,
@@ -44,6 +45,17 @@ export default function MealPlansPage() {
   const activateMealPlan = useMutation({
     mutationFn: (id: number) =>
       mealPlansActivateCreate({
+        path: {
+          id,
+        },
+        body: {} as never,
+      }),
+    onSuccess: invalidateMealPlans,
+  });
+
+  const deactivateMealPlan = useMutation({
+    mutationFn: (id: number) =>
+      mealPlansDeactivateCreate({
         path: {
           id,
         },
@@ -169,9 +181,10 @@ export default function MealPlansPage() {
       <div className="mt-2">
         <MealPlanList
           mealPlans={filteredMealPlans}
-          onDelete={(id) => deleteMealPlan.mutate(id)}
-          onActivate={(id) => activateMealPlan.mutate(id)}
-          onToggleFavorite={(id, isFavorite) =>
+          onDelete={(id: number) => deleteMealPlan.mutate(id)}
+          onActivate={(id: number) => activateMealPlan.mutate(id)}
+          onDeactivate={(id: number) => deactivateMealPlan.mutate(id)}
+          onToggleFavorite={(id: number, isFavorite: boolean) =>
             toggleFavorite.mutate({
               id,
               isFavorite,

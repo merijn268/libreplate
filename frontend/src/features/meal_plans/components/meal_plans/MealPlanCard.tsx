@@ -9,6 +9,7 @@ interface Props {
   mealPlan: MealPlanMinimal;
   onDelete?: (id: number) => void;
   onActivate?: (id: number) => void;
+  onDeactivate?: (id: number) => void;
   onToggleFavorite?: (id: number, isFavorite: boolean) => void;
 }
 
@@ -16,6 +17,7 @@ export default function MealPlanCard({
   mealPlan,
   onDelete,
   onActivate,
+  onDeactivate,
   onToggleFavorite,
 }: Props) {
   const navigate = useNavigate();
@@ -40,6 +42,7 @@ export default function MealPlanCard({
           mealPlan={mealPlan}
           onDelete={onDelete}
           onActivate={onActivate}
+          onDeactivate={onDeactivate}
           onToggleFavorite={onToggleFavorite}
         />
       }
