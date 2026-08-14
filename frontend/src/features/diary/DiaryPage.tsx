@@ -16,6 +16,8 @@ import AddToMealModal from "../../components/modals/AddToMealModal";
 
 import DiaryHeader from "../../components/DateSelector";
 import MealList from "./components/MealList";
+import ActionPillButton from "../../components/buttons/ActionPillButton";
+import ActionPillButtonGroup from "../../components/buttons/ActionPillButtonGroup";
 
 import { computeDailyTotals } from "@/features/diary/utils/computeDailyTotals";
 
@@ -248,6 +250,33 @@ export default function DiaryPage() {
         onAdd={openAddModal}
         onDiaryChanged={refreshDiary}
       />
+
+      <ActionPillButtonGroup>
+        <ActionPillButton
+          label="Enter body metrics"
+          icon="bi-clipboard-check"
+          onClick={() => {
+            // TODO: open body metrics modal
+            console.log("Enter body metrics clicked");
+          }}
+        />
+        <ActionPillButton
+          label="Apply meal plan"
+          icon="bi-calendar2-check"
+          onClick={() => {
+            // TODO: apply meal plan mutation
+            console.log("Apply meal plan clicked");
+          }}
+        />
+        <ActionPillButton
+          label="Add excersice"
+          icon="bi bi-bicycle"
+          onClick={() => {
+            // TODO: apply meal plan mutation
+            console.log("Apply meal plan clicked");
+          }}
+        />
+      </ActionPillButtonGroup>
     </div>
   );
 }
