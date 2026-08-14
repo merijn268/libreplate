@@ -322,6 +322,7 @@ export type PatchedMealPlan = {
 
 export type PatchedPlannedMeal = {
     readonly id?: number;
+    readonly is_virtual?: boolean;
     name?: string;
     /**
      * Display order of the meal within the day.
@@ -402,6 +403,7 @@ export type PatchedUserPreferences = {
 
 export type PlannedMeal = {
     readonly id: number;
+    readonly is_virtual: boolean;
     name: string;
     /**
      * Display order of the meal within the day.

@@ -3240,6 +3240,9 @@ components:
         id:
           type: integer
           readOnly: true
+        is_virtual:
+          type: boolean
+          readOnly: true
         name:
           type: string
           maxLength: 255
@@ -3425,6 +3428,9 @@ components:
         id:
           type: integer
           readOnly: true
+        is_virtual:
+          type: boolean
+          readOnly: true
         name:
           type: string
           maxLength: 255
@@ -3453,6 +3459,7 @@ components:
       required:
       - day
       - id
+      - is_virtual
       - name
       - weekday
     PlannedMealEntryRecurrence:

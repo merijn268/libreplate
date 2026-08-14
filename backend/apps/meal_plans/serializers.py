@@ -97,11 +97,13 @@ class PlannedMealSerializer(serializers.ModelSerializer):
     foods = PlannedMealFoodSerializer(many=True, required=False)
     recipes = PlannedMealRecipeSerializer(many=True, required=False)
     weekday = serializers.SerializerMethodField()
+    is_virtual = serializers.SerializerMethodField()
 
     class Meta:
         model = PlannedMeal
         fields = [
             "id",
+            "is_virtual",
             "name",
             "order",
             "day",
@@ -109,6 +111,9 @@ class PlannedMealSerializer(serializers.ModelSerializer):
             "foods",
             "recipes",
         ]
+
+    def get_is_virtual(self, obj) -> bool:
+        return obj.pk is None
 
     def get_weekday(self, obj) -> str:
         return calendar.day_name[obj.get_weekday()]
@@ -212,7 +217,7 @@ class MealPlanSerializer(serializers.ModelSerializer):
 
     """
 
-    # TODO consider adding an id_virtual instead of documentation
+    # TODO virtual meals are a messy design choice.
 
     planned_meals = PlannedMealSerializer(many=True, required=False)
 
