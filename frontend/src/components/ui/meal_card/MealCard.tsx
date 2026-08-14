@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import AddButton from "@/components/ui/Buttons";
 
 type Props = {
   /** Display name shown in the meal card header. */
@@ -70,14 +71,7 @@ export default function MealCard({
               </div>
             </div>
 
-            <button
-              type="button"
-              className="btn btn-sm btn-primary"
-              onClick={onAdd}
-              aria-label="Add to meal"
-            >
-              <i className="bi bi-plus-lg" />
-            </button>
+            <AddButton onClick={onAdd} />
           </div>
 
           <div className={`collapse ${open ? "show" : ""}`}>{children}</div>
