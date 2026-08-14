@@ -7,7 +7,7 @@ import FoodSearchBar, {
   type FoodSortMethod,
 } from "@/features/foods/components/FoodSearchBar";
 
-import FloatingAddButton from "@/components/ui/buttons/FloatingAddButton";
+import FloatingAddButton from "@/components/buttons/FloatingAddButton";
 
 import {
   foodsCreate,

@@ -6,7 +6,7 @@ import {
   integrationsSearchList,
   foodsList,
 } from "@/api/generated";
-import Modal from "@/components/ui/modals/Modal";
+import Modal from "@/components/modals/Modal";
 
 interface FoodPickerModalProps {
   isOpen: boolean;

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { MealPlan } from "@/api/generated";
 
-import Modal from "@/components/ui/modals/Modal";
+import Modal from "@/components/modals/Modal";
 
 type MealPlanDateSelectorModalProps = {
   mealPlan: MealPlan;

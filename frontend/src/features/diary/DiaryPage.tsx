@@ -9,12 +9,12 @@ import {
 
 import type { DayMeal, Food, Recipe } from "@/api/generated";
 
-import NutrientTotalsBar from "../../components/ui/bars/NutrientsTotalBar";
+import NutrientTotalsBar from "../../components/bars/NutrientsTotalBar";
 import FoodPickerModal from "../foods/components/FoodPickerModal";
 import RecipePickerModal from "../recipes/components/common/RecipePickermodal";
-import AddToMealModal from "../../components/ui/modals/AddToMealModal";
+import AddToMealModal from "../../components/modals/AddToMealModal";
 
-import DiaryHeader from "../../components/ui/DateSelector";
+import DiaryHeader from "../../components/DateSelector";
 import MealList from "./components/MealList";
 
 import { computeDailyTotals } from "@/features/diary/utils/computeDailyTotals";

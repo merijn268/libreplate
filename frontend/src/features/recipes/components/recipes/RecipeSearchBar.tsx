@@ -4,9 +4,9 @@ import { recipesTagsCreate, recipesTagsDestroy } from "@/api/generated";
 
 import type { RecipeTag } from "@/api/generated/types.gen";
 
-import SearchBar, { type SortOption } from "@/components/ui/bars/SearchBar";
+import SearchBar, { type SortOption } from "@/components/bars/SearchBar";
 
-import TagModal from "@/components/ui/modals/TagModal";
+import TagModal from "@/components/modals/TagModal";
 
 export type RecipeSortMethod =
   "created_at" | "updated_at" | "name" | "last_used_at";

@@ -4,7 +4,7 @@ import type { MealPlanMinimal } from "@/api/generated/types.gen";
 
 import ItemCardActions, {
   type ItemCardMenuItem,
-} from "@/components/ui/ItemCardActions";
+} from "@/components/ItemCardActions";
 
 interface Props {
   mealPlan: MealPlanMinimal;

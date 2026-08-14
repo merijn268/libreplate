@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import type { Food } from "@/api/generated";
 
 import FoodCardActions from "./FoodCardActions";
-import ItemCard from "@/components/ui/ItemCard";
+import ItemCard from "@/components/ItemCard";
 
 interface Props {
   food: Food;

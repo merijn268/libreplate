@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import SmallPlusButton from "@/components/ui/buttons/SmallAddButton";
+import SmallPlusButton from "@/components/buttons/SmallAddButton";
 
 type Props = {
   /** Display name shown in the meal card header. */

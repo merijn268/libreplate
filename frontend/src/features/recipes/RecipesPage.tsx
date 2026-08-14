@@ -6,7 +6,7 @@ import RecipeList from "./components/recipes/RecipeList";
 import RecipeSearchBar, {
   type RecipeSortMethod,
 } from "./components/recipes/RecipeSearchBar";
-import FloatingAddButton from "@/components/ui/buttons/FloatingAddButton";
+import FloatingAddButton from "@/components/buttons/FloatingAddButton";
 
 import {
   recipesCopyCreate,

@@ -7,7 +7,7 @@ import type {
   RecipeNutrient,
 } from "@/api/generated";
 
-import { entryOccursOnDay } from "@/components/ui/meal_card/mealEntryRecurrence";
+import { entryOccursOnDay } from "@/components/meal_card/mealEntryRecurrence";
 
 type NutrientTotal = {
   name: string;

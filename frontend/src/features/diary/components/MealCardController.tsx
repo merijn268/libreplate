@@ -8,8 +8,8 @@ import {
 
 import type { DayMeal } from "@/api/generated";
 
-import TotalsModal from "@/components/ui/modals/NutrientsTotalsModal";
-import MealCard from "@/components/ui/meal_card/MealCard";
+import TotalsModal from "@/components/modals/NutrientsTotalsModal";
+import MealCard from "@/components/meal_card/MealCard";
 import FoodAmountItem from "@/features/diary/components/FoodAmountItem";
 
 import { computeMealTotals } from "@/features/diary/utils/MealFormulas";

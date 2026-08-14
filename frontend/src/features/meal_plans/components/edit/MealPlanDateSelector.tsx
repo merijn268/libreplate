@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import SelectorBar from "@/components/ui/bars/SelectorBar";
+import SelectorBar from "@/components/bars/SelectorBar";
 import type { MealPlan } from "@/api/generated";
 
 import MealPlanDateSelectorModal from "./MealPlanDateSelectorModal";

@@ -4,7 +4,7 @@ import type { Recipe } from "@/api/generated/types.gen";
 
 import ItemCardActions, {
   type ItemCardMenuItem,
-} from "@/components/ui/ItemCardActions";
+} from "@/components/ItemCardActions";
 
 interface Props {
   recipe: Recipe;

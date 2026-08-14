@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 import type { Recipe } from "@/api/generated/types.gen";
 
-import ItemCard from "@/components/ui/ItemCard";
+import ItemCard from "@/components/ItemCard";
 import RecipeCardActions from "./RecipeCardActions";
 
 interface Props {

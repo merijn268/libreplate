@@ -4,7 +4,7 @@ import type { Food } from "@/api/generated";
 
 import ItemCardActions, {
   type ItemCardMenuItem,
-} from "@/components/ui/ItemCardActions";
+} from "@/components/ItemCardActions";
 
 interface Props {
   food: Food;

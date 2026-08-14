@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
-import Modal from "@/components/ui/modals/Modal";
-import MacroPieChart from "@/components/ui/MacroPieChart";
+import Modal from "@/components/modals/Modal";
+import MacroPieChart from "@/components/MacroPieChart";
 
 type Totals = {
   energy: number;

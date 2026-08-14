@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import TotalsModal from "@/components/ui/modals/NutrientsTotalsModal";
+import TotalsModal from "@/components/modals/NutrientsTotalsModal";
 
 type Props = {
   energy: number;

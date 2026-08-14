@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import type { Food } from "@/api/generated";
-import AmountItem from "@/components/ui/meal_card/AmountItem";
-import EditFoodAmountModal from "@/components/ui/modals/EditFoodAmountModal";
+import AmountItem from "@/components/meal_card/AmountItem";
+import EditFoodAmountModal from "@/components/modals/EditFoodAmountModal";
 
 type Props = {
   item: {

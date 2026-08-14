@@ -5,7 +5,7 @@ import type {
   MealPlanPeriodUnitEnum,
   PlannedMealEntryRecurrence,
 } from "@/api/generated";
-import Modal from "@/components/ui/modals/Modal";
+import Modal from "@/components/modals/Modal";
 
 type Props = {
   isOpen: boolean;

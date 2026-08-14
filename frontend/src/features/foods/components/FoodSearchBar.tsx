@@ -1,4 +1,4 @@
-import SearchBar, { type SortOption } from "@/components/ui/bars/SearchBar";
+import SearchBar, { type SortOption } from "@/components/bars/SearchBar";
 
 export type FoodSortMethod = "name" | "brand";
 

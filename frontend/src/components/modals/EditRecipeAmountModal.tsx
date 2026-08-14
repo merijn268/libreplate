@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { PlannedMealEntryRecurrence, Recipe } from "@/api/generated";
-import Modal from "@/components/ui/modals/Modal";
+import Modal from "@/components/modals/Modal";
 
 type Props = {
   recipe: Recipe;

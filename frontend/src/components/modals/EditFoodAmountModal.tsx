@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 
 import type { Food, PlannedMealEntryRecurrence } from "@/api/generated";
-import Modal from "@/components/ui/modals/Modal";
-import MacroPieChart from "@/components/ui/MacroPieChart";
+import Modal from "@/components/modals/Modal";
+import MacroPieChart from "@/components/MacroPieChart";
 
 type Props = {
   food: Food;

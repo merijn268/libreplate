@@ -3,7 +3,7 @@ import type { MealPlan } from "@/api/generated";
 
 import MealPlanDateSelector from "./MealPlanDateSelector";
 import PlannedMealsList from "./PlannedMealsList";
-import NutrientTotalsBar from "@/components/ui/bars/NutrientsTotalBar";
+import NutrientTotalsBar from "@/components/bars/NutrientsTotalBar";
 import { getDayNutrients } from "../utils/mealPlanNutrients";
 
 type MealPlanEditContentProps = {

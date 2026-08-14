@@ -6,7 +6,7 @@ import MealPlanList from "./components/meal_plans/MealPlanList";
 import MealPlanSearchBar, {
   type MealPlanSortMethod,
 } from "./components/meal_plans/MealPlanSearchBar";
-import FloatingAddButton from "@/components/ui/buttons/FloatingAddButton";
+import FloatingAddButton from "@/components/buttons/FloatingAddButton";
 
 import {
   mealPlansCreate,

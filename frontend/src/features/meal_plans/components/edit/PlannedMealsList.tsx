@@ -25,21 +25,21 @@ import type {
   PlannedMealWritable,
 } from "@/api/generated";
 
-import MealCard from "@/components/ui/meal_card/MealCard";
-import AmountItem from "@/components/ui/meal_card/AmountItem";
+import MealCard from "@/components/meal_card/MealCard";
+import AmountItem from "@/components/meal_card/AmountItem";
 
-import TotalsModal from "@/components/ui/modals/NutrientsTotalsModal";
-import AddToMealModal from "@/components/ui/modals/AddToMealModal";
-import EditFoodAmountModal from "@/components/ui/modals/EditFoodAmountModal";
-import EditRecipeAmountModal from "@/components/ui/modals/EditRecipeAmountModal";
-import EditRecurrenceModal from "@/components/ui/modals/EditRecurrenceModal";
+import TotalsModal from "@/components/modals/NutrientsTotalsModal";
+import AddToMealModal from "@/components/modals/AddToMealModal";
+import EditFoodAmountModal from "@/components/modals/EditFoodAmountModal";
+import EditRecipeAmountModal from "@/components/modals/EditRecipeAmountModal";
+import EditRecurrenceModal from "@/components/modals/EditRecurrenceModal";
 
 import FoodPickerModal from "@/features/foods/components/FoodPickerModal";
 import RecipePickerModal from "@/features/recipes/components/common/RecipePickermodal";
 
 import { getPlannedMealNutrients } from "@/features/meal_plans/components/utils/mealPlanNutrients";
 
-import { entryOccursOnDay } from "@/components/ui/meal_card/mealEntryRecurrence";
+import { entryOccursOnDay } from "@/components/meal_card/mealEntryRecurrence";
 
 type Props = {
   mealPlan: MealPlan;
