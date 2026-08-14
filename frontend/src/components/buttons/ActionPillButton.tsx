@@ -2,8 +2,6 @@ import type { MouseEventHandler } from "react";
 
 type ActionPillButtonProps = {
   label: string;
-  /** Bootstrap Icons class, e.g. "bi-clipboard-check" (no need to include "bi") */
-  icon?: string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   disabled?: boolean;
   loading?: boolean;
@@ -11,7 +9,6 @@ type ActionPillButtonProps = {
 
 export default function ActionPillButton({
   label,
-  icon,
   onClick,
   disabled = false,
   loading = false,
@@ -19,7 +16,7 @@ export default function ActionPillButton({
   return (
     <button
       type="button"
-      className="btn btn-outline-primary rounded-3 d-flex align-items-center justify-content-center gap-1 w-100 py-2 px-2 fw-semibold shadow-sm small"
+      className="btn btn-outline-primary rounded-2 d-flex align-items-center justify-content-center gap-1 w-100 py-2 px-3 fw-semibold shadow-sm"
       onClick={onClick}
       disabled={disabled || loading}
     >
@@ -30,7 +27,7 @@ export default function ActionPillButton({
           aria-hidden="true"
         />
       ) : (
-        icon && <i className={`bi ${icon}`} aria-hidden="true" />
+        <i className="bi bi-plus-lg fs-6" aria-hidden="true" />
       )}
       <span>{label}</span>
     </button>

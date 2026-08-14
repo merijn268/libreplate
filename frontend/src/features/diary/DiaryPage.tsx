@@ -292,8 +292,7 @@ export default function DiaryPage() {
 
       <ActionPillButtonGroup>
         <ActionPillButton
-          label="Enter body metrics"
-          icon="bi-clipboard-check"
+          label="Log Body metrics"
           onClick={() => {
             // TODO: open body metrics modal
             console.log("Enter body metrics clicked");
@@ -302,17 +301,13 @@ export default function DiaryPage() {
 
         <ActionPillButton
           label={
-            applyMealPlan.isPending
-              ? "Applying meal plan..."
-              : "Apply meal plan"
+            applyMealPlan.isPending ? "Applying meal plan..." : "Apply meal plan"
           }
-          icon="bi-calendar2-check"
           onClick={handleApplyMealPlan}
         />
 
         <ActionPillButton
           label="Add excersice"
-          icon="bi bi-bicycle"
           onClick={() => {
             // TODO: add exercise
             console.log("Add exercise clicked");
