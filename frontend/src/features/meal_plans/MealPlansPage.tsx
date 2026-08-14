@@ -6,7 +6,7 @@ import MealPlanList from "./components/meal_plans/MealPlanList";
 import MealPlanSearchBar, {
   type MealPlanSortMethod,
 } from "./components/meal_plans/MealPlanSearchBar";
-import RoundAddButton from "@/components/ui/RoundAddButton";
+import FloatingAddButton from "@/components/ui/buttons/FloatingAddButton";
 
 import {
   mealPlansCreate,
@@ -167,7 +167,7 @@ export default function MealPlansPage() {
         />
       </div>
 
-      <RoundAddButton
+      <FloatingAddButton
         onClick={handleAddMealPlan}
         disabled={createMealPlan.isPending}
       />

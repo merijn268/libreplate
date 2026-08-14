@@ -1,12 +1,12 @@
-type RoundAddButtonProps = {
+type FloatingAddButtonProps = {
   onClick?: () => void;
   disabled?: boolean;
 };
 
-export default function RoundAddButton({
+export default function FloatingAddButton({
   onClick,
   disabled = false,
-}: RoundAddButtonProps) {
+}: FloatingAddButtonProps) {
   return (
     <button
       type="button"

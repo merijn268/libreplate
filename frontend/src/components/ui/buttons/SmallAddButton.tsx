@@ -2,7 +2,7 @@ type Props = {
   onClick: () => void;
 };
 
-export default function AddButton({ onClick }: Props) {
+export default function SmallPlusButton({ onClick }: Props) {
   return (
     <button
       type="button"

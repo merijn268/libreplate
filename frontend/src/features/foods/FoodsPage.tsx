@@ -7,7 +7,7 @@ import FoodSearchBar, {
   type FoodSortMethod,
 } from "@/features/foods/components/FoodSearchBar";
 
-import RoundAddButton from "@/components/ui/RoundAddButton";
+import FloatingAddButton from "@/components/ui/buttons/FloatingAddButton";
 
 import {
   foodsCreate,
@@ -168,7 +168,10 @@ export default function FoodsPage() {
         />
       </div>
 
-      <RoundAddButton onClick={handleAddFood} disabled={createFood.isPending} />
+      <FloatingAddButton
+        onClick={handleAddFood}
+        disabled={createFood.isPending}
+      />
     </div>
   );
 }

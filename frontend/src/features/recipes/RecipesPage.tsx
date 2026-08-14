@@ -6,7 +6,7 @@ import RecipeList from "./components/recipes/RecipeList";
 import RecipeSearchBar, {
   type RecipeSortMethod,
 } from "./components/recipes/RecipeSearchBar";
-import RoundAddButton from "@/components/ui/RoundAddButton";
+import FloatingAddButton from "@/components/ui/buttons/FloatingAddButton";
 
 import {
   recipesCopyCreate,
@@ -200,7 +200,7 @@ export default function RecipePage() {
         />
       </div>
 
-      <RoundAddButton
+      <FloatingAddButton
         onClick={handleAddRecipe}
         disabled={createRecipe.isPending}
       />
