@@ -59,7 +59,7 @@ export default function ItemCardActions({
     >
       <button
         type="button"
-        className="btn btn-sm border-0 bg-transparent p-1 text-dark"
+        className="btn btn-sm border-0 bg-transparent p-1"
         aria-label={ariaLabel}
         aria-haspopup="menu"
         aria-expanded={open}
