@@ -10,7 +10,7 @@ from .models import (
     PlannedMealRecipe,
 )
 from .serializers import (
-    MealPlanListSerializer,
+    MealPlanMinimalSerializer,
     MealPlanSerializer,
     PlannedMealFoodSerializer,
     PlannedMealRecipeSerializer,
@@ -18,28 +18,9 @@ from .serializers import (
 )
 
 
-class IsOwner(permissions.BasePermission):
-    """Only the owning user can view/edit their meal plans."""
-
-    def has_object_permission(self, request, view, obj):
-        if isinstance(obj, MealPlan):
-            owner = obj.user
-        elif isinstance(obj, PlannedMeal):
-            owner = obj.meal_plan.user
-        elif isinstance(obj, (PlannedMealFood, PlannedMealRecipe)):
-            owner = obj.planned_meal.meal_plan.user
-        else:
-            return False
-
-        return owner == request.user
-
-
 class MealPlanViewSet(viewsets.ModelViewSet):
     queryset = MealPlan.objects.all()
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwner,
-    ]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return MealPlan.objects.filter(user=self.request.user).prefetch_related(
@@ -51,8 +32,7 @@ class MealPlanViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.action == "list":
-            return MealPlanListSerializer
-
+            return MealPlanMinimalSerializer
         return MealPlanSerializer
 
     @action(detail=True, methods=["post"])
@@ -90,10 +70,7 @@ class PlannedMealViewSet(viewsets.ModelViewSet):
 
     queryset = PlannedMeal.objects.all()
     serializer_class = PlannedMealSerializer
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwner,
-    ]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = PlannedMeal.objects.filter(
@@ -101,7 +78,6 @@ class PlannedMealViewSet(viewsets.ModelViewSet):
         )
 
         meal_plan_id = self.request.query_params.get("meal_plan")
-
         if meal_plan_id is not None:
             queryset = queryset.filter(
                 meal_plan_id=meal_plan_id,
@@ -113,14 +89,9 @@ class PlannedMealViewSet(viewsets.ModelViewSet):
 class PlannedMealFoodViewSet(viewsets.ModelViewSet):
     """CRUD for food entries within the current user's meal plans."""
 
-    """
-    `queryset` declares the model/queryset for DRF and schema generation.
-    `get_queryset()` is used for actual requests and restricts results
-    to meal-plan foods owned by the authenticated user.
-    """
     queryset = PlannedMealFood.objects.all()
     serializer_class = PlannedMealFoodSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = PlannedMealFood.objects.filter(
@@ -147,16 +118,12 @@ class PlannedMealRecipeViewSet(viewsets.ModelViewSet):
 
     queryset = PlannedMealRecipe.objects.all()
     serializer_class = PlannedMealRecipeSerializer
-    permission_classes = [
-        permissions.IsAuthenticated,
-        IsOwner,
-    ]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         queryset = PlannedMealRecipe.objects.filter(
             planned_meal__meal_plan__user=self.request.user,
         )
-
         meal_plan_id = self.request.query_params.get("meal_plan")
 
         if meal_plan_id is not None:

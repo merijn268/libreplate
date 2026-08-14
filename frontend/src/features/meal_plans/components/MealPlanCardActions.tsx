@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 
-import type { MealPlanList } from "@/api/generated/types.gen";
+import type { MealPlanMinimal } from "@/api/generated/types.gen";
 
 import ItemCardActions, {
   type ItemCardMenuItem,
 } from "@/components/ui/ItemCardActions";
 
 interface Props {
-  mealPlan: MealPlanList;
+  mealPlan: MealPlanMinimal;
   onDelete?: (id: number) => void;
   onToggleFavorite?: (id: number, isFavorite: boolean) => void;
 }

@@ -696,7 +696,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MealPlanList'
+                  $ref: '#/components/schemas/MealPlanMinimal'
           description: ''
     post:
       operationId: meal_plans_create
@@ -2813,6 +2813,18 @@ components:
       - serving_size
     MealPlan:
       type: object
+      description: |-
+        Full meal-plan representation.
+
+        ``planned_meals`` contains both persisted PlannedMeal instances and
+        virtual PlannedMeal instances generated from the user's DefaultMeals.
+
+        Virtual planned meals:
+        - are not saved to the database;
+        - have ``id=None``;
+        - are generated for missing default meals within the meal plan's duration;
+        - cannot be addressed through the PlannedMeal CRUD endpoints until they
+          have been persisted.
       properties:
         id:
           type: integer
@@ -2877,8 +2889,13 @@ components:
       - start_day_display
       - updated_at
       - user
-    MealPlanList:
+    MealPlanMinimal:
       type: object
+      description: |-
+        Lightweight serializer for meal plans, excluding planned meals and
+        other fields.
+
+        Used for the meal plan list endpoint and when displaying meal plans.
       properties:
         id:
           type: integer
@@ -2894,27 +2911,6 @@ components:
             type: integer
         is_favorite:
           type: boolean
-        start_day:
-          type: integer
-          maximum: 6
-          minimum: 0
-          description: Weekday number on which the meal plan starts (Monday=0).
-        start_day_display:
-          type: string
-          readOnly: true
-        duration:
-          type: integer
-          maximum: 32767
-          minimum: 1
-          description: Length of the meal plan.
-        duration_period:
-          allOf:
-          - $ref: '#/components/schemas/MealPlanPeriodUnitEnum'
-          description: |-
-            Period used for the meal plan duration.
-
-            * `day` - Day
-            * `week` - Week
         created_at:
           type: string
           format: date-time
@@ -2931,7 +2927,6 @@ components:
       - created_at
       - id
       - name
-      - start_day_display
       - updated_at
     MealPlanPeriodUnitEnum:
       enum:
@@ -3171,6 +3166,18 @@ components:
           format: double
     PatchedMealPlan:
       type: object
+      description: |-
+        Full meal-plan representation.
+
+        ``planned_meals`` contains both persisted PlannedMeal instances and
+        virtual PlannedMeal instances generated from the user's DefaultMeals.
+
+        Virtual planned meals:
+        - are not saved to the database;
+        - have ``id=None``;
+        - are generated for missing default meals within the meal plan's duration;
+        - cannot be addressed through the PlannedMeal CRUD endpoints until they
+          have been persisted.
       properties:
         id:
           type: integer
@@ -3288,6 +3295,8 @@ components:
         id:
           type: integer
           readOnly: true
+        planned_meal_id:
+          type: integer
         recipe_id:
           type: integer
         recipe:
@@ -3525,6 +3534,8 @@ components:
         id:
           type: integer
           readOnly: true
+        planned_meal_id:
+          type: integer
         recipe_id:
           type: integer
         recipe:
@@ -3539,6 +3550,7 @@ components:
           $ref: '#/components/schemas/PlannedMealEntryRecurrence'
       required:
       - id
+      - planned_meal_id
       - recipe
       - recipe_id
     Recipe:

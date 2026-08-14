@@ -108,6 +108,19 @@ export type MealFoodCreate = {
     number_of_servings: number;
 };
 
+/**
+ * Full meal-plan representation.
+ *
+ * ``planned_meals`` contains both persisted PlannedMeal instances and
+ * virtual PlannedMeal instances generated from the user's DefaultMeals.
+ *
+ * Virtual planned meals:
+ * - are not saved to the database;
+ * - have ``id=None``;
+ * - are generated for missing default meals within the meal plan's duration;
+ * - cannot be addressed through the PlannedMeal CRUD endpoints until they
+ * have been persisted.
+ */
 export type MealPlan = {
     readonly id: number;
     name: string;
@@ -137,28 +150,18 @@ export type MealPlan = {
     planned_meals?: Array<PlannedMeal>;
 };
 
-export type MealPlanList = {
+/**
+ * Lightweight serializer for meal plans, excluding planned meals and
+ * other fields.
+ *
+ * Used for the meal plan list endpoint and when displaying meal plans.
+ */
+export type MealPlanMinimal = {
     readonly id: number;
     name: string;
     description?: string;
     tags?: Array<number>;
     is_favorite?: boolean;
-    /**
-     * Weekday number on which the meal plan starts (Monday=0).
-     */
-    start_day?: number;
-    readonly start_day_display: string;
-    /**
-     * Length of the meal plan.
-     */
-    duration?: number;
-    /**
-     * Period used for the meal plan duration.
-     *
-     * * `day` - Day
-     * * `week` - Week
-     */
-    duration_period?: MealPlanPeriodUnitEnum;
     readonly created_at: string;
     readonly updated_at: string;
     last_used_at?: string | null;
@@ -275,6 +278,19 @@ export type PatchedMealFoodCreate = {
     number_of_servings?: number;
 };
 
+/**
+ * Full meal-plan representation.
+ *
+ * ``planned_meals`` contains both persisted PlannedMeal instances and
+ * virtual PlannedMeal instances generated from the user's DefaultMeals.
+ *
+ * Virtual planned meals:
+ * - are not saved to the database;
+ * - have ``id=None``;
+ * - are generated for missing default meals within the meal plan's duration;
+ * - cannot be addressed through the PlannedMeal CRUD endpoints until they
+ * have been persisted.
+ */
 export type PatchedMealPlan = {
     readonly id?: number;
     name?: string;
@@ -332,6 +348,7 @@ export type PatchedPlannedMealFood = {
 
 export type PatchedPlannedMealRecipe = {
     readonly id?: number;
+    planned_meal_id?: number;
     recipe_id?: number;
     recipe?: Recipe;
     number_of_servings?: number;
@@ -445,6 +462,7 @@ export type PlannedMealFood = {
 
 export type PlannedMealRecipe = {
     readonly id: number;
+    planned_meal_id: number;
     recipe_id: number;
     recipe: Recipe;
     number_of_servings?: number;
@@ -615,6 +633,19 @@ export type MealFoodCreateWritable = {
     number_of_servings: number;
 };
 
+/**
+ * Full meal-plan representation.
+ *
+ * ``planned_meals`` contains both persisted PlannedMeal instances and
+ * virtual PlannedMeal instances generated from the user's DefaultMeals.
+ *
+ * Virtual planned meals:
+ * - are not saved to the database;
+ * - have ``id=None``;
+ * - are generated for missing default meals within the meal plan's duration;
+ * - cannot be addressed through the PlannedMeal CRUD endpoints until they
+ * have been persisted.
+ */
 export type MealPlanWritable = {
     name: string;
     description?: string;
@@ -638,26 +669,17 @@ export type MealPlanWritable = {
     planned_meals?: Array<PlannedMealWritable>;
 };
 
-export type MealPlanListWritable = {
+/**
+ * Lightweight serializer for meal plans, excluding planned meals and
+ * other fields.
+ *
+ * Used for the meal plan list endpoint and when displaying meal plans.
+ */
+export type MealPlanMinimalWritable = {
     name: string;
     description?: string;
     tags?: Array<number>;
     is_favorite?: boolean;
-    /**
-     * Weekday number on which the meal plan starts (Monday=0).
-     */
-    start_day?: number;
-    /**
-     * Length of the meal plan.
-     */
-    duration?: number;
-    /**
-     * Period used for the meal plan duration.
-     *
-     * * `day` - Day
-     * * `week` - Week
-     */
-    duration_period?: MealPlanPeriodUnitEnum;
     last_used_at?: string | null;
 };
 
@@ -713,6 +735,19 @@ export type PatchedMealFoodCreateWritable = {
     number_of_servings?: number;
 };
 
+/**
+ * Full meal-plan representation.
+ *
+ * ``planned_meals`` contains both persisted PlannedMeal instances and
+ * virtual PlannedMeal instances generated from the user's DefaultMeals.
+ *
+ * Virtual planned meals:
+ * - are not saved to the database;
+ * - have ``id=None``;
+ * - are generated for missing default meals within the meal plan's duration;
+ * - cannot be addressed through the PlannedMeal CRUD endpoints until they
+ * have been persisted.
+ */
 export type PatchedMealPlanWritable = {
     name?: string;
     description?: string;
@@ -759,6 +794,7 @@ export type PatchedPlannedMealFoodWritable = {
 };
 
 export type PatchedPlannedMealRecipeWritable = {
+    planned_meal_id?: number;
     recipe_id?: number;
     number_of_servings?: number;
     recurrence?: PlannedMealEntryRecurrence;
@@ -813,6 +849,7 @@ export type PlannedMealFoodWritable = {
 };
 
 export type PlannedMealRecipeWritable = {
+    planned_meal_id: number;
     recipe_id: number;
     number_of_servings?: number;
     recurrence?: PlannedMealEntryRecurrence;
@@ -1334,7 +1371,7 @@ export type MealPlansListData = {
 };
 
 export type MealPlansListResponses = {
-    200: Array<MealPlanList>;
+    200: Array<MealPlanMinimal>;
 };
 
 export type MealPlansListResponse = MealPlansListResponses[keyof MealPlansListResponses];

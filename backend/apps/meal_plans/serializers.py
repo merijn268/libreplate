@@ -1,10 +1,13 @@
 import calendar
+from typing import Any
 
+from apps.core.serializers import UserOwnedRelatedField
 from apps.foods.models import Food
 from apps.foods.serializers import FoodSerializer
 from apps.meals.models import DefaultMeal
 from apps.recipes.models import Recipe
 from apps.recipes.serializers import RecipeSerializer
+from apps.tags.serializers import TagSerializer
 from rest_framework import serializers
 
 from .models import (
@@ -30,17 +33,33 @@ class PlannedMealEntryRecurrenceSerializer(serializers.ModelSerializer):
         ]
 
 
-class PlannedMealFoodSerializer(serializers.ModelSerializer):
+class PlannedMealEntrySerializer(serializers.ModelSerializer):
     planned_meal_id = serializers.PrimaryKeyRelatedField(
         queryset=PlannedMeal.objects.all(),
         source="planned_meal",
     )
+    recurrence = PlannedMealEntryRecurrenceSerializer(required=False)
+
+    def create(self, validated_data: dict[str, Any]):
+        recurrence_data = validated_data.pop("recurrence", None)
+
+        entry = super().create(validated_data)
+
+        if recurrence_data is not None:
+            PlannedMealEntryRecurrence.objects.create(
+                planned_meal_entry=entry,
+                **recurrence_data,
+            )
+
+        return entry
+
+
+class PlannedMealFoodSerializer(PlannedMealEntrySerializer):
     food_id = serializers.PrimaryKeyRelatedField(
         queryset=Food.objects.all(),
         source="food",
     )
     food = FoodSerializer(read_only=True)
-    recurrence = PlannedMealEntryRecurrenceSerializer(required=False)
 
     class Meta:
         model = PlannedMealFood
@@ -54,67 +73,29 @@ class PlannedMealFoodSerializer(serializers.ModelSerializer):
             "recurrence",
         ]
 
-    def create(self, validated_data):
-        recurrence_data = validated_data.pop("recurrence", None)
-        entry = PlannedMealFood.objects.create(**validated_data)
 
-        if recurrence_data is not None:
-            PlannedMealEntryRecurrence.objects.create(
-                planned_meal_entry=entry,
-                **recurrence_data,
-            )
-        return entry
-
-
-class PlannedMealRecipeSerializer(serializers.ModelSerializer):
+class PlannedMealRecipeSerializer(PlannedMealEntrySerializer):
     recipe_id = serializers.PrimaryKeyRelatedField(
         queryset=Recipe.objects.all(),
         source="recipe",
     )
     recipe = RecipeSerializer(read_only=True)
-    recurrence = PlannedMealEntryRecurrenceSerializer(required=False)
 
     class Meta:
         model = PlannedMealRecipe
         fields = [
             "id",
+            "planned_meal_id",
             "recipe_id",
             "recipe",
             "number_of_servings",
             "recurrence",
         ]
 
-    def create(self, validated_data):
-        recurrence_data = validated_data.pop(
-            "recurrence",
-            None,
-        )
-
-        planned_meal = self.context["planned_meal"]
-
-        entry = PlannedMealRecipe.objects.create(
-            planned_meal=planned_meal,
-            **validated_data,
-        )
-
-        if recurrence_data is not None:
-            PlannedMealEntryRecurrence.objects.create(
-                planned_meal_entry=entry,
-                **recurrence_data,
-            )
-
-        return entry
-
 
 class PlannedMealSerializer(serializers.ModelSerializer):
-    foods = PlannedMealFoodSerializer(
-        many=True,
-        required=False,
-    )
-    recipes = PlannedMealRecipeSerializer(
-        many=True,
-        required=False,
-    )
+    foods = PlannedMealFoodSerializer(many=True, required=False)
+    recipes = PlannedMealRecipeSerializer(many=True, required=False)
     weekday = serializers.SerializerMethodField()
 
     class Meta:
@@ -134,16 +115,13 @@ class PlannedMealSerializer(serializers.ModelSerializer):
 
     def _create_food_entries(
         self,
-        planned_meal,
-        foods_data,
-    ):
+        planned_meal: PlannedMeal,
+        foods_data: list[dict[str, Any]],
+    ) -> None:
+
         for food_data in foods_data:
             food_data = food_data.copy()
-
-            recurrence_data = food_data.pop(
-                "recurrence",
-                None,
-            )
+            recurrence_data = food_data.pop(key="recurrence", default=None)
 
             entry = PlannedMealFood.objects.create(
                 planned_meal=planned_meal,
@@ -158,15 +136,16 @@ class PlannedMealSerializer(serializers.ModelSerializer):
 
     def _create_recipe_entries(
         self,
-        planned_meal,
-        recipes_data,
-    ):
+        planned_meal: PlannedMeal,
+        recipes_data: list[dict[str, Any]],
+    ) -> None:
+
         for recipe_data in recipes_data:
             recipe_data = recipe_data.copy()
 
             recurrence_data = recipe_data.pop(
-                "recurrence",
-                None,
+                key="recurrence",
+                default=None,
             )
 
             entry = PlannedMealRecipe.objects.create(
@@ -180,90 +159,73 @@ class PlannedMealSerializer(serializers.ModelSerializer):
                     **recurrence_data,
                 )
 
-    def create(self, validated_data):
-        foods_data = validated_data.pop(
-            "foods",
-            [],
-        )
-        recipes_data = validated_data.pop(
-            "recipes",
-            [],
-        )
-
-        planned_meal = PlannedMeal.objects.create(
-            **validated_data,
-        )
-
-        self._create_food_entries(
-            planned_meal,
-            foods_data,
-        )
-
-        self._create_recipe_entries(
-            planned_meal,
-            recipes_data,
-        )
-
+    def create(self, validated_data: dict[str, Any]) -> PlannedMeal:
+        """
+        Create a planned meal and its associated food and recipe entries.
+        """
+        foods_data = validated_data.pop("foods", [])
+        recipes_data = validated_data.pop("recipes", [])
+        planned_meal = PlannedMeal.objects.create(**validated_data)
+        self._create_food_entries(planned_meal, foods_data)
+        self._create_recipe_entries(planned_meal, recipes_data)
         return planned_meal
 
-    def update(self, instance, validated_data):
-        foods_data = validated_data.pop(
-            "foods",
-            None,
-        )
-        recipes_data = validated_data.pop(
-            "recipes",
-            None,
-        )
+    def update(
+        self,
+        instance: PlannedMeal,
+        validated_data: dict[str, Any],
+    ) -> PlannedMeal:
+        """
+        Update a planned meal and its associated food and recipe entries.
+        """
+        foods_data = validated_data.pop(key="foods", default=None)
+        recipes_data = validated_data.pop(key="recipes", default=None)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-
         instance.save()
 
         if foods_data is not None:
-            instance.entries.all().delete()
+            PlannedMealFood.objects.filter(planned_meal=instance).delete()
+            self._create_food_entries(instance, foods_data)
 
-            self._create_food_entries(
-                instance,
-                foods_data,
-            )
-
-            self._create_recipe_entries(
-                instance,
-                recipes_data if recipes_data is not None else [],
-            )
-
-        elif recipes_data is not None:
-            instance.entries.all().delete()
-
-            self._create_food_entries(
-                instance,
-                [],
-            )
-
-            self._create_recipe_entries(
-                instance,
-                recipes_data,
-            )
+        if recipes_data is not None:
+            PlannedMealRecipe.objects.filter(planned_meal=instance).delete()
+            self._create_recipe_entries(instance, recipes_data)
 
         return instance
 
 
 class MealPlanSerializer(serializers.ModelSerializer):
-    planned_meals = PlannedMealSerializer(
-        many=True,
-        required=False,
-    )
-    tags = serializers.PrimaryKeyRelatedField(
+    """
+    Full meal-plan representation.
+
+    ``planned_meals`` contains both persisted PlannedMeal instances and
+    virtual PlannedMeal instances generated from the user's DefaultMeals.
+
+    Virtual planned meals:
+    - are not saved to the database;
+    - have ``id=None``;
+    - are generated for missing default meals within the meal plan's duration;
+    - cannot be addressed through the PlannedMeal CRUD endpoints until they
+      have been persisted.
+
+    """
+
+    # TODO consider adding an id_virtual instead of documentation
+
+    planned_meals = PlannedMealSerializer(many=True, required=False)
+
+    # TODO Try out if this validation actually helps with readability.
+    # Than apply to all code
+    tags = UserOwnedRelatedField(
         queryset=MealPlanTag.objects.all(),
+        serializer_class=TagSerializer,
         many=True,
         required=False,
     )
     start_day_display = serializers.SerializerMethodField()
-    user = serializers.PrimaryKeyRelatedField(
-        read_only=True,
-    )
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = MealPlan
@@ -341,81 +303,55 @@ class MealPlanSerializer(serializers.ModelSerializer):
 
         return planned_meals
 
-    def to_representation(self, instance):
-        planned_meals = self._populate_default_meals(instance)
-
-        representation = super().to_representation(instance)
+    def to_representation(self, instance: MealPlan) -> dict[str, Any]:
+        """
+        Serialize the meal plan with populated default planned meals.
+        """
+        representation = super().to_representation(instance=instance)
+        planned_meals = self._populate_default_meals(meal_plan=instance)
 
         representation["planned_meals"] = PlannedMealSerializer(
-            planned_meals,
+            instance=planned_meals,
             many=True,
             context=self.context,
         ).data
 
         return representation
 
-    def validate_tags(self, tags):
-        user = self.context["request"].user
-
-        if any(tag.user_id != user.id for tag in tags):
-            raise serializers.ValidationError("You can only use your own tags.")
-
-        return tags
-
     def _create_planned_meal(
         self,
-        meal_plan,
-        planned_meal_data,
-    ):
+        meal_plan: MealPlan,
+        planned_meal_data: dict[str, Any],
+    ) -> PlannedMeal:
+        """
+        Create a planned meal and its associated food and recipe entries.
+        """
         planned_meal_data = planned_meal_data.copy()
-
-        foods_data = planned_meal_data.pop(
-            "foods",
-            [],
-        )
-        recipes_data = planned_meal_data.pop(
-            "recipes",
-            [],
-        )
-
+        foods_data = planned_meal_data.pop(key="foods", default=[])
+        recipes_data = planned_meal_data.pop(key="recipes", default=[])
         planned_meal = PlannedMeal.objects.create(
             meal_plan=meal_plan,
             **planned_meal_data,
         )
-
-        serializer = PlannedMealSerializer(
-            context=self.context,
-        )
-
-        serializer._create_food_entries(
-            planned_meal,
-            foods_data,
-        )
-
-        serializer._create_recipe_entries(
-            planned_meal,
-            recipes_data,
-        )
-
+        serializer = PlannedMealSerializer(context=self.context)
+        serializer._create_food_entries(planned_meal, foods_data)
+        serializer._create_recipe_entries(planned_meal, recipes_data)
         return planned_meal
 
-    def create(self, validated_data):
-        planned_meals_data = validated_data.pop(
-            "planned_meals",
-            [],
-        )
-        tags_data = validated_data.pop(
-            "tags",
-            [],
-        )
+    def create(self, validated_data: dict[str, Any]) -> MealPlan:
+        planned_meals_data = validated_data.pop("planned_meals", [])
+        tags_data = validated_data.pop("tags", [])
 
         validated_data["user"] = self.context["request"].user
 
-        meal_plan = MealPlan.objects.create(
-            **validated_data,
-        )
+        meal_plan = MealPlan.objects.create(**validated_data)
 
-        meal_plan.tags.set(tags_data)
+        for tag_data in tags_data:
+            tag = MealPlanTag.objects.create(
+                user=meal_plan.user,
+                **tag_data,
+            )
+            meal_plan.tags.add(tag)
 
         for planned_meal_data in planned_meals_data:
             self._create_planned_meal(
@@ -425,15 +361,13 @@ class MealPlanSerializer(serializers.ModelSerializer):
 
         return meal_plan
 
-    def update(self, instance, validated_data):
-        planned_meals_data = validated_data.pop(
-            "planned_meals",
-            None,
-        )
-        tags_data = validated_data.pop(
-            "tags",
-            None,
-        )
+    def update(
+        self,
+        instance: MealPlan,
+        validated_data: dict[str, Any],
+    ) -> MealPlan:
+        planned_meals_data = validated_data.pop("planned_meals", None)
+        tags_data = validated_data.pop("tags", None)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -441,7 +375,14 @@ class MealPlanSerializer(serializers.ModelSerializer):
         instance.save()
 
         if tags_data is not None:
-            instance.tags.set(tags_data)
+            instance.tags.clear()
+
+            for tag_data in tags_data:
+                tag = MealPlanTag.objects.create(
+                    user=instance.user,
+                    **tag_data,
+                )
+                instance.tags.add(tag)
 
         if planned_meals_data is not None:
             instance.planned_meals.all().delete()
@@ -455,8 +396,13 @@ class MealPlanSerializer(serializers.ModelSerializer):
         return instance
 
 
-class MealPlanListSerializer(serializers.ModelSerializer):
-    start_day_display = serializers.SerializerMethodField()
+class MealPlanMinimalSerializer(serializers.ModelSerializer):
+    """
+    Lightweight serializer for meal plans, excluding planned meals and
+    other fields.
+
+    Used for the meal plan list endpoint and when displaying meal plans.
+    """
 
     class Meta:
         model = MealPlan
@@ -466,24 +412,7 @@ class MealPlanListSerializer(serializers.ModelSerializer):
             "description",
             "tags",
             "is_favorite",
-            "start_day",
-            "start_day_display",
-            "duration",
-            "duration_period",
             "created_at",
             "updated_at",
             "last_used_at",
         ]
-
-    def get_start_day_display(self, obj) -> str:
-        return calendar.day_name[obj.start_day]
-
-    def get_food_count(self, obj) -> int:
-        return PlannedMealFood.objects.filter(
-            planned_meal__meal_plan=obj,
-        ).count()
-
-    def get_recipe_count(self, obj) -> int:
-        return PlannedMealRecipe.objects.filter(
-            planned_meal__meal_plan=obj,
-        ).count()

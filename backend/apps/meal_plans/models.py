@@ -116,20 +116,6 @@ class PlannedMealEntry(models.Model):
         validators=[MinValueValidator(0)],
     )
 
-    def get_day_of_week(self, day: int | None = None) -> int:
-        """
-        Return the weekday for a day offset.
-
-        Monday=0 through Sunday=6.
-        """
-        if day is None:
-            day = self.planned_meal.day
-
-        return (self.planned_meal.meal_plan.start_day + day) % 7
-
-    def get_day_of_week_display(self, day: int | None = None) -> str:
-        return calendar.day_name[self.get_day_of_week(day)]
-
     def get_item(self):
         raise NotImplementedError
 

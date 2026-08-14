@@ -1,6 +1,6 @@
 import MealPlanCard from "./MealPlanCard";
 
-import type { MealPlanList as MealPlanListType } from "@/api/generated/types.gen";
+import type { MealPlanMinimal as MealPlanListType } from "@/api/generated/types.gen";
 
 interface Props {
   mealPlans: MealPlanListType[];
