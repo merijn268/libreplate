@@ -50,7 +50,9 @@ export default function Modal({
             maxHeight: "80vh",
           }}
         >
-          {title}
+          <h4>{title}</h4>
+
+          <hr className="my-1" />
 
           <div className="flex-grow-1 overflow-auto" style={{ minHeight: 0 }}>
             {children}

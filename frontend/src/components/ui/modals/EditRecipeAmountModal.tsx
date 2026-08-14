@@ -31,7 +31,7 @@ export default function EditRecipeAmountModal({
   );
 
   const parsedServings = Number.parseFloat(currentNumberOfServings);
-  const hasValidInputs = !Number.isNaN(parsedServings) && parsedServings > 0;
+  const hasValidInputs = !Number.isNaN(parsedServings) && parsedServings >= 0;
 
   async function handleSave() {
     if (!hasValidInputs) {
@@ -83,10 +83,19 @@ export default function EditRecipeAmountModal({
       }
     >
       <div className="d-flex flex-column gap-3">
-        <div>
-          <label htmlFor="number-of-servings" className="form-label small">
-            Servings
-          </label>
+        <div className="mt-2">
+          <div className="d-flex align-items-center gap-2 mb-1">
+            <label
+              htmlFor="number-of-servings"
+              className={`form-label mb-0 ${!hasValidInputs ? "text-danger" : ""}`}
+            >
+              Servings
+            </label>
+
+            {!hasValidInputs && (
+              <span className="text-danger small">(Enter a valid number)</span>
+            )}
+          </div>
 
           <input
             id="number-of-servings"
@@ -135,7 +144,7 @@ export default function EditRecipeAmountModal({
 
                 <span className="text-muted small d-flex align-items-center gap-1">
                   <i
-                    className="bi bi-chevron-right  text-primary"
+                    className="bi bi-chevron-right text-primary"
                     aria-hidden="true"
                   />
                 </span>
@@ -143,12 +152,6 @@ export default function EditRecipeAmountModal({
             </button>
           )}
         </div>
-
-        {!hasValidInputs && (
-          <div className="text-danger small">
-            Enter a valid number of servings.
-          </div>
-        )}
       </div>
     </Modal>
   );

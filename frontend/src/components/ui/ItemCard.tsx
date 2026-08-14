@@ -24,8 +24,6 @@ export default function ItemCard({ title, meta, actions, onClick }: Props) {
           )}
         </div>
 
-        {/* {subtitle && <p className="card-text mb-0 text-muted">{subtitle}</p>} */}
-
         {meta && <div className="text-muted small mt-0">{meta}</div>}
       </div>
     </div>
