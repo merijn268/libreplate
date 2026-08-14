@@ -99,11 +99,24 @@ class PlannedMealSerializer(serializers.ModelSerializer):
     weekday = serializers.SerializerMethodField()
     is_virtual = serializers.SerializerMethodField()
 
+    # Only needed when creating/updating a PlannedMeal directly through the
+    # flat /planned-meals/ endpoint. When PlannedMealSerializer is used as
+    # a nested field on MealPlanSerializer, the parent meal plan is already
+    # known and assigned explicitly, so this stays optional here and its
+    # absence is instead enforced in create() below.
+    meal_plan_id = serializers.PrimaryKeyRelatedField(
+        queryset=MealPlan.objects.all(),
+        source="meal_plan",
+        write_only=True,
+        required=False,
+    )
+
     class Meta:
         model = PlannedMeal
         fields = [
             "id",
             "is_virtual",
+            "meal_plan_id",
             "name",
             "order",
             "day",
@@ -111,6 +124,25 @@ class PlannedMealSerializer(serializers.ModelSerializer):
             "foods",
             "recipes",
         ]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        request = self.context.get("request")
+        user = getattr(request, "user", None)
+
+        # Schema generators (e.g. drf-spectacular) instantiate serializers
+        # with a fake, unauthenticated request to introspect fields, so
+        # `user` can be an AnonymousUser here rather than a real User -
+        # which isn't a valid value to filter a FK by. Fall back to an
+        # empty queryset in that case; real requests are always
+        # authenticated because of the view's IsAuthenticated permission.
+        if user is not None and user.is_authenticated:
+            self.fields["meal_plan_id"].queryset = MealPlan.objects.filter(
+                user=user,
+            )
+        else:
+            self.fields["meal_plan_id"].queryset = MealPlan.objects.none()
 
     def get_is_virtual(self, obj) -> bool:
         return obj.pk is None
@@ -168,6 +200,11 @@ class PlannedMealSerializer(serializers.ModelSerializer):
         """
         Create a planned meal and its associated food and recipe entries.
         """
+        if "meal_plan" not in validated_data:
+            raise serializers.ValidationError(
+                {"meal_plan_id": "This field is required."}
+            )
+
         foods_data = validated_data.pop("foods", [])
         recipes_data = validated_data.pop("recipes", [])
         planned_meal = PlannedMeal.objects.create(**validated_data)

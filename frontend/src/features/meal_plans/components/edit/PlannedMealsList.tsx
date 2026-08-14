@@ -1,6 +1,19 @@
 import { useMemo, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { MealPlan, PlannedMeal } from "@/api/generated";
 import type { Food, Recipe } from "@/api/generated/types.gen";
+import {
+  mealPlansFoodsCreate,
+  mealPlansFoodsDestroy,
+  mealPlansPlannedMealsCreate,
+  mealPlansRecipesCreate,
+  mealPlansRecipesDestroy,
+} from "@/api/generated";
+import type {
+  PlannedMealFoodWritable,
+  PlannedMealRecipeWritable,
+  PlannedMealWritable,
+} from "@/api/generated";
 
 import MealCard from "@/components/ui/meal_card/MealCard";
 import AmountItem from "@/components/ui/meal_card/AmountItem";
@@ -25,11 +38,104 @@ type MealTotals = {
 type AddModal = "none" | "type" | "food" | "recipe";
 
 export default function PlannedMealsList({ mealPlan, day }: Props) {
+  const queryClient = useQueryClient();
+
   const [openMeals, setOpenMeals] = useState<Set<string>>(() => new Set());
 
   const [totalsMeal, setTotalsMeal] = useState<PlannedMeal | null>(null);
   const [addMeal, setAddMeal] = useState<PlannedMeal | null>(null);
   const [addModal, setAddModal] = useState<AddModal>("none");
+
+  const invalidateMealPlan = () =>
+    queryClient.invalidateQueries({ queryKey: ["meal-plan", mealPlan.id] });
+
+  /*
+   * Virtual meals (meal.id == null) don't exist on the server yet — they're
+   * placeholders generated client-side for a day/slot that has no planned
+   * meal. Before we can attach a food or recipe to one, we have to create
+   * the real PlannedMeal first and use the id it comes back with.
+   */
+  const materializeMeal = async (meal: PlannedMeal): Promise<number> => {
+    if (meal.id != null) {
+      return meal.id;
+    }
+
+    const body: PlannedMealWritable & { meal_plan_id: number } = {
+      meal_plan_id: mealPlan.id,
+      name: meal.name,
+      day: meal.day,
+      order: meal.order,
+    };
+
+    const response = await mealPlansPlannedMealsCreate({ body });
+
+    if (response.data?.id == null) {
+      throw new Error("Failed to create planned meal.");
+    }
+
+    return response.data.id;
+  };
+
+  const addFoodMutation = useMutation({
+    mutationFn: async ({
+      meal,
+      foods,
+    }: {
+      meal: PlannedMeal;
+      foods: Food[];
+    }) => {
+      const plannedMealId = await materializeMeal(meal);
+
+      await Promise.all(
+        foods.map((food) => {
+          const body: PlannedMealFoodWritable = {
+            planned_meal_id: plannedMealId,
+            food_id: food.id,
+            serving_size: food.serving,
+            number_of_servings: 1,
+          };
+
+          return mealPlansFoodsCreate({ body });
+        }),
+      );
+    },
+    onSuccess: invalidateMealPlan,
+  });
+
+  const addRecipeMutation = useMutation({
+    mutationFn: async ({
+      meal,
+      recipe,
+      servings,
+    }: {
+      meal: PlannedMeal;
+      recipe: Recipe;
+      servings: number;
+    }) => {
+      const plannedMealId = await materializeMeal(meal);
+
+      const body: PlannedMealRecipeWritable = {
+        planned_meal_id: plannedMealId,
+        recipe_id: recipe.id,
+        number_of_servings: servings,
+      };
+
+      await mealPlansRecipesCreate({ body });
+    },
+    onSuccess: invalidateMealPlan,
+  });
+
+  const deleteFoodMutation = useMutation({
+    mutationFn: (plannedFoodId: number) =>
+      mealPlansFoodsDestroy({ path: { id: plannedFoodId } }),
+    onSuccess: invalidateMealPlan,
+  });
+
+  const deleteRecipeMutation = useMutation({
+    mutationFn: (plannedRecipeId: number) =>
+      mealPlansRecipesDestroy({ path: { id: plannedRecipeId } }),
+    onSuccess: invalidateMealPlan,
+  });
 
   const plannedMeals = useMemo(() => {
     return [...(mealPlan.planned_meals ?? [])]
@@ -98,53 +204,62 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
     setAddModal("recipe");
   };
 
-  const handleFoodSelect = (foods: Food[]) => {
+  const handleFoodSelect = async (foods: Food[]) => {
     if (addMeal == null) {
       return;
     }
 
-    /*
-     * TODO: API integration.
-     *
-     * addMeal.id may be null because this can be a virtual meal.
-     *
-     * Example:
-     *
-     * if (addMeal.id != null) {
-     *   // Persist food against existing planned meal.
-     * } else {
-     *   // Handle food for virtual meal.
-     * }
-     */
-
-    console.log("TODO: add foods to planned meal", {
-      plannedMeal: addMeal,
-      plannedMealId: addMeal.id,
-      foods,
-    });
-
+    const meal = addMeal;
     closeAddFlow();
+
+    try {
+      await addFoodMutation.mutateAsync({ meal, foods });
+    } catch (error) {
+      console.error("Failed to add foods to planned meal", error);
+    }
   };
 
-  const handleRecipeSelect = (recipe: Recipe, servings: number) => {
+  const handleRecipeSelect = async (recipe: Recipe, servings: number) => {
     if (addMeal == null) {
       return;
     }
 
-    /*
-     * TODO: API integration.
-     *
-     * addMeal.id may be null because this can be a virtual meal.
-     */
-
-    console.log("TODO: add recipe to planned meal", {
-      plannedMeal: addMeal,
-      plannedMealId: addMeal.id,
-      recipe,
-      servings,
-    });
-
+    const meal = addMeal;
     closeAddFlow();
+
+    try {
+      await addRecipeMutation.mutateAsync({ meal, recipe, servings });
+    } catch (error) {
+      console.error("Failed to add recipe to planned meal", error);
+    }
+  };
+
+  const handleDeleteFood = (plannedFoodId: number) => {
+    if (deleteFoodMutation.isPending) {
+      return;
+    }
+
+    const confirmed = window.confirm("Remove this food from the meal?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    deleteFoodMutation.mutate(plannedFoodId);
+  };
+
+  const handleDeleteRecipe = (plannedRecipeId: number) => {
+    if (deleteRecipeMutation.isPending) {
+      return;
+    }
+
+    const confirmed = window.confirm("Remove this recipe from the meal?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    deleteRecipeMutation.mutate(plannedRecipeId);
   };
 
   return (
@@ -179,9 +294,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
                       onClick={() => {
                         // TODO: edit planned food
                       }}
-                      onDelete={() => {
-                        // TODO: remove planned food
-                      }}
+                      onDelete={() => handleDeleteFood(plannedFood.id)}
                     />
                   );
                 })}
@@ -202,9 +315,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
                       onClick={() => {
                         // TODO: edit planned recipe
                       }}
-                      onDelete={() => {
-                        // TODO: remove planned recipe
-                      }}
+                      onDelete={() => handleDeleteRecipe(plannedRecipe.id)}
                     />
                   );
                 })}

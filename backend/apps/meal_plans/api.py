@@ -26,8 +26,6 @@ class MealPlanViewSet(viewsets.ModelViewSet):
         return MealPlan.objects.filter(user=self.request.user).prefetch_related(
             "tags",
             "planned_meals",
-            "planned_meals__entries",
-            "planned_meals__entries__recurrence",
         )
 
     def get_serializer_class(self):

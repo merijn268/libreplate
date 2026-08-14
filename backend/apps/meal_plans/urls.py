@@ -15,12 +15,6 @@ from .api import (
 router = DefaultRouter()
 
 router.register(
-    prefix="",
-    viewset=MealPlanViewSet,
-    basename="meal-plan",
-)
-
-router.register(
     prefix="planned-meals",
     viewset=PlannedMealViewSet,
     basename="planned-meal",
@@ -36,6 +30,12 @@ router.register(
     prefix="recipes",
     viewset=PlannedMealRecipeViewSet,
     basename="meal-plan-recipe",
+)
+
+router.register(
+    prefix="",
+    viewset=MealPlanViewSet,
+    basename="meal-plan",
 )
 
 urlpatterns = [

@@ -99,6 +99,34 @@ class PlannedMeal(core_models.HasName):
     def get_weekday_display(self) -> str:
         return calendar.day_name[self.get_weekday()]
 
+    def foods(self):
+        """
+        Return the food entries belonging to this planned meal.
+
+        PlannedMealFood is a subclass of PlannedMealEntry (multi-table
+        inheritance), so the FK back to PlannedMeal only exists once, on
+        PlannedMealEntry, as `related_name="entries"`. There is no
+        `planned_meal.foods` relation to read directly, so this queries
+        PlannedMealFood explicitly instead. Named to match the "foods"
+        field on PlannedMealSerializer: DRF calls zero-argument callables
+        automatically when resolving a field's value.
+        """
+        if self.pk is None:
+            return PlannedMealFood.objects.none()
+
+        return PlannedMealFood.objects.filter(
+            planned_meal_id=self.pk,
+        ).select_related("food", "food__unit", "recurrence")
+
+    def recipes(self):
+        """Return the recipe entries belonging to this planned meal. See foods()."""
+        if self.pk is None:
+            return PlannedMealRecipe.objects.none()
+
+        return PlannedMealRecipe.objects.filter(
+            planned_meal_id=self.pk,
+        ).select_related("recipe", "recurrence")
+
 
 class PlannedMealEntry(models.Model):
     """

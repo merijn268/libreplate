@@ -774,6 +774,7 @@ export type PatchedMealPlanWritable = {
 };
 
 export type PatchedPlannedMealWritable = {
+    meal_plan_id?: number;
     name?: string;
     /**
      * Display order of the meal within the day.
@@ -829,6 +830,7 @@ export type PatchedRecipeTagWritable = {
 };
 
 export type PlannedMealWritable = {
+    meal_plan_id?: number;
     name: string;
     /**
      * Display order of the meal within the day.

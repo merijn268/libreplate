@@ -3243,6 +3243,9 @@ components:
         is_virtual:
           type: boolean
           readOnly: true
+        meal_plan_id:
+          type: integer
+          writeOnly: true
         name:
           type: string
           maxLength: 255
@@ -3431,6 +3434,9 @@ components:
         is_virtual:
           type: boolean
           readOnly: true
+        meal_plan_id:
+          type: integer
+          writeOnly: true
         name:
           type: string
           maxLength: 255
