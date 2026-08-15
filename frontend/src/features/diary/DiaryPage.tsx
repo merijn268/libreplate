@@ -292,7 +292,7 @@ export default function DiaryPage() {
 
       <ActionPillButtonGroup>
         <ActionPillButton
-          label="Log Body metrics"
+          label="Body Stats"
           onClick={() => {
             // TODO: open body metrics modal
             console.log("Enter body metrics clicked");
@@ -303,18 +303,18 @@ export default function DiaryPage() {
           label={
             applyMealPlan.isPending
               ? "Applying meal plan..."
-              : "Apply meal plan"
+              : "Apply Meal Plan"
           }
           onClick={handleApplyMealPlan}
         />
 
-        <ActionPillButton
+        {/* <ActionPillButton
           label="Add excersice"
           onClick={() => {
             // TODO: add exercise
             console.log("Add exercise clicked");
           }}
-        />
+        /> */}
       </ActionPillButtonGroup>
       <MealList
         meals={meals}
