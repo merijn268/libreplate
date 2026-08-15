@@ -14,6 +14,8 @@ UserFactory: TypeAlias = Callable[[Optional[str]], AbstractBaseUser]
 AuthenticatedClient: TypeAlias = tuple[APIClient, AbstractBaseUser]
 
 
+# TODO Add logs if it was succesfull and what things were synced. verbose
+# option.
 @pytest.fixture
 def setup_default_data(db) -> None:
     sync_default_units()

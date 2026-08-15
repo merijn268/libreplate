@@ -81,6 +81,7 @@ export default function SettingsPage() {
             />
           </SettingsSection>
 
+          {/* TODO Should be a github release commit hash in the about! */}
           <SettingsSection title="LibrePlate" className="mt-2">
             <SettingsListItem icon={Easel} label="About" to="/settings/about" />
           </SettingsSection>
