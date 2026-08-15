@@ -29,11 +29,12 @@ export default function SelectorBar({ children, onPrevious, onNext }: Props) {
 
       {/* Selected item */}
       <div
-        className="position-relative flex-shrink-0"
+        className="position-relative flex-shrink-0 d-flex align-items-center gap-2"
         style={{
           zIndex: 1,
         }}
       >
+        <i className="bi bi-calendar4 text-primary" aria-hidden="true" />
         {children}
       </div>
 
