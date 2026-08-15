@@ -83,10 +83,6 @@ function normalizeRecurrence(
 export default function PlannedMealsList({ mealPlan, day }: Props) {
   const queryClient = useQueryClient();
 
-  /*
-   * Meal cards are open by default.
-   * We only keep track of the cards the user explicitly collapsed.
-   */
   const [collapsedMeals, setCollapsedMeals] = useState<Set<string>>(
     () => new Set(),
   );
@@ -103,10 +99,6 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
     });
   };
 
-  /*
-   * Virtual meals don't exist on the server yet.
-   * Materialize them before adding a food/recipe.
-   */
   const materializeMeal = async (meal: PlannedMeal): Promise<number> => {
     if (meal.id != null) {
       return meal.id;
@@ -265,9 +257,6 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
 
     const mealsByKey = new Map<string, PlannedMeal>();
 
-    /*
-     * First, add meals that actually belong to this day.
-     */
     for (const meal of sourceMeals) {
       if (meal.day !== day) {
         continue;
@@ -282,9 +271,6 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
       });
     }
 
-    /*
-     * Then project recurring entries from other days.
-     */
     for (const sourceMeal of sourceMeals) {
       if (sourceMeal.day === day) {
         continue;
@@ -325,12 +311,6 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
         continue;
       }
 
-      /*
-       * Client-side display copy.
-       *
-       * The entries retain their original database IDs,
-       * allowing edit/delete to operate on the source entry.
-       */
       mealsByKey.set(key, {
         ...sourceMeal,
         day,
@@ -444,34 +424,6 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
     }
   };
 
-  const handleDeleteFood = (plannedFoodId: number) => {
-    if (deleteFoodMutation.isPending) {
-      return;
-    }
-
-    const confirmed = window.confirm("Remove this food from the meal?");
-
-    if (!confirmed) {
-      return;
-    }
-
-    deleteFoodMutation.mutate(plannedFoodId);
-  };
-
-  const handleDeleteRecipe = (plannedRecipeId: number) => {
-    if (deleteRecipeMutation.isPending) {
-      return;
-    }
-
-    const confirmed = window.confirm("Remove this recipe from the meal?");
-
-    if (!confirmed) {
-      return;
-    }
-
-    deleteRecipeMutation.mutate(plannedRecipeId);
-  };
-
   const openFoodEditor = (
     plannedFood: NonNullable<PlannedMeal["foods"]>[number],
   ) => {
@@ -571,12 +523,39 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
     }
   };
 
+  const handleDeleteFood = async () => {
+    if (editEntry == null || editEntry.type !== "food") {
+      return;
+    }
+
+    try {
+      await deleteFoodMutation.mutateAsync(editEntry.id);
+      closeEditFlow();
+    } catch (error) {
+      console.error("Failed to delete planned food", error);
+      throw error;
+    }
+  };
+
+  const handleDeleteRecipe = async () => {
+    if (editEntry == null || editEntry.type !== "recipe") {
+      return;
+    }
+
+    try {
+      await deleteRecipeMutation.mutateAsync(editEntry.id);
+      closeEditFlow();
+    } catch (error) {
+      console.error("Failed to delete planned recipe", error);
+      throw error;
+    }
+  };
+
   return (
     <>
       <div className="mt-3">
         {plannedMeals.map((meal, mealIndex) => {
           const mealKey = getMealKey(meal, mealIndex);
-
           const mealTotals = getMealTotals(meal);
 
           return (
@@ -600,9 +579,8 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
                     <AmountItem
                       key={foodKey}
                       label={plannedFood.food.name}
-                      amount={`${plannedFood.serving_size} ${plannedFood.food.unit.name}`}
+                      amount={`${plannedFood.serving_size * (plannedFood.number_of_servings ?? 1)} ${plannedFood.food.unit.name}`}
                       onClick={() => openFoodEditor(plannedFood)}
-                      onDelete={() => handleDeleteFood(plannedFood.id)}
                     />
                   );
                 })}
@@ -621,7 +599,6 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
                       label={plannedRecipe.recipe.name}
                       amount={`${servings} serving${servings === 1 ? "" : "s"}`}
                       onClick={() => openRecipeEditor(plannedRecipe)}
-                      onDelete={() => handleDeleteRecipe(plannedRecipe.id)}
                     />
                   );
                 })}
@@ -660,6 +637,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
           onClose={closeEditFlow}
           onEditRecurrence={openRecurrenceEditor}
           onSave={handleFoodSave}
+          onDelete={handleDeleteFood}
         />
       )}
 
@@ -671,6 +649,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
           onClose={closeEditFlow}
           onEditRecurrence={openRecurrenceEditor}
           onSave={handleRecipeSave}
+          onDelete={handleDeleteRecipe}
         />
       )}
 

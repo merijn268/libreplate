@@ -16,6 +16,7 @@ type Props = {
     number_of_servings: number;
     recurrence?: PlannedMealEntryRecurrence;
   }) => Promise<void>;
+  onDelete: () => Promise<void>;
 };
 
 type NutrientTotals = {
@@ -101,6 +102,7 @@ export default function EditFoodAmountModal({
   onClose,
   onEditRecurrence,
   onSave,
+  onDelete,
 }: Props) {
   const [currentServingSize, setCurrentServingSize] = useState(
     String(servingSize),
@@ -109,6 +111,8 @@ export default function EditFoodAmountModal({
   const [currentNumberOfServings, setCurrentNumberOfServings] = useState(
     String(numberOfServings),
   );
+
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const parsedSize = Number.parseFloat(currentServingSize);
   const parsedServings = Number.parseFloat(currentNumberOfServings);
@@ -141,25 +145,51 @@ export default function EditFoodAmountModal({
     onClose();
   }
 
+  async function handleDelete() {
+    setIsDeleting(true);
+
+    try {
+      await onDelete();
+    } finally {
+      setIsDeleting(false);
+    }
+  }
+
   return (
     <Modal
       isOpen
       title={food.name}
-      onClose={onClose}
+      onClose={isDeleting ? () => undefined : onClose}
       footer={
-        <div className="d-flex justify-content-end gap-2">
-          <button type="button" className="btn btn-secondary" onClick={onClose}>
-            Cancel
-          </button>
-
+        <div className="d-flex justify-content-between">
           <button
             type="button"
-            className="btn btn-primary"
-            onClick={() => void handleSave()}
-            disabled={!hasValidInputs}
+            className="btn btn-outline-danger"
+            onClick={() => void handleDelete()}
+            disabled={isDeleting}
           >
-            Save
+            {isDeleting ? "Deleting..." : "Delete"}
           </button>
+
+          <div className="d-flex justify-content-end gap-2">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={onClose}
+              disabled={isDeleting}
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={() => void handleSave()}
+              disabled={!hasValidInputs || isDeleting}
+            >
+              Save
+            </button>
+          </div>
         </div>
       }
     >
@@ -175,6 +205,7 @@ export default function EditFoodAmountModal({
               className="form-control"
               value={currentServingSize}
               onChange={(event) => setCurrentServingSize(event.target.value)}
+              disabled={isDeleting}
             />
           </div>
 
@@ -190,6 +221,7 @@ export default function EditFoodAmountModal({
               onChange={(event) =>
                 setCurrentNumberOfServings(event.target.value)
               }
+              disabled={isDeleting}
             />
           </div>
         </div>
@@ -199,6 +231,7 @@ export default function EditFoodAmountModal({
             <div className="d-flex align-items-center justify-content-between gap-3">
               <div>
                 <div className="fw-semibold">Recurrence</div>
+
                 <div className="text-muted small">
                   {formatRecurrence(recurrence)}
                 </div>
@@ -208,6 +241,7 @@ export default function EditFoodAmountModal({
                 type="button"
                 className="btn btn-outline-primary"
                 onClick={onEditRecurrence}
+                disabled={isDeleting}
               >
                 Edit recurrence
               </button>

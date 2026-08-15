@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { PlannedMealEntryRecurrence, Recipe } from "@/api/generated";
+
 import Modal from "@/components/modals/Modal";
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
     number_of_servings: number;
     recurrence?: PlannedMealEntryRecurrence;
   }) => Promise<void>;
+  onDelete: () => Promise<void>;
 };
 
 export default function EditRecipeAmountModal({
@@ -23,6 +25,7 @@ export default function EditRecipeAmountModal({
   onClose,
   onEditRecurrence,
   onSave,
+  onDelete,
 }: Props) {
   const navigate = useNavigate();
 
@@ -30,7 +33,10 @@ export default function EditRecipeAmountModal({
     String(numberOfServings),
   );
 
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const parsedServings = Number.parseFloat(currentNumberOfServings);
+
   const hasValidInputs = !Number.isNaN(parsedServings) && parsedServings >= 0;
 
   async function handleSave() {
@@ -44,6 +50,16 @@ export default function EditRecipeAmountModal({
     });
 
     onClose();
+  }
+
+  async function handleDelete() {
+    setIsDeleting(true);
+
+    try {
+      await onDelete();
+    } finally {
+      setIsDeleting(false);
+    }
   }
 
   function handleEditRecipe() {
@@ -60,25 +76,37 @@ export default function EditRecipeAmountModal({
     <Modal
       isOpen
       title={recipe.name}
-      onClose={onClose}
+      onClose={isDeleting ? () => undefined : onClose}
       footer={
-        <div className="d-flex justify-content-end gap-2">
+        <div className="d-flex justify-content-between">
           <button
             type="button"
-            className="btn btn-sm btn-light"
-            onClick={onClose}
+            className="btn btn-outline-danger"
+            onClick={() => void handleDelete()}
+            disabled={isDeleting}
           >
-            Cancel
+            {isDeleting ? "Deleting..." : "Delete"}
           </button>
 
-          <button
-            type="button"
-            className="btn btn-sm btn-primary px-3"
-            disabled={!hasValidInputs}
-            onClick={() => void handleSave()}
-          >
-            Save
-          </button>
+          <div className="d-flex justify-content-end gap-2">
+            <button
+              type="button"
+              className="btn btn-sm btn-light"
+              onClick={onClose}
+              disabled={isDeleting}
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-sm btn-primary px-3"
+              disabled={!hasValidInputs || isDeleting}
+              onClick={() => void handleSave()}
+            >
+              Save
+            </button>
+          </div>
         </div>
       }
     >
@@ -87,7 +115,9 @@ export default function EditRecipeAmountModal({
           <div className="d-flex align-items-center gap-2 mb-1">
             <label
               htmlFor="number-of-servings"
-              className={`form-label mb-0 ${!hasValidInputs ? "text-danger" : ""}`}
+              className={`form-label mb-0 ${
+                !hasValidInputs ? "text-danger" : ""
+              }`}
             >
               Servings
             </label>
@@ -106,6 +136,7 @@ export default function EditRecipeAmountModal({
             className="form-control"
             value={currentNumberOfServings}
             onChange={(event) => setCurrentNumberOfServings(event.target.value)}
+            disabled={isDeleting}
           />
         </div>
 
@@ -114,6 +145,7 @@ export default function EditRecipeAmountModal({
             type="button"
             className="list-group-item list-group-item-action px-3 py-2"
             onClick={handleEditRecipe}
+            disabled={isDeleting}
           >
             <div className="d-flex align-items-center justify-content-between">
               <span className="fw-medium">
@@ -135,6 +167,7 @@ export default function EditRecipeAmountModal({
               type="button"
               className="list-group-item list-group-item-action px-3 py-2"
               onClick={onEditRecurrence}
+              disabled={isDeleting}
             >
               <div className="d-flex align-items-center justify-content-between">
                 <div className="text-start">

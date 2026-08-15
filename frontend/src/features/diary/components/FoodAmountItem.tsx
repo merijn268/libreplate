@@ -21,30 +21,16 @@ type Props = {
 
 export default function FoodAmountItem({ item, onSave, onDelete }: Props) {
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const servingSize = item.serving_size ?? 0;
   const numberOfServings = item.number_of_servings ?? 0;
-
-  async function handleDelete() {
-    setIsDeleting(true);
-
-    try {
-      await onDelete(item.id);
-    } finally {
-      setIsDeleting(false);
-    }
-  }
 
   return (
     <>
       <AmountItem
         label={item.food.name}
-        amount={`${servingSize}g × ${numberOfServings}`}
+        amount={`${servingSize * numberOfServings}g`}
         onClick={() => setIsEditOpen(true)}
-        onDelete={() => void handleDelete()}
-        isDeleting={isDeleting}
-        deleteLabel={`Remove ${item.food.name}`}
       />
 
       {isEditOpen && (
@@ -58,6 +44,10 @@ export default function FoodAmountItem({ item, onSave, onDelete }: Props) {
               id: item.id,
               ...values,
             });
+          }}
+          onDelete={async () => {
+            await onDelete(item.id);
+            setIsEditOpen(false);
           }}
         />
       )}
