@@ -1,18 +1,18 @@
 from collections import defaultdict
 from decimal import ROUND_HALF_UP, Decimal
 
-from apps.core import models as core_models
+from apps.core.models import base as base_models
 from apps.tags.models import BaseTag
 from django.db import models
 
 
 class Recipe(
-    core_models.HasName,
-    core_models.BelongsToUser,
-    core_models.CanBeFavorited,
-    core_models.HasDescription,
-    core_models.TracksUsage,
-    core_models.HasTimestamps,
+    base_models.HasName,
+    base_models.BelongsToUser,
+    base_models.CanBeFavorited,
+    base_models.HasDescription,
+    base_models.TracksUsage,
+    base_models.HasTimestamps,
 ):
     def get_nutrients(self, per_portion=True):
         totals = defaultdict(lambda: Decimal("0"))

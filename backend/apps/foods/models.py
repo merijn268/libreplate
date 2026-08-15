@@ -1,4 +1,4 @@
-from apps.core.models import (
+from apps.core.models.base import (
     BelongsToUser,
     CanBeFavorited,
     HasDescription,

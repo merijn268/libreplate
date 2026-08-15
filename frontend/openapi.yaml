@@ -117,6 +117,155 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserPreferences'
           description: ''
+  /api/body-metrics/body-metric-logs/:
+    get:
+      operationId: body_metrics_body_metric_logs_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - body-metrics
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BodyMetricLog'
+          description: ''
+    post:
+      operationId: body_metrics_body_metric_logs_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - body-metrics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyMetricLog'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BodyMetricLog'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BodyMetricLog'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BodyMetricLog'
+          description: ''
+  /api/body-metrics/body-metric-logs/{id}/:
+    get:
+      operationId: body_metrics_body_metric_logs_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - body-metrics
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BodyMetricLog'
+          description: ''
+    put:
+      operationId: body_metrics_body_metric_logs_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - body-metrics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyMetricLog'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/BodyMetricLog'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/BodyMetricLog'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BodyMetricLog'
+          description: ''
+    patch:
+      operationId: body_metrics_body_metric_logs_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - body-metrics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBodyMetricLog'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBodyMetricLog'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBodyMetricLog'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BodyMetricLog'
+          description: ''
+    delete:
+      operationId: body_metrics_body_metric_logs_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - body-metrics
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/foods/:
     get:
       operationId: foods_list
@@ -2803,6 +2952,28 @@ paths:
           description: ''
 components:
   schemas:
+    BodyMetricLog:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        body_metric:
+          type: integer
+        date:
+          type: string
+          format: date
+        amount:
+          type: number
+          format: double
+        note:
+          type: string
+          nullable: true
+      required:
+      - amount
+      - body_metric
+      - date
+      - id
     Csrf:
       type: object
       properties:
@@ -3347,6 +3518,23 @@ components:
       required:
       - id
       - name
+    PatchedBodyMetricLog:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        body_metric:
+          type: integer
+        date:
+          type: string
+          format: date
+        amount:
+          type: number
+          format: double
+        note:
+          type: string
+          nullable: true
     PatchedDefaultMeal:
       type: object
       properties:

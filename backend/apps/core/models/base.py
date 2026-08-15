@@ -3,7 +3,14 @@ from django.db import models
 from django.db.models import Q
 
 # TODO: add abbreviation model?
+
 # TODO: Add amount model maybe?
+# class HasAmount(models.Model):
+#   amount = some decimal field
+
+# TODO add has date
+# class HasDate(models.Model):
+#     date = models.DateField()
 
 
 class ExclusiveMixin(models.Model):
@@ -40,6 +47,13 @@ class ExclusiveMixin(models.Model):
                         f"{mixin.__name__} and "
                         f"{incompatible.__name__}."
                     )
+
+
+class HasNote(models.Model):
+    note = models.TextField(blank=True, null=True)
+
+    class Meta:
+        abstract = True
 
 
 class HasName(models.Model):

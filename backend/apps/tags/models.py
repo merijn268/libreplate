@@ -1,12 +1,12 @@
-from apps.core import models as core_models
+from apps.core.models import base as base_models
 from django.db import models
 
 
 class BaseTag(
-    core_models.HasName,
-    core_models.BelongsToUser,
-    core_models.HasDescription,
-    core_models.HasTimestamps,
+    base_models.HasName,
+    base_models.BelongsToUser,
+    base_models.HasDescription,
+    base_models.HasTimestamps,
 ):
     """
     Abstract base model for user-owned tags with a name, description,

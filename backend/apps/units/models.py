@@ -1,13 +1,13 @@
-from apps.core import models as core_models
+from apps.core.models import base as base_models
 from django.db import models
 from django.db.models import Q
 
 
 class Unit(
-    core_models.UserScoped,
-    core_models.HasName,
-    core_models.HasDescription,
-    core_models.HasTimestamps,
+    base_models.UserScoped,
+    base_models.HasName,
+    base_models.HasDescription,
+    base_models.HasTimestamps,
 ):
     """
     Represents a unit of measurement.

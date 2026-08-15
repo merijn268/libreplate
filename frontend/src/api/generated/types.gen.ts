@@ -4,6 +4,14 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+export type BodyMetricLog = {
+    readonly id: number;
+    body_metric: number;
+    date: string;
+    amount: number;
+    note?: string | null;
+};
+
 export type Csrf = {
     csrfToken: string;
 };
@@ -236,6 +244,14 @@ export type NutrientBrief = {
      * Display unit for this nutrient's amount (e.g. g, mg, kcal).
      */
     unit?: string | null;
+};
+
+export type PatchedBodyMetricLog = {
+    readonly id?: number;
+    body_metric?: number;
+    date?: string;
+    amount?: number;
+    note?: string | null;
 };
 
 export type PatchedDefaultMeal = {
@@ -576,6 +592,13 @@ export type UserPreferences = {
     theme_color?: string;
 };
 
+export type BodyMetricLogWritable = {
+    body_metric: number;
+    date: string;
+    amount: number;
+    note?: string | null;
+};
+
 /**
  * Serializer representing a meal slot for a specific day.
  *
@@ -716,6 +739,13 @@ export type NutrientBriefWritable = {
      * Display unit for this nutrient's amount (e.g. g, mg, kcal).
      */
     unit?: string | null;
+};
+
+export type PatchedBodyMetricLogWritable = {
+    body_metric?: number;
+    date?: string;
+    amount?: number;
+    note?: string | null;
 };
 
 export type PatchedDefaultMealWritable = {
@@ -1016,6 +1046,99 @@ export type AccountsPreferencesPartialUpdateResponses = {
 };
 
 export type AccountsPreferencesPartialUpdateResponse = AccountsPreferencesPartialUpdateResponses[keyof AccountsPreferencesPartialUpdateResponses];
+
+export type BodyMetricsBodyMetricLogsListData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/body-metrics/body-metric-logs/';
+};
+
+export type BodyMetricsBodyMetricLogsListResponses = {
+    200: Array<BodyMetricLog>;
+};
+
+export type BodyMetricsBodyMetricLogsListResponse = BodyMetricsBodyMetricLogsListResponses[keyof BodyMetricsBodyMetricLogsListResponses];
+
+export type BodyMetricsBodyMetricLogsCreateData = {
+    body: BodyMetricLogWritable;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/body-metrics/body-metric-logs/';
+};
+
+export type BodyMetricsBodyMetricLogsCreateResponses = {
+    201: BodyMetricLog;
+};
+
+export type BodyMetricsBodyMetricLogsCreateResponse = BodyMetricsBodyMetricLogsCreateResponses[keyof BodyMetricsBodyMetricLogsCreateResponses];
+
+export type BodyMetricsBodyMetricLogsDestroyData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/body-metrics/body-metric-logs/{id}/';
+};
+
+export type BodyMetricsBodyMetricLogsDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type BodyMetricsBodyMetricLogsDestroyResponse = BodyMetricsBodyMetricLogsDestroyResponses[keyof BodyMetricsBodyMetricLogsDestroyResponses];
+
+export type BodyMetricsBodyMetricLogsRetrieveData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/body-metrics/body-metric-logs/{id}/';
+};
+
+export type BodyMetricsBodyMetricLogsRetrieveResponses = {
+    200: BodyMetricLog;
+};
+
+export type BodyMetricsBodyMetricLogsRetrieveResponse = BodyMetricsBodyMetricLogsRetrieveResponses[keyof BodyMetricsBodyMetricLogsRetrieveResponses];
+
+export type BodyMetricsBodyMetricLogsPartialUpdateData = {
+    body?: PatchedBodyMetricLogWritable;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/body-metrics/body-metric-logs/{id}/';
+};
+
+export type BodyMetricsBodyMetricLogsPartialUpdateResponses = {
+    200: BodyMetricLog;
+};
+
+export type BodyMetricsBodyMetricLogsPartialUpdateResponse = BodyMetricsBodyMetricLogsPartialUpdateResponses[keyof BodyMetricsBodyMetricLogsPartialUpdateResponses];
+
+export type BodyMetricsBodyMetricLogsUpdateData = {
+    body: BodyMetricLogWritable;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/body-metrics/body-metric-logs/{id}/';
+};
+
+export type BodyMetricsBodyMetricLogsUpdateResponses = {
+    200: BodyMetricLog;
+};
+
+export type BodyMetricsBodyMetricLogsUpdateResponse = BodyMetricsBodyMetricLogsUpdateResponses[keyof BodyMetricsBodyMetricLogsUpdateResponses];
 
 export type FoodsListData = {
     body?: never;

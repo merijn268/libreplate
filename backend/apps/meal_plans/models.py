@@ -3,7 +3,7 @@ from collections import defaultdict
 from datetime import timedelta
 from decimal import Decimal
 
-from apps.core import models as core_models
+from apps.core.models import base as base_models
 from apps.foods.models import Food
 from apps.meals.models import DefaultMeal, Meal, MealFood
 from apps.recipes.models import Recipe
@@ -23,12 +23,12 @@ class MealPlanPeriodUnit(models.TextChoices):
 
 
 class MealPlan(
-    core_models.BelongsToUser,
-    core_models.CanBeFavorited,
-    core_models.HasDescription,
-    core_models.HasName,
-    core_models.HasTimestamps,
-    core_models.TracksUsage,
+    base_models.BelongsToUser,
+    base_models.CanBeFavorited,
+    base_models.HasDescription,
+    base_models.HasName,
+    base_models.HasTimestamps,
+    base_models.TracksUsage,
 ):
     # Hard cap on how many real days `apply()` can populate in one call.
     MAX_APPLY_DAYS = 7
@@ -377,7 +377,7 @@ class MealPlan(
         ]
 
 
-class PlannedMeal(core_models.HasName):
+class PlannedMeal(base_models.HasName):
     """
     A meal scheduled within a meal plan.
     """

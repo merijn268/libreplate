@@ -1,27 +1,38 @@
-from apps.core import models as core_models
+from apps.core.models import base as base_models
+from apps.core.models import visibility as visibility_models
 from django.db import models
 from django.db.models import Q
 
 
-class BodyMetric(
-    core_models.UserScopedNamed,
-    core_models.CanBeFavorited,
-    core_models.HasDescription,
-    core_models.HasTimestamps,
-    core_models.TracksUsage,
+class BodyMetricsVisibility(
+    visibility_models.DiaryVisibility,
+    visibility_models.GoalEditVisibility,
 ):
-    show_in_diary_total = models.BooleanField(
-        default=True,
-    )
-    show_in_goal_edit = models.BooleanField(
-        default=True,
-    )
+    pass
+
+
+class BodyMetric(
+    base_models.UserScopedNamed,
+    base_models.CanBeFavorited,
+    base_models.HasDescription,
+    base_models.HasTimestamps,
+    base_models.TracksUsage,
+):
+    # TODO this variable may not be needed with the proper visibility classes.
+    # A user may not want to enter their height multiple times for example.
+    # But depending on where this is entered, a visibility class could be used.
     is_single_entry = models.BooleanField(
-        default=False,
+        default=False, help_text="If only one log entry can be entered."
+    )
+
+    visibility = models.OneToOneField(
+        BodyMetricsVisibility,
+        on_delete=models.CASCADE,
+        related_name="body_metric",
     )
 
     class Meta:
-        verbose_name = "Nutrients"
+        verbose_name = "Body Metrics"
         constraints = [
             # Global metrics
             models.UniqueConstraint(
@@ -39,18 +50,18 @@ class BodyMetric(
 
 
 # TODO When a user owns a body metric and also the logs, there will be a lot
-# off dupplicate data. The Logs do not need a user in that case
+# of duplicate data. The Logs do not need a user in that case. Consider making
+# body metric not global. It also simplifies the code a lot to have user-only
+# body metrics.
 class BodyMetricLog(
-    core_models.BelongsToUser,
+    base_models.BelongsToUser,
+    base_models.HasNote,
 ):
     body_metric = models.ForeignKey(
         BodyMetric, on_delete=models.CASCADE, related_name="logs"
     )
-
     date = models.DateField()
-
     amount = models.FloatField()
-    note = models.TextField(blank=True, null=True)
 
     class Meta:
         unique_together = ("body_metric", "user", "date")

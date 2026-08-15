@@ -1,14 +1,14 @@
-from apps.core import models as core_models
+from apps.core.models import base as base_models
 from django.db import models
 
 
 class GoalGroup(
-    core_models.BelongsToUser,
-    core_models.CanBeFavorited,
-    core_models.HasDescription,
-    core_models.HasName,
-    core_models.HasTimestamps,
-    core_models.TracksUsage,
+    base_models.BelongsToUser,
+    base_models.CanBeFavorited,
+    base_models.HasDescription,
+    base_models.HasName,
+    base_models.HasTimestamps,
+    base_models.TracksUsage,
 ):
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)

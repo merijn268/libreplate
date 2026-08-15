@@ -1,15 +1,15 @@
-from apps.core import models as core_models
+from apps.core.models import base as base_models
 from apps.foods.models import Food
 from django.db import models
 
 
 class GroceryList(
-    core_models.BelongsToUser,
-    core_models.CanBeFavorited,
-    core_models.HasDescription,
-    core_models.HasName,
-    core_models.HasTimestamps,
-    core_models.TracksUsage,
+    base_models.BelongsToUser,
+    base_models.CanBeFavorited,
+    base_models.HasDescription,
+    base_models.HasName,
+    base_models.HasTimestamps,
+    base_models.TracksUsage,
 ):
     date_start = models.DateField(null=True, blank=True)
     date_end = models.DateField(null=True, blank=True)
@@ -22,7 +22,7 @@ class GroceryList(
 
 
 class GroceryListFood(
-    core_models.HasTimestamps,
+    base_models.HasTimestamps,
 ):
     grocery_list = models.ForeignKey(
         GroceryList, on_delete=models.CASCADE, related_name="items"
