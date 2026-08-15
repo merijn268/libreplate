@@ -126,18 +126,68 @@ class MealPlan(
 
         return planned_meals
 
+    def _get_absolute_day_for_offset(self, offset, start_date, duration_days):
+        """
+        Map an `apply()` offset (days since `start_date`) to a
+        continuously increasing "absolute" plan-day index - i.e. how
+        many days after the plan's own day 0 (`self.start_day`) the
+        target date falls, *without* wrapping by `duration_days`.
+
+        This absolute index is what both plan-day matching
+        (`% duration_days`, see `apply()`) and entry recurrence
+        (`PlannedMealEntryRecurrence.occurs_on`) are measured against,
+        so a plan that repeats (wraps) and an entry that recurs across
+        those repeats stay consistent with each other - e.g. an entry
+        that repeats "every 2 weeks" keeps counting weeks correctly
+        even once the underlying plan has looped back to day 0.
+
+        Weekday alignment only makes sense when the plan repeats on a
+        7-day cycle (`duration_days % 7 == 0` - true for WEEK-period
+        plans, and DAY-period plans whose duration is a multiple of 7).
+        For any other DAY-period duration, we fall back to `start_date`
+        itself being absolute day 0.
+        """
+        if duration_days % 7 == 0:
+            return offset + ((start_date.weekday() - self.start_day) % 7)
+
+        return offset
+
+    @staticmethod
+    def _get_entry_recurrence(entry):
+        """
+        Safely fetch the (optional) PlannedMealEntryRecurrence attached
+        to a PlannedMealFood/PlannedMealRecipe, or None if it has none.
+        `entry.recurrence` is a reverse OneToOneField accessor, which
+        raises DoesNotExist rather than returning None when absent.
+        """
+        try:
+            return entry.recurrence
+        except PlannedMealEntryRecurrence.DoesNotExist:
+            return None
+
     @transaction.atomic
     def apply(self, start_date, days=MAX_APPLY_DAYS):
         """
         Apply this meal plan onto real Meal slots for `days` consecutive
         calendar dates, starting at `start_date`.
 
-        `start_date` is treated as meal-plan day 0, `start_date + 1` as
-        meal-plan day 1, and so on. If `days` is greater than the plan's
-        own duration, the plan's days repeat (the meal-plan day index
-        wraps with `% duration_days`).
+        Plan days are aligned by weekday against `self.start_day` (see
+        `_get_absolute_day_for_offset`), so a planned meal on the plan's
+        Monday only ever lands on an actual Monday `Meal`, no matter what
+        calendar date `start_date` happens to be. If `days` is greater
+        than the plan's own duration, the plan's days repeat (the
+        plan-day index wraps with `% duration_days`).
 
-        For every (date, planned meal) pair:
+        Beyond each entry's own planned day, any food or recipe entry
+        with a PlannedMealEntryRecurrence is also applied on every date
+        (within the `days` window) that its recurrence produces an
+        occurrence for - see `PlannedMealEntryRecurrence.occurs_on`. A
+        recurring entry is merged into the same Meal as any "anchor"
+        entries already scheduled for that date/name, so a date can end
+        up populated purely from recurrence even if no PlannedMeal is
+        anchored there.
+
+        For every (date, meal name) with at least one applicable entry:
         - if no Meal exists yet for that user/date/name, one is created
           and populated;
         - if a Meal already exists but has no food entries, it's
@@ -155,9 +205,22 @@ class MealPlan(
 
         duration_days = self.get_duration_days()
 
+        planned_meals = self.get_effective_planned_meals()
+
         planned_meals_by_day = defaultdict(list)
-        for planned_meal in self.get_effective_planned_meals():
+        entries_by_planned_meal = {}
+        recurring_entries = []  # list of (planned_meal, entry, recurrence)
+
+        for planned_meal in planned_meals:
             planned_meals_by_day[planned_meal.day].append(planned_meal)
+
+            entries = list(planned_meal.foods()) + list(planned_meal.recipes())
+            entries_by_planned_meal[id(planned_meal)] = entries
+
+            for entry in entries:
+                recurrence = self._get_entry_recurrence(entry)
+                if recurrence is not None:
+                    recurring_entries.append((planned_meal, entry, recurrence))
 
         default_meals_by_name = {
             default_meal.name: default_meal
@@ -172,11 +235,39 @@ class MealPlan(
 
         for offset in range(days):
             target_date = start_date + timedelta(days=offset)
-            plan_day = offset % duration_days
+            absolute_day = self._get_absolute_day_for_offset(
+                offset, start_date, duration_days
+            )
+            plan_day = absolute_day % duration_days
 
+            entries_by_name = defaultdict(list)
+            source_planned_meal_by_name = {}
+
+            # Anchor entries: planned meals actually scheduled on this
+            # plan day.
             for planned_meal in planned_meals_by_day.get(plan_day, []):
-                self._apply_planned_meal_to_date(
-                    planned_meal=planned_meal,
+                entries_by_name[planned_meal.name].extend(
+                    entries_by_planned_meal[id(planned_meal)]
+                )
+                source_planned_meal_by_name[planned_meal.name] = planned_meal
+
+            # Recurring entries: individual foods/recipes whose
+            # recurrence produces an extra occurrence on this date,
+            # regardless of which day their PlannedMeal itself lives on.
+            for planned_meal, entry, recurrence in recurring_entries:
+                if not recurrence.occurs_on(
+                    planned_meal.day, absolute_day, self.start_day
+                ):
+                    continue
+
+                entries_by_name[planned_meal.name].append(entry)
+                source_planned_meal_by_name.setdefault(planned_meal.name, planned_meal)
+
+            for name, entries in entries_by_name.items():
+                self._apply_entries_to_date(
+                    name=name,
+                    order=source_planned_meal_by_name[name].order,
+                    entries=entries,
                     target_date=target_date,
                     default_meals_by_name=default_meals_by_name,
                     summary=summary,
@@ -184,13 +275,13 @@ class MealPlan(
 
         return summary
 
-    def _apply_planned_meal_to_date(
-        self, planned_meal, target_date, default_meals_by_name, summary
+    def _apply_entries_to_date(
+        self, name, order, entries, target_date, default_meals_by_name, summary
     ):
         meal = Meal.objects.filter(
             user=self.user,
             date=target_date,
-            name=planned_meal.name,
+            name=name,
         ).first()
 
         created = False
@@ -199,9 +290,9 @@ class MealPlan(
             meal = Meal.objects.create(
                 user=self.user,
                 date=target_date,
-                name=planned_meal.name,
-                order=planned_meal.order,
-                default_meal=default_meals_by_name.get(planned_meal.name),
+                name=name,
+                order=order,
+                default_meal=default_meals_by_name.get(name),
             )
             created = True
 
@@ -211,18 +302,20 @@ class MealPlan(
             )
             return
 
-        meal_foods = [
-            MealFood(
-                meal=meal,
-                food=planned_food.food,
-                serving_size=planned_food.serving_size,
-                number_of_servings=planned_food.number_of_servings,
-            )
-            for planned_food in planned_meal.foods()
-        ]
+        meal_foods = []
 
-        for planned_recipe in planned_meal.recipes():
-            meal_foods.extend(self._unfold_recipe(planned_recipe, meal))
+        for entry in entries:
+            if isinstance(entry, PlannedMealFood):
+                meal_foods.append(
+                    MealFood(
+                        meal=meal,
+                        food=entry.food,
+                        serving_size=entry.serving_size,
+                        number_of_servings=entry.number_of_servings,
+                    )
+                )
+            else:
+                meal_foods.extend(self._unfold_recipe(entry, meal))
 
         if not meal_foods:
             summary["skipped_empty_plan"].append(
@@ -434,6 +527,81 @@ class PlannedMealEntryRecurrence(models.Model):
         validators=[MinValueValidator(1)],
         help_text=("Number of occurrences after which repetition ends."),
     )
+
+    def _matches_pattern(self, origin_day: int, day: int, start_day: int) -> bool:
+        """
+        Whether `day` (an absolute, non-wrapped plan-day index - see
+        `MealPlan._get_absolute_day_for_offset`) matches this
+        recurrence's interval/weekday pattern, ignoring any `end`
+        condition. `origin_day` is the entry's own PlannedMeal.day - its
+        first, anchor occurrence.
+        """
+        diff = day - origin_day
+
+        if diff <= 0:
+            return False
+
+        if self.interval_count <= 0:
+            return False
+
+        if self.interval == MealPlanPeriodUnit.DAY:
+            return diff % self.interval_count == 0
+
+        # WEEK: only fires on the configured weekdays, every
+        # `interval_count` weeks (counted in plan-day weeks, i.e.
+        # 7-day blocks starting at the plan's own day 0).
+        if not self.weekdays:
+            return False
+
+        weekday = (start_day + day) % 7
+
+        if weekday not in self.weekdays:
+            return False
+
+        week_diff = (day // 7) - (origin_day // 7)
+
+        return week_diff % self.interval_count == 0
+
+    def _occurrence_number(self, origin_day: int, day: int, start_day: int) -> int:
+        """
+        Which occurrence `day` is, counting the origin day itself as
+        occurrence 1. Used only to evaluate `end == AFTER`. Only ever
+        called on days that already matched `_matches_pattern`, over the
+        small (<= MealPlan.MAX_APPLY_DAYS + 6) window `apply()` works
+        with, so a simple day-by-day scan is cheap.
+        """
+        count = 1  # the origin occurrence itself
+
+        for candidate in range(origin_day + 1, day + 1):
+            if self._matches_pattern(origin_day, candidate, start_day):
+                count += 1
+
+        return count
+
+    def occurs_on(self, origin_day: int, day: int, start_day: int) -> bool:
+        """
+        Whether this recurrence produces an occurrence of its entry on
+        `day` (an absolute, non-wrapped plan-day index). `origin_day` is
+        the entry's PlannedMeal.day, and `start_day` is the owning
+        MealPlan's start_day (needed to translate plan-day indices into
+        weekdays for WEEK-interval recurrences).
+
+        The origin day itself is always applied directly by
+        `MealPlan.apply()`'s normal plan-day matching, so this only
+        needs to answer for days *after* the origin.
+        """
+        if not self._matches_pattern(origin_day, day, start_day):
+            return False
+
+        if self.end == self.End.ON_DAY:
+            return self.end_day is None or day <= self.end_day
+
+        if self.end == self.End.AFTER:
+            if self.end_after is None:
+                return True
+            return self._occurrence_number(origin_day, day, start_day) <= self.end_after
+
+        return True
 
 
 class PlannedMealFood(PlannedMealEntry):
