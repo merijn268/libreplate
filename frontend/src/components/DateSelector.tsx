@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import SelectorBar from "./bars/SelectorBar";
+import SelectorBar from "./bars/DaySelectorBar";
 
 type Props = {
   selectedDate: string;
