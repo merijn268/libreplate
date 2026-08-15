@@ -230,7 +230,7 @@ export const foodsTagsUpdate = <ThrowOnError extends boolean = false>(options: O
     }
 });
 
-export const groceriesList = <ThrowOnError extends boolean = false>(options: Options<GroceriesListData, ThrowOnError>): RequestResult<GroceriesListResponses, unknown, ThrowOnError> => (options.client ?? client).get<GroceriesListResponses, unknown, ThrowOnError>({
+export const groceriesList = <ThrowOnError extends boolean = false>(options?: Options<GroceriesListData, ThrowOnError>): RequestResult<GroceriesListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GroceriesListResponses, unknown, ThrowOnError>({
     security: [{
             in: 'cookie',
             name: 'sessionid',
@@ -388,7 +388,7 @@ export const groceriesUpdate = <ThrowOnError extends boolean = false>(options: O
     }
 });
 
-export const groceriesGenerateCreate = <ThrowOnError extends boolean = false>(options: Options<GroceriesGenerateCreateData, ThrowOnError>): RequestResult<GroceriesGenerateCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<GroceriesGenerateCreateResponses, unknown, ThrowOnError>({
+export const groceriesGenerateCreate = <ThrowOnError extends boolean = false>(options?: Options<GroceriesGenerateCreateData, ThrowOnError>): RequestResult<GroceriesGenerateCreateResponses, unknown, ThrowOnError> => (options?.client ?? client).post<GroceriesGenerateCreateResponses, unknown, ThrowOnError>({
     security: [{
             in: 'cookie',
             name: 'sessionid',
@@ -398,7 +398,7 @@ export const groceriesGenerateCreate = <ThrowOnError extends boolean = false>(op
     ...options,
     headers: {
         'Content-Type': 'application/json',
-        ...options.headers
+        ...options?.headers
     }
 });
 

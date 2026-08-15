@@ -402,12 +402,6 @@ paths:
   /api/groceries/:
     get:
       operationId: groceries_list
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
       tags:
       - groceries
       security:
@@ -423,12 +417,6 @@ paths:
           description: ''
     post:
       operationId: groceries_create
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
       tags:
       - groceries
       requestBody:
@@ -676,6 +664,7 @@ paths:
         name: id
         schema:
           type: integer
+        description: A unique integer value identifying this grocery list.
         required: true
       tags:
       - groceries
@@ -695,6 +684,7 @@ paths:
         name: id
         schema:
           type: integer
+        description: A unique integer value identifying this grocery list.
         required: true
       tags:
       - groceries
@@ -726,6 +716,7 @@ paths:
         name: id
         schema:
           type: integer
+        description: A unique integer value identifying this grocery list.
         required: true
       tags:
       - groceries
@@ -756,6 +747,7 @@ paths:
         name: id
         schema:
           type: integer
+        description: A unique integer value identifying this grocery list.
         required: true
       tags:
       - groceries
@@ -767,12 +759,6 @@ paths:
   /api/groceries/generate/:
     post:
       operationId: groceries_generate_create
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
       tags:
       - groceries
       requestBody:
@@ -786,7 +772,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/GroceryListGenerate'
-        required: true
       security:
       - cookieAuth: []
       responses:
@@ -2981,6 +2966,10 @@ components:
         name:
           type: string
           maxLength: 255
+        description:
+          type: string
+        is_favorite:
+          type: boolean
         date_start:
           type: string
           format: date
@@ -3009,7 +2998,12 @@ components:
           type: integer
           readOnly: true
         food:
+          allOf:
+          - $ref: '#/components/schemas/Food'
+          readOnly: true
+        food_id:
           type: integer
+          writeOnly: true
         amount:
           type: number
           format: double
@@ -3018,6 +3012,7 @@ components:
       required:
       - amount
       - food
+      - food_id
       - id
     GroceryListGenerate:
       type: object
@@ -3028,9 +3023,7 @@ components:
           type: integer
           maximum: 31
           minimum: 1
-      required:
-      - length_days
-      - meal_plan_id
+          default: 7
     Login:
       type: object
       properties:
@@ -3430,6 +3423,10 @@ components:
         name:
           type: string
           maxLength: 255
+        description:
+          type: string
+        is_favorite:
+          type: boolean
         date_start:
           type: string
           format: date
@@ -3453,7 +3450,12 @@ components:
           type: integer
           readOnly: true
         food:
+          allOf:
+          - $ref: '#/components/schemas/Food'
+          readOnly: true
+        food_id:
           type: integer
+          writeOnly: true
         amount:
           type: number
           format: double

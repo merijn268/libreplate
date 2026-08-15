@@ -170,6 +170,7 @@ def check(c: Context, verbose: bool = False) -> None:
     print_success(message="Code checks passed")
 
 
+# TODO Formatter still formats react code, not sure what... probably the generated API.
 # TODO IDE should automatically format!
 @task(
     aliases=["f"],

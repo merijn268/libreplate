@@ -16,24 +16,16 @@ from .serializers import (
 from .services import GroceryListGenerator
 
 
-@extend_schema(
-    parameters=[
-        OpenApiParameter(
-            name="id",
-            type=int,
-            location=OpenApiParameter.PATH,
-        ),
-    ],
-)
 class GroceryListViewSet(viewsets.ModelViewSet):
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = GroceryListSerializer
 
     def get_queryset(self):
-        return GroceryList.objects.filter(
-            user=self.request.user,
-        )
+        if getattr(self, "swagger_fake_view", False):
+            return GroceryList.objects.none()
+
+        return GroceryList.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -46,9 +38,13 @@ class GroceryListViewSet(viewsets.ModelViewSet):
     def generate(self, request):
         serializer = GroceryListGenerateSerializer(
             data=request.data,
+            context={"request": request},
         )
         serializer.is_valid(raise_exception=True)
-        meal_plan = MealPlan.get_active_instance(user=request.user)
+
+        meal_plan = serializer.validated_data.get(
+            "meal_plan"
+        ) or MealPlan.get_active_instance(user=request.user)
 
         if meal_plan is None:
             return Response(

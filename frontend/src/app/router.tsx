@@ -11,6 +11,7 @@ import FoodEditPage from "../features/foods/FoodEditPage";
 import FoodsPage from "../features/foods/FoodsPage";
 import DiaryPage from "../features/diary/DiaryPage";
 import GroceriesPage from "@/features/groceries/GroceriesPage";
+import GroceriesEditPage from "@/features/groceries/GropceriesEditPage";
 import MealPlansPage from "../features/meal_plans/MealPlansPage";
 import MealPlanEditPage from "../features/meal_plans/MealPlanEditPage";
 import SettingsPage from "../features/settings/SettingsPage";
@@ -63,6 +64,14 @@ const router = createBrowserRouter([
         element: <GroceriesPage />,
         handle: {
           title: "Groceries",
+        },
+      },
+
+      {
+        path: "groceries/:id/edit",
+        element: <GroceriesEditPage />,
+        handle: {
+          title: "Edit Grocery List",
         },
       },
 

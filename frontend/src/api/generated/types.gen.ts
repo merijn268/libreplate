@@ -65,6 +65,8 @@ export type FoodNutrient = {
 export type GroceryList = {
     readonly id: number;
     name: string;
+    description?: string;
+    is_favorite?: boolean;
     date_start?: string | null;
     date_end?: string | null;
     readonly created_at: string;
@@ -73,14 +75,14 @@ export type GroceryList = {
 
 export type GroceryListFood = {
     readonly id: number;
-    food: number;
+    food: Food;
     amount: number;
     on_hand?: boolean;
 };
 
 export type GroceryListGenerate = {
-    meal_plan_id: number;
-    length_days: number;
+    meal_plan_id?: number;
+    length_days?: number;
 };
 
 export type Login = {
@@ -261,6 +263,8 @@ export type PatchedFood = {
 export type PatchedGroceryList = {
     readonly id?: number;
     name?: string;
+    description?: string;
+    is_favorite?: boolean;
     date_start?: string | null;
     date_end?: string | null;
     readonly created_at?: string;
@@ -269,7 +273,7 @@ export type PatchedGroceryList = {
 
 export type PatchedGroceryListFood = {
     readonly id?: number;
-    food?: number;
+    food?: Food;
     amount?: number;
     on_hand?: boolean;
 };
@@ -614,12 +618,14 @@ export type FoodNutrientWritable = {
 
 export type GroceryListWritable = {
     name: string;
+    description?: string;
+    is_favorite?: boolean;
     date_start?: string | null;
     date_end?: string | null;
 };
 
 export type GroceryListFoodWritable = {
-    food: number;
+    food_id: number;
     amount: number;
     on_hand?: boolean;
 };
@@ -734,12 +740,14 @@ export type PatchedFoodWritable = {
 
 export type PatchedGroceryListWritable = {
     name?: string;
+    description?: string;
+    is_favorite?: boolean;
     date_start?: string | null;
     date_end?: string | null;
 };
 
 export type PatchedGroceryListFoodWritable = {
-    food?: number;
+    food_id?: number;
     amount?: number;
     on_hand?: boolean;
 };
@@ -1213,9 +1221,7 @@ export type FoodsTagsUpdateResponse = FoodsTagsUpdateResponses[keyof FoodsTagsUp
 
 export type GroceriesListData = {
     body?: never;
-    path: {
-        id: number;
-    };
+    path?: never;
     query?: never;
     url: '/api/groceries/';
 };
@@ -1228,9 +1234,7 @@ export type GroceriesListResponse = GroceriesListResponses[keyof GroceriesListRe
 
 export type GroceriesCreateData = {
     body: GroceryListWritable;
-    path: {
-        id: number;
-    };
+    path?: never;
     query?: never;
     url: '/api/groceries/';
 };
@@ -1359,6 +1363,9 @@ export type GroceriesItemsToggleCreateResponse = GroceriesItemsToggleCreateRespo
 export type GroceriesDestroyData = {
     body?: never;
     path: {
+        /**
+         * A unique integer value identifying this grocery list.
+         */
         id: number;
     };
     query?: never;
@@ -1377,6 +1384,9 @@ export type GroceriesDestroyResponse = GroceriesDestroyResponses[keyof Groceries
 export type GroceriesRetrieveData = {
     body?: never;
     path: {
+        /**
+         * A unique integer value identifying this grocery list.
+         */
         id: number;
     };
     query?: never;
@@ -1392,6 +1402,9 @@ export type GroceriesRetrieveResponse = GroceriesRetrieveResponses[keyof Groceri
 export type GroceriesPartialUpdateData = {
     body?: PatchedGroceryListWritable;
     path: {
+        /**
+         * A unique integer value identifying this grocery list.
+         */
         id: number;
     };
     query?: never;
@@ -1407,6 +1420,9 @@ export type GroceriesPartialUpdateResponse = GroceriesPartialUpdateResponses[key
 export type GroceriesUpdateData = {
     body: GroceryListWritable;
     path: {
+        /**
+         * A unique integer value identifying this grocery list.
+         */
         id: number;
     };
     query?: never;
@@ -1420,10 +1436,8 @@ export type GroceriesUpdateResponses = {
 export type GroceriesUpdateResponse = GroceriesUpdateResponses[keyof GroceriesUpdateResponses];
 
 export type GroceriesGenerateCreateData = {
-    body: GroceryListGenerate;
-    path: {
-        id: number;
-    };
+    body?: GroceryListGenerate;
+    path?: never;
     query?: never;
     url: '/api/groceries/generate/';
 };
