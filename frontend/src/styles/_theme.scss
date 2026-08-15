@@ -1,0 +1,74 @@
+// src/styles/_theme.scss
+
+@import "tokens";
+
+// ===========================================================================
+// Light theme
+// ===========================================================================
+
+:root {
+  // -------------------------------------------------------------------------
+  // Application design tokens
+  // -------------------------------------------------------------------------
+
+  --app-primary: #{$color-primary};
+  --app-secondary: #{$color-secondary};
+  --app-accent: #{$color-accent};
+
+  --app-success: #{$color-success};
+  --app-danger: #{$color-danger};
+  --app-warning: #{$color-warning};
+  --app-info: #{$color-info};
+
+  --app-background: #{$color-background};
+  --app-surface: #{$color-surface};
+  --app-text: #{$color-text};
+  --app-muted: #{$color-muted};
+  --app-border: #{$color-border};
+
+  // -------------------------------------------------------------------------
+  // Bootstrap runtime bridge
+  // -------------------------------------------------------------------------
+
+  --bs-primary: var(--app-primary);
+  --bs-primary-rgb: 59, 130, 246;
+
+  --bs-link-color: var(--app-primary);
+  --bs-link-color-rgb: var(--bs-primary-rgb);
+
+  --bs-link-hover-color: var(--app-primary);
+  --bs-link-hover-color-rgb: var(--bs-primary-rgb);
+}
+
+// ===========================================================================
+// Dark theme
+// ===========================================================================
+
+[data-bs-theme="dark"] {
+  // -------------------------------------------------------------------------
+  // Application design tokens
+  // -------------------------------------------------------------------------
+
+  --app-background: #{$color-background-dark};
+  --app-surface: #{$color-surface-dark};
+  --app-text: #{$color-text-dark};
+  --app-muted: #{$color-muted-dark};
+  --app-border: #{$color-border-dark};
+
+  // -------------------------------------------------------------------------
+  // Bootstrap semantic colors
+  // -------------------------------------------------------------------------
+
+  --bs-body-bg: var(--app-background);
+  --bs-body-color: var(--app-text);
+
+  --bs-secondary-color: var(--app-muted);
+  --bs-tertiary-color: var(--app-muted);
+
+  --bs-border-color: var(--app-border);
+
+  --bs-secondary-bg: var(--app-surface);
+
+  // Slightly different value for elements that need a second-level surface.
+  --bs-tertiary-bg: #273449;
+}

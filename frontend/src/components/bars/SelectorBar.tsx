@@ -16,7 +16,7 @@ export default function SelectorBar({ children, onPrevious, onNext }: Props) {
       <button
         onClick={onPrevious}
         type="button"
-        className="btn border-0 bg-transparent shadow-none position-absolute d-flex align-items-center justify-content-center p-0 text-secondary selector-bar-nav selector-bar-prev"
+        className="btn border-0 bg-transparent shadow-none position-absolute d-flex align-items-center justify-content-center p-0 text-primary selector-bar-nav selector-bar-prev"
         style={{
           width: "40px",
           height: "40px",
@@ -41,7 +41,7 @@ export default function SelectorBar({ children, onPrevious, onNext }: Props) {
       <button
         onClick={onNext}
         type="button"
-        className="btn border-0 bg-transparent shadow-none position-absolute d-flex align-items-center justify-content-center p-0 text-secondary selector-bar-nav selector-bar-next"
+        className="btn border-0 bg-transparent shadow-none position-absolute d-flex align-items-center justify-content-center p-0 text-primary selector-bar-nav selector-bar-next"
         style={{
           width: "40px",
           height: "40px",
@@ -75,7 +75,7 @@ export default function SelectorBar({ children, onPrevious, onNext }: Props) {
           }
 
           .selector-bar-nav:hover {
-            background-color: var(--bs-secondary) !important;
+            background-color: var(--bs-primary) !important;
             color: var(--bs-white) !important;
           }
         }

@@ -1,0 +1,139 @@
+// src/styles/_overrides.scss
+
+// ===========================================================================
+// Application semantic utilities
+// ===========================================================================
+
+// A surface is an element sitting on top of the application background.
+//
+// Example:
+//
+//   <div className="app-surface">
+//
+
+.app-surface {
+  background-color: var(--app-surface);
+  color: var(--app-text);
+  border-color: var(--app-border);
+}
+
+// Page/application background.
+
+.app-background {
+  background-color: var(--app-background);
+  color: var(--app-text);
+}
+
+// Primary application text.
+
+.app-text {
+  color: var(--app-text);
+}
+
+// Secondary/muted application text.
+
+.app-muted {
+  color: var(--app-muted);
+}
+
+// Application border.
+
+.app-border {
+  border-color: var(--app-border) !important;
+}
+
+// Strong border, useful for selected controls.
+
+.app-border-strong {
+  border-color: var(--app-text) !important;
+}
+
+// ===========================================================================
+// Bootstrap primary button
+// ===========================================================================
+
+.btn-primary {
+  --bs-btn-bg: var(--app-primary);
+  --bs-btn-border-color: var(--app-primary);
+
+  --bs-btn-hover-bg: var(--app-primary);
+  --bs-btn-hover-border-color: var(--app-primary);
+
+  --bs-btn-active-bg: var(--app-primary);
+  --bs-btn-active-border-color: var(--app-primary);
+
+  --bs-btn-disabled-bg: var(--app-primary);
+  --bs-btn-disabled-border-color: var(--app-primary);
+
+  --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+}
+
+// ===========================================================================
+// Bootstrap primary outline button
+// ===========================================================================
+
+.btn-outline-primary {
+  --bs-btn-color: var(--app-primary);
+  --bs-btn-border-color: var(--app-primary);
+
+  --bs-btn-hover-bg: var(--app-primary);
+  --bs-btn-hover-border-color: var(--app-primary);
+
+  --bs-btn-active-bg: var(--app-primary);
+  --bs-btn-active-border-color: var(--app-primary);
+
+  --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+}
+
+// ===========================================================================
+// Form controls
+// ===========================================================================
+
+.form-check-input:checked {
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+}
+
+.form-check-input:focus {
+  border-color: var(--app-primary);
+
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+// ===========================================================================
+// Form switch
+// ===========================================================================
+
+.form-switch .form-check-input:focus:not(:checked) {
+  --bs-form-switch-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba(0, 0, 0, 0.25)'/%3e%3c/svg%3e");
+}
+
+// ===========================================================================
+// List groups
+// ===========================================================================
+
+.list-group-item.active {
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+}
+
+// ===========================================================================
+// Pagination
+// ===========================================================================
+
+.page-link {
+  color: var(--app-primary);
+}
+
+.page-item.active .page-link {
+  background-color: var(--app-primary);
+  border-color: var(--app-primary);
+}
+
+// ===========================================================================
+// Navigation pills
+// ===========================================================================
+
+.nav-pills {
+  --bs-nav-pills-link-active-bg: var(--app-primary);
+}

@@ -8,7 +8,7 @@ interface Props {
 
 export default function TopNavbar({ onMenuClick, title }: Props) {
   return (
-    <Navbar bg="body" className="border-bottom sticky-top">
+    <Navbar className="app-surface border-bottom sticky-top">
       <Container fluid>
         <div className="d-flex align-items-center">
           <Button

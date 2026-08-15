@@ -68,14 +68,14 @@ export default function SearchBar<TSort extends string, TagType = unknown>({
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder={placeholder}
-            className="form-control"
+            className="form-control app-surface"
           />
 
           <button
             className={`btn border ${
               showFavorites
-                ? "btn-success border-success"
-                : "btn-outline-secondary border-secondary-subtle"
+                ? "btn-primary border-primary"
+                : "btn-outline-primary border-primary"
             }`}
             onClick={onToggleFavorites}
             title="Show favorites"
@@ -87,8 +87,8 @@ export default function SearchBar<TSort extends string, TagType = unknown>({
             <button
               className={`btn border ${
                 selectedTags.length > 0
-                  ? "btn-success border-success"
-                  : "btn-outline-secondary border-secondary-subtle"
+                  ? "btn-primary border-primary"
+                  : "btn-outline-primary border-primary"
               }`}
               onClick={onManageTags}
               title="Manage tags"
@@ -104,7 +104,7 @@ export default function SearchBar<TSort extends string, TagType = unknown>({
           <div className="dropdown" ref={sortRef}>
             <button
               type="button"
-              className="btn btn-outline-secondary border-secondary-subtle rounded-0 rounded-end"
+              className="btn btn-outline-primary border-primary rounded-0 rounded-end"
               aria-expanded={sortOpen}
               title="Sort"
               onClick={() => setSortOpen((open) => !open)}

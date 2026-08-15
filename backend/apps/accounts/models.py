@@ -33,6 +33,10 @@ class UserPreferences(models.Model):
     dark_mode = models.BooleanField(default=False)
     theme_color = ColorField(default="#107800")
 
+    # TODO setting allow multiple meal plans at once
+    # TODO setting macro colors
+    # TODO setting more contract colors
+
     RECIPE_SORT_CHOICES = [
         ("last_used", "Last used"),
         ("created", "Last created"),

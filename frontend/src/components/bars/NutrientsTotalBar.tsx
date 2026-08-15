@@ -27,14 +27,14 @@ export default function NutrientTotalsBar({
   return (
     <>
       <div
-        className="card mb-2"
+        className="card mb-2 app-surface"
         onClick={() => setIsOpen(true)}
         style={{ cursor: "pointer" }}
       >
         <div className="card-body d-flex align-items-center justify-content-between">
           <span>Totals</span>
 
-          <div className="d-flex gap-4 text-muted">
+          <div className="d-flex gap-4 text-primary">
             <span>Kcal {energy.toFixed(0)}</span>
             <span>P {protein.toFixed(0)}</span>
             <span>F {fat.toFixed(0)}</span>

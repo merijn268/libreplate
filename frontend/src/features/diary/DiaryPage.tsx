@@ -301,7 +301,9 @@ export default function DiaryPage() {
 
         <ActionPillButton
           label={
-            applyMealPlan.isPending ? "Applying meal plan..." : "Apply meal plan"
+            applyMealPlan.isPending
+              ? "Applying meal plan..."
+              : "Apply meal plan"
           }
           onClick={handleApplyMealPlan}
         />

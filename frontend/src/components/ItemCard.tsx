@@ -10,7 +10,7 @@ interface Props {
 
 export default function ItemCard({ title, meta, actions, onClick }: Props) {
   return (
-    <div className="card rounded-2" role="button" onClick={onClick}>
+    <div className="card app-surface" role="button" onClick={onClick}>
       <div className="card-body p-2">
         <div className="d-flex align-items-start">
           <div className="flex-grow-1">

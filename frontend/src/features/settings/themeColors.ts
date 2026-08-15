@@ -3,10 +3,7 @@ export interface ThemeColorOption {
   hex: string;
 }
 
-// The API stores theme_color as a hex string directly (e.g. "#3b82f6"),
-// so these presets double as the values we send/compare against.
 export const THEME_COLORS: ThemeColorOption[] = [
-  // Existing
   { label: "Blue", hex: "#3b82f6" },
   { label: "Purple", hex: "#8b5cf6" },
   { label: "Green", hex: "#22c55e" },
@@ -14,7 +11,6 @@ export const THEME_COLORS: ThemeColorOption[] = [
   { label: "Pink", hex: "#ec4899" },
   { label: "Teal", hex: "#14b8a6" },
 
-  // Additional
   { label: "Red", hex: "#ef4444" },
   { label: "Yellow", hex: "#eab308" },
   { label: "Indigo", hex: "#6366f1" },

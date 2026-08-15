@@ -40,7 +40,7 @@ export default function MealCard({
 }: Props) {
   return (
     <div className="mb-2">
-      <div className="card">
+      <div className="card app-surface">
         <div className="card-body">
           <div className="d-flex align-items-center">
             <button
@@ -63,7 +63,7 @@ export default function MealCard({
             >
               <h2 className="h5 m-0">{name}</h2>
 
-              <div className="small text-muted d-flex gap-3">
+              <div className="small d-flex gap-3 text-primary">
                 <span>Kcal {totals.energy.toFixed(0)}</span>
                 <span>P {totals.protein.toFixed(0)}</span>
                 <span>F {totals.fat.toFixed(0)}</span>

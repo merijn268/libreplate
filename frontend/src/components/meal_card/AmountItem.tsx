@@ -32,7 +32,7 @@ export default function AmountItem({
 
   return (
     <li
-      className="list-group-item list-group-item-action d-flex align-items-center px-1 py-2"
+      className="app-surface list-group-item list-group-item-action d-flex align-items-center px-1 py-2"
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
       onClick={onClick}
