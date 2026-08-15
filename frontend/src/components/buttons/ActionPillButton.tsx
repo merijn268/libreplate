@@ -16,7 +16,7 @@ export default function ActionPillButton({
   return (
     <button
       type="button"
-      className="app-surface btn rounded-2 d-flex align-items-center justify-content-center gap-1 w-100 py-2 px-3 fw-semibold shadow-sm"
+      className="app-surface btn rounded-2 d-flex align-items-center justify-content-center gap-1 w-100 py-2 px-3 fw-semibold"
       onClick={onClick}
       disabled={disabled || loading}
     >
