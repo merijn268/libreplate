@@ -2,6 +2,10 @@
 # Python
 # ============================================================
 
+
+# TODO Migrations should be commited to the repo. It allows verifying what
+# will happen in the production environment.
+
 # Byte-compiled / cache
 __pycache__/
 *.py[cod]
