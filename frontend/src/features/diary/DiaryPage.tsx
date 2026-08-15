@@ -15,6 +15,7 @@ import NutrientTotalsBar from "../../components/bars/NutrientsTotalBar";
 import FoodPickerModal from "../foods/components/FoodPickerModal";
 import RecipePickerModal from "../recipes/components/common/RecipePickermodal";
 import AddToMealModal from "../../components/modals/AddToMealModal";
+import BodyMetricsEditModal from "@/features/body_metrics/BodyMetricsEditModal";
 
 import DiaryHeader from "../../components/DateSelector";
 import MealList from "./components/MealList";
@@ -38,6 +39,7 @@ export default function DiaryPage() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isFoodPickerOpen, setIsFoodPickerOpen] = useState(false);
   const [isRecipePickerOpen, setIsRecipePickerOpen] = useState(false);
+  const [isBodyMetricsOpen, setIsBodyMetricsOpen] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState<DayMeal | null>(null);
   const diaryQueryKey = ["meals", "day", selectedDate] as const;
 
@@ -258,6 +260,12 @@ export default function DiaryPage() {
         onSelect={handleRecipeSelect}
       />
 
+      <BodyMetricsEditModal
+        isOpen={isBodyMetricsOpen}
+        date={selectedDate}
+        onClose={() => setIsBodyMetricsOpen(false)}
+      />
+
       {/* TODO this should be in a component not in diary page. */}
       <AddToMealModal
         isOpen={isAddModalOpen}
@@ -292,11 +300,8 @@ export default function DiaryPage() {
 
       <ActionPillButtonGroup>
         <ActionPillButton
-          label="Body Stats"
-          onClick={() => {
-            // TODO: open body metrics modal
-            console.log("Enter body metrics clicked");
-          }}
+          label="Body Metrics"
+          onClick={() => setIsBodyMetricsOpen(true)}
         />
 
         <ActionPillButton

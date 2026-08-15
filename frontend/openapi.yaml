@@ -266,6 +266,48 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/body-metrics/body-metrics/:
+    get:
+      operationId: body_metrics_body_metrics_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - body-metrics
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BodyMetric'
+          description: ''
+  /api/body-metrics/body-metrics/{id}/:
+    get:
+      operationId: body_metrics_body_metrics_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - body-metrics
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BodyMetric'
+          description: ''
   /api/foods/:
     get:
       operationId: foods_list
@@ -2952,6 +2994,27 @@ paths:
           description: ''
 components:
   schemas:
+    BodyMetric:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          readOnly: true
+        is_single_entry:
+          type: boolean
+          readOnly: true
+          description: If only one log entry can be entered.
+      required:
+      - description
+      - id
+      - is_single_entry
+      - name
     BodyMetricLog:
       type: object
       properties:

@@ -4,6 +4,16 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+export type BodyMetric = {
+    readonly id: number;
+    readonly name: string;
+    readonly description: string;
+    /**
+     * If only one log entry can be entered.
+     */
+    readonly is_single_entry: boolean;
+};
+
 export type BodyMetricLog = {
     readonly id: number;
     body_metric: number;
@@ -1139,6 +1149,36 @@ export type BodyMetricsBodyMetricLogsUpdateResponses = {
 };
 
 export type BodyMetricsBodyMetricLogsUpdateResponse = BodyMetricsBodyMetricLogsUpdateResponses[keyof BodyMetricsBodyMetricLogsUpdateResponses];
+
+export type BodyMetricsBodyMetricsListData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/body-metrics/body-metrics/';
+};
+
+export type BodyMetricsBodyMetricsListResponses = {
+    200: Array<BodyMetric>;
+};
+
+export type BodyMetricsBodyMetricsListResponse = BodyMetricsBodyMetricsListResponses[keyof BodyMetricsBodyMetricsListResponses];
+
+export type BodyMetricsBodyMetricsRetrieveData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/body-metrics/body-metrics/{id}/';
+};
+
+export type BodyMetricsBodyMetricsRetrieveResponses = {
+    200: BodyMetric;
+};
+
+export type BodyMetricsBodyMetricsRetrieveResponse = BodyMetricsBodyMetricsRetrieveResponses[keyof BodyMetricsBodyMetricsRetrieveResponses];
 
 export type FoodsListData = {
     body?: never;

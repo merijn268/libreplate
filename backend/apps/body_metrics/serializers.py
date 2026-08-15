@@ -1,5 +1,17 @@
-from apps.body_metrics.models import BodyMetricLog
+from apps.body_metrics.models import BodyMetric, BodyMetricLog
 from rest_framework import serializers
+
+
+class BodyMetricSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BodyMetric
+        fields = (
+            "id",
+            "name",
+            "description",
+            "is_single_entry",
+        )
+        read_only_fields = fields
 
 
 class BodyMetricLogSerializer(serializers.ModelSerializer):
@@ -49,13 +61,7 @@ class BodyMetricLogSerializer(serializers.ModelSerializer):
             date=date,
         ).exists():
             raise serializers.ValidationError(
-                {"date": ("A log for this body metric already exists for this date.")}
+                {"date": "A log for this body metric already exists for this date."}
             )
 
         return attrs
-
-    def create(self, validated_data):
-        return BodyMetricLog.objects.create(
-            user=self.context["request"].user,
-            **validated_data,
-        )
