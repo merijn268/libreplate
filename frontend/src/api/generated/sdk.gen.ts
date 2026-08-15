@@ -2,7 +2,7 @@
 
 import { type Client, type ClientMeta, formDataBodySerializer, type Options as Options2, type RequestResult, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AccountsCsrfRetrieveData, AccountsCsrfRetrieveResponses, AccountsLoginCreateData, AccountsLoginCreateErrors, AccountsLoginCreateResponses, AccountsLogoutCreateData, AccountsLogoutCreateResponses, AccountsMeRetrieveData, AccountsMeRetrieveResponses, AccountsPreferencesPartialUpdateData, AccountsPreferencesPartialUpdateResponses, AccountsPreferencesRetrieveData, AccountsPreferencesRetrieveResponses, FoodsCreateData, FoodsCreateResponses, FoodsDestroyData, FoodsDestroyResponses, FoodsListData, FoodsListResponses, FoodsPartialUpdateData, FoodsPartialUpdateResponses, FoodsRetrieveData, FoodsRetrieveResponses, FoodsTagsCreateData, FoodsTagsCreateResponses, FoodsTagsDestroyData, FoodsTagsDestroyResponses, FoodsTagsListData, FoodsTagsListResponses, FoodsTagsPartialUpdateData, FoodsTagsPartialUpdateResponses, FoodsTagsRetrieveData, FoodsTagsRetrieveResponses, FoodsTagsUpdateData, FoodsTagsUpdateResponses, FoodsUpdateData, FoodsUpdateResponses, GroceriesCreateData, GroceriesCreateResponses, GroceriesDestroyData, GroceriesDestroyResponses, GroceriesItemsCreateData, GroceriesItemsCreateResponses, GroceriesItemsDestroyData, GroceriesItemsDestroyResponses, GroceriesItemsListData, GroceriesItemsListResponses, GroceriesItemsPartialUpdateData, GroceriesItemsPartialUpdateResponses, GroceriesItemsToggleCreateData, GroceriesItemsToggleCreateResponses, GroceriesListData, GroceriesListResponses, GroceriesRetrieveData, GroceriesRetrieveResponses, IntegrationsAddCreateData, IntegrationsAddCreateResponses, IntegrationsSearchListData, IntegrationsSearchListResponses, MealPlansActivateCreateData, MealPlansActivateCreateResponses, MealPlansActiveRetrieveData, MealPlansActiveRetrieveResponses, MealPlansApplyCreateData, MealPlansApplyCreateResponses, MealPlansCreateData, MealPlansCreateResponses, MealPlansDeactivateCreateData, MealPlansDeactivateCreateResponses, MealPlansDestroyData, MealPlansDestroyResponses, MealPlansFoodsCreateData, MealPlansFoodsCreateResponses, MealPlansFoodsDestroyData, MealPlansFoodsDestroyResponses, MealPlansFoodsListData, MealPlansFoodsListResponses, MealPlansFoodsPartialUpdateData, MealPlansFoodsPartialUpdateResponses, MealPlansFoodsRetrieveData, MealPlansFoodsRetrieveResponses, MealPlansFoodsUpdateData, MealPlansFoodsUpdateResponses, MealPlansListData, MealPlansListResponses, MealPlansMarkFavoriteCreateData, MealPlansMarkFavoriteCreateResponses, MealPlansMarkUsedCreateData, MealPlansMarkUsedCreateResponses, MealPlansPartialUpdateData, MealPlansPartialUpdateResponses, MealPlansPlannedMealsCreateData, MealPlansPlannedMealsCreateResponses, MealPlansPlannedMealsDestroyData, MealPlansPlannedMealsDestroyResponses, MealPlansPlannedMealsListData, MealPlansPlannedMealsListResponses, MealPlansPlannedMealsPartialUpdateData, MealPlansPlannedMealsPartialUpdateResponses, MealPlansPlannedMealsRetrieveData, MealPlansPlannedMealsRetrieveResponses, MealPlansPlannedMealsUpdateData, MealPlansPlannedMealsUpdateResponses, MealPlansRecipesCreateData, MealPlansRecipesCreateResponses, MealPlansRecipesDestroyData, MealPlansRecipesDestroyResponses, MealPlansRecipesListData, MealPlansRecipesListResponses, MealPlansRecipesPartialUpdateData, MealPlansRecipesPartialUpdateResponses, MealPlansRecipesRetrieveData, MealPlansRecipesRetrieveResponses, MealPlansRecipesUpdateData, MealPlansRecipesUpdateResponses, MealPlansRetrieveData, MealPlansRetrieveResponses, MealPlansUnmarkFavoriteCreateData, MealPlansUnmarkFavoriteCreateResponses, MealPlansUpdateData, MealPlansUpdateResponses, MealsCreateData, MealsCreateResponses, MealsDayListData, MealsDayListResponses, MealsDefaultsCreateData, MealsDefaultsCreateResponses, MealsDefaultsDestroyData, MealsDefaultsDestroyResponses, MealsDefaultsListData, MealsDefaultsListResponses, MealsDefaultsPartialUpdateData, MealsDefaultsPartialUpdateResponses, MealsDefaultsRetrieveData, MealsDefaultsRetrieveResponses, MealsDefaultsUpdateData, MealsDefaultsUpdateResponses, MealsDestroyData, MealsDestroyResponses, MealsListData, MealsListResponses, MealsMealFoodsCreateData, MealsMealFoodsCreateResponses, MealsMealFoodsDestroyData, MealsMealFoodsDestroyResponses, MealsMealFoodsPartialUpdateData, MealsMealFoodsPartialUpdateResponses, MealsMealFoodsUpdateData, MealsMealFoodsUpdateResponses, MealsPartialUpdateData, MealsPartialUpdateResponses, MealsRetrieveData, MealsRetrieveResponses, MealsUpdateData, MealsUpdateResponses, NutrientsListData, NutrientsListResponses, NutrientsRetrieveData, NutrientsRetrieveResponses, RecipesCopyCreateData, RecipesCopyCreateResponses, RecipesCreateData, RecipesCreateResponses, RecipesDestroyData, RecipesDestroyResponses, RecipesIngredientsCreateData, RecipesIngredientsCreateResponses, RecipesIngredientsDestroyData, RecipesIngredientsDestroyResponses, RecipesIngredientsListData, RecipesIngredientsListResponses, RecipesIngredientsPartialUpdateData, RecipesIngredientsPartialUpdateResponses, RecipesIngredientsRetrieveData, RecipesIngredientsRetrieveResponses, RecipesIngredientsUpdateData, RecipesIngredientsUpdateResponses, RecipesListData, RecipesListResponses, RecipesPartialUpdateData, RecipesPartialUpdateResponses, RecipesPictureCreateData, RecipesPictureCreateResponses, RecipesPictureDestroyData, RecipesPictureDestroyResponses, RecipesPictureRetrieveData, RecipesPictureRetrieveResponses, RecipesRetrieveData, RecipesRetrieveResponses, RecipesTagsCreateData, RecipesTagsCreateResponses, RecipesTagsDestroyData, RecipesTagsDestroyResponses, RecipesTagsListData, RecipesTagsListResponses, RecipesTagsPartialUpdateData, RecipesTagsPartialUpdateResponses, RecipesTagsUpdateData, RecipesTagsUpdateResponses, RecipesToggleFavoriteCreateData, RecipesToggleFavoriteCreateResponses, RecipesUpdateData, RecipesUpdateResponses, SchemaRetrieveData, SchemaRetrieveResponses, UnitsListData, UnitsListResponses } from './types.gen';
+import type { AccountsCsrfRetrieveData, AccountsCsrfRetrieveResponses, AccountsLoginCreateData, AccountsLoginCreateErrors, AccountsLoginCreateResponses, AccountsLogoutCreateData, AccountsLogoutCreateResponses, AccountsMeRetrieveData, AccountsMeRetrieveResponses, AccountsPreferencesPartialUpdateData, AccountsPreferencesPartialUpdateResponses, AccountsPreferencesRetrieveData, AccountsPreferencesRetrieveResponses, FoodsCreateData, FoodsCreateResponses, FoodsDestroyData, FoodsDestroyResponses, FoodsListData, FoodsListResponses, FoodsPartialUpdateData, FoodsPartialUpdateResponses, FoodsRetrieveData, FoodsRetrieveResponses, FoodsTagsCreateData, FoodsTagsCreateResponses, FoodsTagsDestroyData, FoodsTagsDestroyResponses, FoodsTagsListData, FoodsTagsListResponses, FoodsTagsPartialUpdateData, FoodsTagsPartialUpdateResponses, FoodsTagsRetrieveData, FoodsTagsRetrieveResponses, FoodsTagsUpdateData, FoodsTagsUpdateResponses, FoodsUpdateData, FoodsUpdateResponses, GroceriesCreateData, GroceriesCreateResponses, GroceriesDestroyData, GroceriesDestroyResponses, GroceriesGenerateCreateData, GroceriesGenerateCreateResponses, GroceriesItemsCreateData, GroceriesItemsCreateResponses, GroceriesItemsDestroyData, GroceriesItemsDestroyResponses, GroceriesItemsListData, GroceriesItemsListResponses, GroceriesItemsPartialUpdateData, GroceriesItemsPartialUpdateResponses, GroceriesItemsRetrieveData, GroceriesItemsRetrieveResponses, GroceriesItemsToggleCreateData, GroceriesItemsToggleCreateResponses, GroceriesItemsUpdateData, GroceriesItemsUpdateResponses, GroceriesListData, GroceriesListResponses, GroceriesPartialUpdateData, GroceriesPartialUpdateResponses, GroceriesRetrieveData, GroceriesRetrieveResponses, GroceriesUpdateData, GroceriesUpdateResponses, IntegrationsAddCreateData, IntegrationsAddCreateResponses, IntegrationsSearchListData, IntegrationsSearchListResponses, MealPlansActivateCreateData, MealPlansActivateCreateResponses, MealPlansActiveRetrieveData, MealPlansActiveRetrieveResponses, MealPlansApplyCreateData, MealPlansApplyCreateResponses, MealPlansCreateData, MealPlansCreateResponses, MealPlansDeactivateCreateData, MealPlansDeactivateCreateResponses, MealPlansDestroyData, MealPlansDestroyResponses, MealPlansFoodsCreateData, MealPlansFoodsCreateResponses, MealPlansFoodsDestroyData, MealPlansFoodsDestroyResponses, MealPlansFoodsListData, MealPlansFoodsListResponses, MealPlansFoodsPartialUpdateData, MealPlansFoodsPartialUpdateResponses, MealPlansFoodsRetrieveData, MealPlansFoodsRetrieveResponses, MealPlansFoodsUpdateData, MealPlansFoodsUpdateResponses, MealPlansListData, MealPlansListResponses, MealPlansMarkFavoriteCreateData, MealPlansMarkFavoriteCreateResponses, MealPlansMarkUsedCreateData, MealPlansMarkUsedCreateResponses, MealPlansPartialUpdateData, MealPlansPartialUpdateResponses, MealPlansPlannedMealsCreateData, MealPlansPlannedMealsCreateResponses, MealPlansPlannedMealsDestroyData, MealPlansPlannedMealsDestroyResponses, MealPlansPlannedMealsListData, MealPlansPlannedMealsListResponses, MealPlansPlannedMealsPartialUpdateData, MealPlansPlannedMealsPartialUpdateResponses, MealPlansPlannedMealsRetrieveData, MealPlansPlannedMealsRetrieveResponses, MealPlansPlannedMealsUpdateData, MealPlansPlannedMealsUpdateResponses, MealPlansRecipesCreateData, MealPlansRecipesCreateResponses, MealPlansRecipesDestroyData, MealPlansRecipesDestroyResponses, MealPlansRecipesListData, MealPlansRecipesListResponses, MealPlansRecipesPartialUpdateData, MealPlansRecipesPartialUpdateResponses, MealPlansRecipesRetrieveData, MealPlansRecipesRetrieveResponses, MealPlansRecipesUpdateData, MealPlansRecipesUpdateResponses, MealPlansRetrieveData, MealPlansRetrieveResponses, MealPlansUnmarkFavoriteCreateData, MealPlansUnmarkFavoriteCreateResponses, MealPlansUpdateData, MealPlansUpdateResponses, MealsCreateData, MealsCreateResponses, MealsDayListData, MealsDayListResponses, MealsDefaultsCreateData, MealsDefaultsCreateResponses, MealsDefaultsDestroyData, MealsDefaultsDestroyResponses, MealsDefaultsListData, MealsDefaultsListResponses, MealsDefaultsPartialUpdateData, MealsDefaultsPartialUpdateResponses, MealsDefaultsRetrieveData, MealsDefaultsRetrieveResponses, MealsDefaultsUpdateData, MealsDefaultsUpdateResponses, MealsDestroyData, MealsDestroyResponses, MealsListData, MealsListResponses, MealsMealFoodsCreateData, MealsMealFoodsCreateResponses, MealsMealFoodsDestroyData, MealsMealFoodsDestroyResponses, MealsMealFoodsPartialUpdateData, MealsMealFoodsPartialUpdateResponses, MealsMealFoodsUpdateData, MealsMealFoodsUpdateResponses, MealsPartialUpdateData, MealsPartialUpdateResponses, MealsRetrieveData, MealsRetrieveResponses, MealsUpdateData, MealsUpdateResponses, NutrientsListData, NutrientsListResponses, NutrientsRetrieveData, NutrientsRetrieveResponses, RecipesCopyCreateData, RecipesCopyCreateResponses, RecipesCreateData, RecipesCreateResponses, RecipesDestroyData, RecipesDestroyResponses, RecipesIngredientsCreateData, RecipesIngredientsCreateResponses, RecipesIngredientsDestroyData, RecipesIngredientsDestroyResponses, RecipesIngredientsListData, RecipesIngredientsListResponses, RecipesIngredientsPartialUpdateData, RecipesIngredientsPartialUpdateResponses, RecipesIngredientsRetrieveData, RecipesIngredientsRetrieveResponses, RecipesIngredientsUpdateData, RecipesIngredientsUpdateResponses, RecipesListData, RecipesListResponses, RecipesPartialUpdateData, RecipesPartialUpdateResponses, RecipesPictureCreateData, RecipesPictureCreateResponses, RecipesPictureDestroyData, RecipesPictureDestroyResponses, RecipesPictureRetrieveData, RecipesPictureRetrieveResponses, RecipesRetrieveData, RecipesRetrieveResponses, RecipesTagsCreateData, RecipesTagsCreateResponses, RecipesTagsDestroyData, RecipesTagsDestroyResponses, RecipesTagsListData, RecipesTagsListResponses, RecipesTagsPartialUpdateData, RecipesTagsPartialUpdateResponses, RecipesTagsUpdateData, RecipesTagsUpdateResponses, RecipesToggleFavoriteCreateData, RecipesToggleFavoriteCreateResponses, RecipesUpdateData, RecipesUpdateResponses, SchemaRetrieveData, SchemaRetrieveResponses, UnitsListData, UnitsListResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -230,7 +230,7 @@ export const foodsTagsUpdate = <ThrowOnError extends boolean = false>(options: O
     }
 });
 
-export const groceriesList = <ThrowOnError extends boolean = false>(options?: Options<GroceriesListData, ThrowOnError>): RequestResult<GroceriesListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GroceriesListResponses, unknown, ThrowOnError>({
+export const groceriesList = <ThrowOnError extends boolean = false>(options: Options<GroceriesListData, ThrowOnError>): RequestResult<GroceriesListResponses, unknown, ThrowOnError> => (options.client ?? client).get<GroceriesListResponses, unknown, ThrowOnError>({
     security: [{
             in: 'cookie',
             name: 'sessionid',
@@ -288,7 +288,31 @@ export const groceriesItemsDestroy = <ThrowOnError extends boolean = false>(opti
     ...options
 });
 
+export const groceriesItemsRetrieve = <ThrowOnError extends boolean = false>(options: Options<GroceriesItemsRetrieveData, ThrowOnError>): RequestResult<GroceriesItemsRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<GroceriesItemsRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/groceries/{grocery_pk}/items/{id}/',
+    ...options
+});
+
 export const groceriesItemsPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<GroceriesItemsPartialUpdateData, ThrowOnError>): RequestResult<GroceriesItemsPartialUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).patch<GroceriesItemsPartialUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/groceries/{grocery_pk}/items/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const groceriesItemsUpdate = <ThrowOnError extends boolean = false>(options: Options<GroceriesItemsUpdateData, ThrowOnError>): RequestResult<GroceriesItemsUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<GroceriesItemsUpdateResponses, unknown, ThrowOnError>({
     security: [{
             in: 'cookie',
             name: 'sessionid',
@@ -334,6 +358,48 @@ export const groceriesRetrieve = <ThrowOnError extends boolean = false>(options:
         }],
     url: '/api/groceries/{id}/',
     ...options
+});
+
+export const groceriesPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<GroceriesPartialUpdateData, ThrowOnError>): RequestResult<GroceriesPartialUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).patch<GroceriesPartialUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/groceries/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const groceriesUpdate = <ThrowOnError extends boolean = false>(options: Options<GroceriesUpdateData, ThrowOnError>): RequestResult<GroceriesUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<GroceriesUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/groceries/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+export const groceriesGenerateCreate = <ThrowOnError extends boolean = false>(options: Options<GroceriesGenerateCreateData, ThrowOnError>): RequestResult<GroceriesGenerateCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<GroceriesGenerateCreateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/groceries/generate/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
 
 export const integrationsAddCreate = <ThrowOnError extends boolean = false>(options: Options<IntegrationsAddCreateData, ThrowOnError>): RequestResult<IntegrationsAddCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<IntegrationsAddCreateResponses, unknown, ThrowOnError>({

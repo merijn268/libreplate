@@ -64,19 +64,23 @@ export type FoodNutrient = {
 
 export type GroceryList = {
     readonly id: number;
+    name: string;
     date_start?: string | null;
     date_end?: string | null;
     readonly created_at: string;
     readonly updated_at: string;
-    name: string;
 };
 
 export type GroceryListFood = {
     readonly id: number;
     food: number;
-    readonly food_name: string;
     amount: number;
-    readonly on_hand: boolean;
+    on_hand?: boolean;
+};
+
+export type GroceryListGenerate = {
+    meal_plan_id: number;
+    length_days: number;
 };
 
 export type Login = {
@@ -254,12 +258,20 @@ export type PatchedFood = {
     nutrients?: Array<FoodNutrient>;
 };
 
+export type PatchedGroceryList = {
+    readonly id?: number;
+    name?: string;
+    date_start?: string | null;
+    date_end?: string | null;
+    readonly created_at?: string;
+    readonly updated_at?: string;
+};
+
 export type PatchedGroceryListFood = {
     readonly id?: number;
     food?: number;
-    readonly food_name?: string;
     amount?: number;
-    readonly on_hand?: boolean;
+    on_hand?: boolean;
 };
 
 export type PatchedMeal = {
@@ -601,14 +613,15 @@ export type FoodNutrientWritable = {
 };
 
 export type GroceryListWritable = {
+    name: string;
     date_start?: string | null;
     date_end?: string | null;
-    name: string;
 };
 
 export type GroceryListFoodWritable = {
     food: number;
     amount: number;
+    on_hand?: boolean;
 };
 
 export type LoginWritable = {
@@ -719,9 +732,16 @@ export type PatchedFoodWritable = {
     nutrients?: Array<FoodNutrientWritable>;
 };
 
+export type PatchedGroceryListWritable = {
+    name?: string;
+    date_start?: string | null;
+    date_end?: string | null;
+};
+
 export type PatchedGroceryListFoodWritable = {
     food?: number;
     amount?: number;
+    on_hand?: boolean;
 };
 
 export type PatchedMealWritable = {
@@ -1193,7 +1213,9 @@ export type FoodsTagsUpdateResponse = FoodsTagsUpdateResponses[keyof FoodsTagsUp
 
 export type GroceriesListData = {
     body?: never;
-    path?: never;
+    path: {
+        id: number;
+    };
     query?: never;
     url: '/api/groceries/';
 };
@@ -1206,7 +1228,9 @@ export type GroceriesListResponse = GroceriesListResponses[keyof GroceriesListRe
 
 export type GroceriesCreateData = {
     body: GroceryListWritable;
-    path?: never;
+    path: {
+        id: number;
+    };
     query?: never;
     url: '/api/groceries/';
 };
@@ -1221,6 +1245,7 @@ export type GroceriesItemsListData = {
     body?: never;
     path: {
         grocery_pk: number;
+        id: number;
     };
     query?: never;
     url: '/api/groceries/{grocery_pk}/items/';
@@ -1236,6 +1261,7 @@ export type GroceriesItemsCreateData = {
     body: GroceryListFoodWritable;
     path: {
         grocery_pk: number;
+        id: number;
     };
     query?: never;
     url: '/api/groceries/{grocery_pk}/items/';
@@ -1266,6 +1292,22 @@ export type GroceriesItemsDestroyResponses = {
 
 export type GroceriesItemsDestroyResponse = GroceriesItemsDestroyResponses[keyof GroceriesItemsDestroyResponses];
 
+export type GroceriesItemsRetrieveData = {
+    body?: never;
+    path: {
+        grocery_pk: number;
+        id: number;
+    };
+    query?: never;
+    url: '/api/groceries/{grocery_pk}/items/{id}/';
+};
+
+export type GroceriesItemsRetrieveResponses = {
+    200: GroceryListFood;
+};
+
+export type GroceriesItemsRetrieveResponse = GroceriesItemsRetrieveResponses[keyof GroceriesItemsRetrieveResponses];
+
 export type GroceriesItemsPartialUpdateData = {
     body?: PatchedGroceryListFoodWritable;
     path: {
@@ -1281,6 +1323,22 @@ export type GroceriesItemsPartialUpdateResponses = {
 };
 
 export type GroceriesItemsPartialUpdateResponse = GroceriesItemsPartialUpdateResponses[keyof GroceriesItemsPartialUpdateResponses];
+
+export type GroceriesItemsUpdateData = {
+    body: GroceryListFoodWritable;
+    path: {
+        grocery_pk: number;
+        id: number;
+    };
+    query?: never;
+    url: '/api/groceries/{grocery_pk}/items/{id}/';
+};
+
+export type GroceriesItemsUpdateResponses = {
+    200: GroceryListFood;
+};
+
+export type GroceriesItemsUpdateResponse = GroceriesItemsUpdateResponses[keyof GroceriesItemsUpdateResponses];
 
 export type GroceriesItemsToggleCreateData = {
     body: GroceryListFoodWritable;
@@ -1330,6 +1388,51 @@ export type GroceriesRetrieveResponses = {
 };
 
 export type GroceriesRetrieveResponse = GroceriesRetrieveResponses[keyof GroceriesRetrieveResponses];
+
+export type GroceriesPartialUpdateData = {
+    body?: PatchedGroceryListWritable;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/groceries/{id}/';
+};
+
+export type GroceriesPartialUpdateResponses = {
+    200: GroceryList;
+};
+
+export type GroceriesPartialUpdateResponse = GroceriesPartialUpdateResponses[keyof GroceriesPartialUpdateResponses];
+
+export type GroceriesUpdateData = {
+    body: GroceryListWritable;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/groceries/{id}/';
+};
+
+export type GroceriesUpdateResponses = {
+    200: GroceryList;
+};
+
+export type GroceriesUpdateResponse = GroceriesUpdateResponses[keyof GroceriesUpdateResponses];
+
+export type GroceriesGenerateCreateData = {
+    body: GroceryListGenerate;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/api/groceries/generate/';
+};
+
+export type GroceriesGenerateCreateResponses = {
+    201: GroceryList;
+};
+
+export type GroceriesGenerateCreateResponse = GroceriesGenerateCreateResponses[keyof GroceriesGenerateCreateResponses];
 
 export type IntegrationsAddCreateData = {
     body: FoodIntegrationAdd;

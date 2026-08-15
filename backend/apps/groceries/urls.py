@@ -1,45 +1,26 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
+from rest_framework_nested.routers import NestedDefaultRouter
 
 from .api import GroceryListFoodViewSet, GroceryListViewSet
 
-grocery_list = GroceryListViewSet.as_view(
-    {
-        "get": "list",
-        "post": "create",
-    }
+router = DefaultRouter()
+
+router.register(
+    prefix="",
+    viewset=GroceryListViewSet,
+    basename="grocery-list",
 )
 
-grocery_detail = GroceryListViewSet.as_view(
-    {
-        "get": "retrieve",
-        "delete": "destroy",
-    }
+grocery_router = NestedDefaultRouter(
+    parent_router=router,
+    parent_prefix="",
+    lookup="grocery",
 )
 
-item_list = GroceryListFoodViewSet.as_view(
-    {
-        "get": "list",
-        "post": "create",
-    }
+grocery_router.register(
+    prefix="items",
+    viewset=GroceryListFoodViewSet,
+    basename="grocery-item",
 )
 
-item_detail = GroceryListFoodViewSet.as_view(
-    {
-        "patch": "partial_update",
-        "delete": "destroy",
-    }
-)
-
-item_toggle = GroceryListFoodViewSet.as_view(
-    {
-        "post": "toggle",
-    }
-)
-
-urlpatterns = [
-    path("", grocery_list),
-    path("<int:pk>/", grocery_detail),
-    path("<int:grocery_pk>/items/", item_list),
-    path("<int:grocery_pk>/items/<int:pk>/", item_detail),
-    path("<int:grocery_pk>/items/<int:pk>/toggle/", item_toggle),
-]
+urlpatterns = router.urls + grocery_router.urls

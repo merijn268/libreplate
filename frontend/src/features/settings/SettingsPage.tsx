@@ -1,31 +1,88 @@
 import type { ReactNode } from "react";
-import { PersonCircle, Palette } from "react-bootstrap-icons";
+import {
+  Book,
+  Cake2,
+  Calendar3,
+  Cart4,
+  ClipboardData,
+  Easel,
+  Globe,
+  GraphDown,
+  JournalText,
+  Palette,
+  PersonCircle,
+  Trophy,
+} from "react-bootstrap-icons";
 
 import SettingsListItem from "./components/SettingsListItem";
 
 export default function SettingsPage() {
   return (
-    <div className="container py-4">
+    <div className="container">
       <div className="row justify-content-center">
         <div className="col-12 col-md-8 col-lg-6">
-          <h1 className="h4 fw-semibold mb-4">Settings</h1>
-
-          <SettingsSection title="Display">
+          <SettingsSection title="General">
             <SettingsListItem
               icon={Palette}
               label="Appearance"
-              description="Dark mode, accent color"
               to="/settings/appearance"
+            />
+            <SettingsListItem
+              icon={Trophy}
+              label="Goals"
+              to="/settings/goals"
+            />
+            <SettingsListItem
+              icon={Globe}
+              label="Integrations"
+              to="/settings/data"
             />
           </SettingsSection>
 
-          <SettingsSection title="Account" className="mt-4">
+          <SettingsSection title="Pages" className="mt-2">
+            <SettingsListItem
+              icon={JournalText}
+              label="Diary"
+              to="/settings/diary"
+            />
+            <SettingsListItem
+              icon={Book}
+              label="Recipes"
+              to="/settings/recipes"
+            />
+            <SettingsListItem icon={Cake2} label="Foods" to="/settings/foods" />
+            <SettingsListItem
+              icon={Cart4}
+              label="Groceries"
+              to="/settings/groceries"
+            />
+            <SettingsListItem
+              icon={GraphDown}
+              label="Statistics"
+              to="/settings/statitics"
+            />
+            <SettingsListItem
+              icon={Calendar3}
+              label="Meal Plans"
+              to="/settings/meal_plans"
+            />
+          </SettingsSection>
+
+          <SettingsSection title="Account" className="mt-2">
             <SettingsListItem
               icon={PersonCircle}
               label="Account"
-              description="Profile and login"
               to="/account"
             />
+            <SettingsListItem
+              icon={ClipboardData}
+              label="Import/Export"
+              to="/account"
+            />
+          </SettingsSection>
+
+          <SettingsSection title="LibrePlate" className="mt-2">
+            <SettingsListItem icon={Easel} label="About" to="/settings/about" />
           </SettingsSection>
         </div>
       </div>

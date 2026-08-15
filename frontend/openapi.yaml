@@ -402,6 +402,12 @@ paths:
   /api/groceries/:
     get:
       operationId: groceries_list
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
       tags:
       - groceries
       security:
@@ -417,6 +423,12 @@ paths:
           description: ''
     post:
       operationId: groceries_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
       tags:
       - groceries
       requestBody:
@@ -449,6 +461,11 @@ paths:
         schema:
           type: integer
         required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
       tags:
       - groceries
       security:
@@ -467,6 +484,11 @@ paths:
       parameters:
       - in: path
         name: grocery_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
         schema:
           type: integer
         required: true
@@ -494,6 +516,66 @@ paths:
                 $ref: '#/components/schemas/GroceryListFood'
           description: ''
   /api/groceries/{grocery_pk}/items/{id}/:
+    get:
+      operationId: groceries_items_retrieve
+      parameters:
+      - in: path
+        name: grocery_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - groceries
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroceryListFood'
+          description: ''
+    put:
+      operationId: groceries_items_update
+      parameters:
+      - in: path
+        name: grocery_pk
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - groceries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroceryListFood'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GroceryListFood'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GroceryListFood'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroceryListFood'
+          description: ''
     patch:
       operationId: groceries_items_partial_update
       parameters:
@@ -606,6 +688,67 @@ paths:
               schema:
                 $ref: '#/components/schemas/GroceryList'
           description: ''
+    put:
+      operationId: groceries_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - groceries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroceryList'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GroceryList'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GroceryList'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroceryList'
+          description: ''
+    patch:
+      operationId: groceries_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - groceries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGroceryList'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGroceryList'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGroceryList'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroceryList'
+          description: ''
     delete:
       operationId: groceries_destroy
       parameters:
@@ -621,6 +764,38 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/groceries/generate/:
+    post:
+      operationId: groceries_generate_create
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - groceries
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GroceryListGenerate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GroceryListGenerate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GroceryListGenerate'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GroceryList'
+          description: ''
   /api/integrations/add/:
     post:
       operationId: integrations_add_create
@@ -2803,6 +2978,9 @@ components:
         id:
           type: integer
           readOnly: true
+        name:
+          type: string
+          maxLength: 255
         date_start:
           type: string
           format: date
@@ -2819,9 +2997,6 @@ components:
           type: string
           format: date-time
           readOnly: true
-        name:
-          type: string
-          maxLength: 255
       required:
       - created_at
       - id
@@ -2835,21 +3010,27 @@ components:
           readOnly: true
         food:
           type: integer
-        food_name:
-          type: string
-          readOnly: true
         amount:
           type: number
           format: double
         on_hand:
           type: boolean
-          readOnly: true
       required:
       - amount
       - food
-      - food_name
       - id
-      - on_hand
+    GroceryListGenerate:
+      type: object
+      properties:
+        meal_plan_id:
+          type: integer
+        length_days:
+          type: integer
+          maximum: 31
+          minimum: 1
+      required:
+      - length_days
+      - meal_plan_id
     Login:
       type: object
       properties:
@@ -3240,6 +3421,31 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FoodNutrient'
+    PatchedGroceryList:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        date_start:
+          type: string
+          format: date
+          nullable: true
+        date_end:
+          type: string
+          format: date
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
     PatchedGroceryListFood:
       type: object
       properties:
@@ -3248,15 +3454,11 @@ components:
           readOnly: true
         food:
           type: integer
-        food_name:
-          type: string
-          readOnly: true
         amount:
           type: number
           format: double
         on_hand:
           type: boolean
-          readOnly: true
     PatchedMeal:
       type: object
       properties:

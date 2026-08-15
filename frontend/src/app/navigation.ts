@@ -4,6 +4,8 @@ import {
   Calendar3,
   Gear,
   JournalText,
+  Cart4,
+  GraphDown,
   type Icon,
 } from "react-bootstrap-icons";
 
@@ -28,6 +30,17 @@ export const mainNavigation: NavigationItem[] = [
     label: "Foods",
     path: "/foods",
     icon: Cake2,
+  },
+  {
+    label: "Groceries",
+    path: "/groceries",
+    icon: Cart4,
+  },
+  // TODO easter egg, when bulking it goes up.
+  {
+    label: "Statistics",
+    path: "/statistics",
+    icon: GraphDown,
   },
   {
     label: "Meal Plans",

@@ -10,6 +10,7 @@ import RecipeEditPage from "../features/recipes/RecipeEditPage";
 import FoodEditPage from "../features/foods/FoodEditPage";
 import FoodsPage from "../features/foods/FoodsPage";
 import DiaryPage from "../features/diary/DiaryPage";
+import GroceriesPage from "@/features/groceries/GroceriesPage";
 import MealPlansPage from "../features/meal_plans/MealPlansPage";
 import MealPlanEditPage from "../features/meal_plans/MealPlanEditPage";
 import SettingsPage from "../features/settings/SettingsPage";
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
 
       {
         path: "groceries",
-        element: placeholder("Groceries"),
+        element: <GroceriesPage />,
         handle: {
           title: "Groceries",
         },
@@ -122,7 +123,7 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "goals",
+        path: "settings/goals",
         element: placeholder("Goals"),
         handle: {
           title: "Goals",
@@ -144,7 +145,6 @@ const router = createBrowserRouter([
           title: "Appearance",
         },
       },
-
       {
         path: "account",
         element: placeholder("Account"),

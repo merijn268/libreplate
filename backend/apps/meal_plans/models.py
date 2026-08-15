@@ -69,6 +69,10 @@ class MealPlan(
 
         return self.duration
 
+    @classmethod
+    def get_active_instance(cls, user):
+        return cls.objects.filter(user=user, is_active=True).first()
+
     @transaction.atomic
     def activate(self):
         type(self).objects.filter(user=self.user, is_active=True).exclude(

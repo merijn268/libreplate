@@ -27,11 +27,11 @@ export default function SettingsListItem({
   trailing,
 }: SettingsListItemProps) {
   const className =
-    "list-group-item list-group-item-action d-flex align-items-center gap-3 py-3";
+    "list-group-item list-group-item-action d-flex align-items-center gap-3 py-2";
 
   const content = (
     <>
-      <ItemIcon className="flex-shrink-0 text-body-secondary" size={20} />
+      <ItemIcon className="flex-shrink-0 text-body-secondary" />
       <div className="flex-grow-1 text-truncate">
         <div className="fw-medium">{label}</div>
         {description && (
