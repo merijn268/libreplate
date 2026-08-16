@@ -5,6 +5,7 @@ import MealPlanDateSelector from "./MealPlanDateSelector";
 import PlannedMealsList from "./PlannedMealsList";
 import NutrientTotalsBar from "@/components/bars/NutrientsTotalBar";
 import { getDayNutrients } from "../utils/mealPlanNutrients";
+import { useNutrientGoals } from "@/features/goals/hooks/useNutrientGoals";
 
 type MealPlanEditContentProps = {
   mealPlan: MealPlan;
@@ -49,6 +50,8 @@ export default function MealPlanEditContent({
       (nutrient) => nutrient.name.toLowerCase() === name.toLowerCase(),
     )?.amount ?? 0;
 
+  const { goals } = useNutrientGoals();
+
   return (
     <div>
       <MealPlanDateSelector
@@ -61,6 +64,10 @@ export default function MealPlanEditContent({
         protein={getNutrientAmount("protein")}
         fat={getNutrientAmount("fat")}
         carbs={getNutrientAmount("carbohydrates")}
+        energyGoal={goals.energy}
+        proteinGoal={goals.protein}
+        fatGoal={goals.fat}
+        carbsGoal={goals.carbs}
       />
 
       <PlannedMealsList mealPlan={mealPlan} day={selectedDate.day} />

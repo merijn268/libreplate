@@ -18,6 +18,7 @@ import StatisticsPage from "@/features/statistics/StatisticsPage";
 import StatisticsEditPage from "@/features/statistics/StatisticsEditPage";
 import SettingsPage from "../features/settings/SettingsPage";
 import AppearanceSettingsPage from "../features/settings/AppearanceSettingsPage";
+import GoalsPage from "../features/goals/GoalsPage";
 
 function placeholder(title: string) {
   return (
@@ -151,7 +152,7 @@ const router = createBrowserRouter([
 
       {
         path: "settings/goals",
-        element: placeholder("Goals"),
+        element: <GoalsPage />,
         handle: {
           title: "Goals",
         },

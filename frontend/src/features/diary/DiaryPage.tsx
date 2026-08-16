@@ -23,6 +23,7 @@ import ActionPillButton from "../../components/buttons/ActionPillButton";
 import ActionPillButtonGroup from "../../components/buttons/ActionPillButtonGroup";
 
 import { computeDailyTotals } from "@/features/diary/utils/computeDailyTotals";
+import { useNutrientGoals } from "@/features/goals/hooks/useNutrientGoals";
 
 function formatDate(date: Date): string {
   const year = date.getFullYear();
@@ -75,6 +76,7 @@ export default function DiaryPage() {
   });
 
   const totals = computeDailyTotals(meals);
+  const { goals } = useNutrientGoals();
 
   const createMeal = useMutation({
     mutationFn: async (options: Parameters<typeof mealsCreate>[0]) => {
@@ -296,6 +298,10 @@ export default function DiaryPage() {
         protein={totals.protein}
         fat={totals.fat}
         carbs={totals.carbs}
+        energyGoal={goals.energy}
+        proteinGoal={goals.protein}
+        fatGoal={goals.fat}
+        carbsGoal={goals.carbs}
       />
 
       <ActionPillButtonGroup>

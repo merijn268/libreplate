@@ -1727,7 +1727,10 @@ export type GoalsGoalBodyMetricsCreateResponse = GoalsGoalBodyMetricsCreateRespo
 export type GoalsGoalBodyMetricsDestroyData = {
     body?: never;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal body metric.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-body-metrics/{id}/';
@@ -1745,7 +1748,10 @@ export type GoalsGoalBodyMetricsDestroyResponse = GoalsGoalBodyMetricsDestroyRes
 export type GoalsGoalBodyMetricsRetrieveData = {
     body?: never;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal body metric.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-body-metrics/{id}/';
@@ -1760,7 +1766,10 @@ export type GoalsGoalBodyMetricsRetrieveResponse = GoalsGoalBodyMetricsRetrieveR
 export type GoalsGoalBodyMetricsPartialUpdateData = {
     body?: PatchedGoalBodyMetricWritable;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal body metric.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-body-metrics/{id}/';
@@ -1775,7 +1784,10 @@ export type GoalsGoalBodyMetricsPartialUpdateResponse = GoalsGoalBodyMetricsPart
 export type GoalsGoalBodyMetricsUpdateData = {
     body: GoalBodyMetricWritable;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal body metric.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-body-metrics/{id}/';
@@ -1816,7 +1828,10 @@ export type GoalsGoalNutrientsCreateResponse = GoalsGoalNutrientsCreateResponses
 export type GoalsGoalNutrientsDestroyData = {
     body?: never;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal nutrient.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-nutrients/{id}/';
@@ -1834,7 +1849,10 @@ export type GoalsGoalNutrientsDestroyResponse = GoalsGoalNutrientsDestroyRespons
 export type GoalsGoalNutrientsRetrieveData = {
     body?: never;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal nutrient.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-nutrients/{id}/';
@@ -1849,7 +1867,10 @@ export type GoalsGoalNutrientsRetrieveResponse = GoalsGoalNutrientsRetrieveRespo
 export type GoalsGoalNutrientsPartialUpdateData = {
     body?: PatchedGoalNutrientWritable;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal nutrient.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-nutrients/{id}/';
@@ -1864,7 +1885,10 @@ export type GoalsGoalNutrientsPartialUpdateResponse = GoalsGoalNutrientsPartialU
 export type GoalsGoalNutrientsUpdateData = {
     body: GoalNutrientWritable;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal nutrient.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-nutrients/{id}/';
@@ -1905,7 +1929,10 @@ export type GoalsGoalPlansCreateResponse = GoalsGoalPlansCreateResponses[keyof G
 export type GoalsGoalPlansDestroyData = {
     body?: never;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal plan.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-plans/{id}/';
@@ -1923,7 +1950,10 @@ export type GoalsGoalPlansDestroyResponse = GoalsGoalPlansDestroyResponses[keyof
 export type GoalsGoalPlansRetrieveData = {
     body?: never;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal plan.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-plans/{id}/';
@@ -1938,7 +1968,10 @@ export type GoalsGoalPlansRetrieveResponse = GoalsGoalPlansRetrieveResponses[key
 export type GoalsGoalPlansPartialUpdateData = {
     body?: PatchedGoalPlanWritable;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal plan.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-plans/{id}/';
@@ -1953,7 +1986,10 @@ export type GoalsGoalPlansPartialUpdateResponse = GoalsGoalPlansPartialUpdateRes
 export type GoalsGoalPlansUpdateData = {
     body: GoalPlanWritable;
     path: {
-        id: string;
+        /**
+         * A unique integer value identifying this goal plan.
+         */
+        id: number;
     };
     query?: never;
     url: '/api/goals/goal-plans/{id}/';

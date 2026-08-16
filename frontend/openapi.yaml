@@ -650,7 +650,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal body metric.
         required: true
       tags:
       - goals
@@ -673,7 +674,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal body metric.
         required: true
       tags:
       - goals
@@ -708,7 +710,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal body metric.
         required: true
       tags:
       - goals
@@ -742,7 +745,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal body metric.
         required: true
       tags:
       - goals
@@ -808,7 +812,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal nutrient.
         required: true
       tags:
       - goals
@@ -830,7 +835,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal nutrient.
         required: true
       tags:
       - goals
@@ -864,7 +870,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal nutrient.
         required: true
       tags:
       - goals
@@ -897,7 +904,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal nutrient.
         required: true
       tags:
       - goals
@@ -969,7 +977,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal plan.
         required: true
       tags:
       - goals
@@ -993,7 +1002,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal plan.
         required: true
       tags:
       - goals
@@ -1029,7 +1039,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal plan.
         required: true
       tags:
       - goals
@@ -1064,7 +1075,8 @@ paths:
       - in: path
         name: id
         schema:
-          type: string
+          type: integer
+        description: A unique integer value identifying this goal plan.
         required: true
       tags:
       - goals
