@@ -16,7 +16,7 @@ export default function SelectorBar({ children, onPrevious, onNext }: Props) {
       <button
         onClick={onPrevious}
         type="button"
-        className="btn border-0 bg-transparent shadow-none position-absolute d-flex align-items-center justify-content-center p-0 text-primary selector-bar-nav selector-bar-prev"
+        className="btn border-0 bg-transparent shadow-none position-absolute d-flex align-items-center justify-content-center p-0 selector-bar-nav selector-bar-prev"
         style={{
           width: "40px",
           height: "40px",
@@ -34,7 +34,7 @@ export default function SelectorBar({ children, onPrevious, onNext }: Props) {
           zIndex: 1,
         }}
       >
-        <i className="bi bi-calendar4 text-primary" aria-hidden="true" />
+        <i className="bi bi-calendar4" aria-hidden="true" />
         {children}
       </div>
 
@@ -42,7 +42,7 @@ export default function SelectorBar({ children, onPrevious, onNext }: Props) {
       <button
         onClick={onNext}
         type="button"
-        className="btn border-0 bg-transparent shadow-none position-absolute d-flex align-items-center justify-content-center p-0 text-primary selector-bar-nav selector-bar-next"
+        className="btn border-0 bg-transparent shadow-none position-absolute d-flex align-items-center justify-content-center p-0 selector-bar-nav selector-bar-next"
         style={{
           width: "40px",
           height: "40px",
