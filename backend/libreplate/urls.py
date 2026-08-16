@@ -39,15 +39,16 @@ def react_app(request):
 
 urlpatterns = [
     path("api/accounts/", include("apps.accounts.urls")),
+    path("api/body-metrics/", include("apps.body_metrics.urls")),
     path("api/foods/", include("apps.foods.urls")),
+    path("api/goals/", include("apps.goals.urls")),
     path("api/groceries/", include("apps.groceries.urls")),
     path("api/integrations/", include("apps.integrations.urls")),
+    path("api/meal-plans/", include("apps.meal_plans.urls")),
     path("api/meals/", include("apps.meals.urls")),
     path("api/nutrients/", include("apps.nutrients.urls")),
-    path("api/units/", include("apps.units.urls")),
     path("api/recipes/", include("apps.recipes.urls")),
-    path("api/meal-plans/", include("apps.meal_plans.urls")),
-    path("api/body-metrics/", include("apps.body_metrics.urls")),
+    path("api/units/", include("apps.units.urls")),
     path("api/user-statistics/", include("apps.user_statistics.urls")),
 ]
 

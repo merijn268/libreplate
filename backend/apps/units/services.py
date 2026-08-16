@@ -4,6 +4,7 @@ from .defaults import DEFAULT_UNITS
 from .models import Unit
 
 
+# TODO Replace with  Django fixtures
 def sync_default_units(overwrite=False):
     operation = (
         Unit.objects.update_or_create if overwrite else Unit.objects.get_or_create

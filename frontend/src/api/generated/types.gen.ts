@@ -84,6 +84,42 @@ export type FoodNutrient = {
     amount: number;
 };
 
+/**
+ * A single body metric target within a goal plan.
+ */
+export type GoalBodyMetric = {
+    readonly id: number;
+    body_metric: BodyMetric;
+    amount: number;
+};
+
+/**
+ * A single nutrient target within a goal plan.
+ */
+export type GoalNutrient = {
+    readonly id: number;
+    nutrient: NutrientBrief;
+    amount: number;
+};
+
+/**
+ * A goal plan, with its nested nutrient and body metric targets.
+ *
+ * On write, `nutrient_goals` / `body_metric_goals` are treated as the
+ * full desired set: items already present (matched by nutrient /
+ * body_metric) are updated, new items are created, and anything left
+ * out of the payload is removed.
+ */
+export type GoalPlan = {
+    readonly id: number;
+    name: string;
+    description?: string;
+    start_date?: string | null;
+    end_date?: string | null;
+    nutrient_goals?: Array<GoalNutrient>;
+    body_metric_goals?: Array<GoalBodyMetric>;
+};
+
 export type Graph = {
     readonly id: number;
     readonly user: number;
@@ -347,6 +383,42 @@ export type PatchedFood = {
     external_id?: string | null;
     readonly tags?: Array<Tag>;
     nutrients?: Array<FoodNutrient>;
+};
+
+/**
+ * A single body metric target within a goal plan.
+ */
+export type PatchedGoalBodyMetric = {
+    readonly id?: number;
+    body_metric?: BodyMetric;
+    amount?: number;
+};
+
+/**
+ * A single nutrient target within a goal plan.
+ */
+export type PatchedGoalNutrient = {
+    readonly id?: number;
+    nutrient?: NutrientBrief;
+    amount?: number;
+};
+
+/**
+ * A goal plan, with its nested nutrient and body metric targets.
+ *
+ * On write, `nutrient_goals` / `body_metric_goals` are treated as the
+ * full desired set: items already present (matched by nutrient /
+ * body_metric) are updated, new items are created, and anything left
+ * out of the payload is removed.
+ */
+export type PatchedGoalPlan = {
+    readonly id?: number;
+    name?: string;
+    description?: string;
+    start_date?: string | null;
+    end_date?: string | null;
+    nutrient_goals?: Array<GoalNutrient>;
+    body_metric_goals?: Array<GoalBodyMetric>;
 };
 
 export type PatchedGraph = {
@@ -769,6 +841,39 @@ export type FoodNutrientWritable = {
     amount: number;
 };
 
+/**
+ * A single body metric target within a goal plan.
+ */
+export type GoalBodyMetricWritable = {
+    body_metric_id: number;
+    amount: number;
+};
+
+/**
+ * A single nutrient target within a goal plan.
+ */
+export type GoalNutrientWritable = {
+    nutrient_id: number;
+    amount: number;
+};
+
+/**
+ * A goal plan, with its nested nutrient and body metric targets.
+ *
+ * On write, `nutrient_goals` / `body_metric_goals` are treated as the
+ * full desired set: items already present (matched by nutrient /
+ * body_metric) are updated, new items are created, and anything left
+ * out of the payload is removed.
+ */
+export type GoalPlanWritable = {
+    name: string;
+    description?: string;
+    start_date?: string | null;
+    end_date?: string | null;
+    nutrient_goals?: Array<GoalNutrientWritable>;
+    body_metric_goals?: Array<GoalBodyMetricWritable>;
+};
+
 export type GraphWritable = {
     name: string;
     description?: string;
@@ -925,6 +1030,39 @@ export type PatchedFoodWritable = {
     external_id?: string | null;
     tag_ids?: Array<number>;
     nutrients?: Array<FoodNutrientWritable>;
+};
+
+/**
+ * A single body metric target within a goal plan.
+ */
+export type PatchedGoalBodyMetricWritable = {
+    body_metric_id?: number;
+    amount?: number;
+};
+
+/**
+ * A single nutrient target within a goal plan.
+ */
+export type PatchedGoalNutrientWritable = {
+    nutrient_id?: number;
+    amount?: number;
+};
+
+/**
+ * A goal plan, with its nested nutrient and body metric targets.
+ *
+ * On write, `nutrient_goals` / `body_metric_goals` are treated as the
+ * full desired set: items already present (matched by nutrient /
+ * body_metric) are updated, new items are created, and anything left
+ * out of the payload is removed.
+ */
+export type PatchedGoalPlanWritable = {
+    name?: string;
+    description?: string;
+    start_date?: string | null;
+    end_date?: string | null;
+    nutrient_goals?: Array<GoalNutrientWritable>;
+    body_metric_goals?: Array<GoalBodyMetricWritable>;
 };
 
 export type PatchedGraphWritable = {
@@ -1559,6 +1697,273 @@ export type FoodsTagsUpdateResponses = {
 };
 
 export type FoodsTagsUpdateResponse = FoodsTagsUpdateResponses[keyof FoodsTagsUpdateResponses];
+
+export type GoalsGoalBodyMetricsListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/goals/goal-body-metrics/';
+};
+
+export type GoalsGoalBodyMetricsListResponses = {
+    200: Array<GoalBodyMetric>;
+};
+
+export type GoalsGoalBodyMetricsListResponse = GoalsGoalBodyMetricsListResponses[keyof GoalsGoalBodyMetricsListResponses];
+
+export type GoalsGoalBodyMetricsCreateData = {
+    body: GoalBodyMetricWritable;
+    path?: never;
+    query?: never;
+    url: '/api/goals/goal-body-metrics/';
+};
+
+export type GoalsGoalBodyMetricsCreateResponses = {
+    201: GoalBodyMetric;
+};
+
+export type GoalsGoalBodyMetricsCreateResponse = GoalsGoalBodyMetricsCreateResponses[keyof GoalsGoalBodyMetricsCreateResponses];
+
+export type GoalsGoalBodyMetricsDestroyData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-body-metrics/{id}/';
+};
+
+export type GoalsGoalBodyMetricsDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type GoalsGoalBodyMetricsDestroyResponse = GoalsGoalBodyMetricsDestroyResponses[keyof GoalsGoalBodyMetricsDestroyResponses];
+
+export type GoalsGoalBodyMetricsRetrieveData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-body-metrics/{id}/';
+};
+
+export type GoalsGoalBodyMetricsRetrieveResponses = {
+    200: GoalBodyMetric;
+};
+
+export type GoalsGoalBodyMetricsRetrieveResponse = GoalsGoalBodyMetricsRetrieveResponses[keyof GoalsGoalBodyMetricsRetrieveResponses];
+
+export type GoalsGoalBodyMetricsPartialUpdateData = {
+    body?: PatchedGoalBodyMetricWritable;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-body-metrics/{id}/';
+};
+
+export type GoalsGoalBodyMetricsPartialUpdateResponses = {
+    200: GoalBodyMetric;
+};
+
+export type GoalsGoalBodyMetricsPartialUpdateResponse = GoalsGoalBodyMetricsPartialUpdateResponses[keyof GoalsGoalBodyMetricsPartialUpdateResponses];
+
+export type GoalsGoalBodyMetricsUpdateData = {
+    body: GoalBodyMetricWritable;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-body-metrics/{id}/';
+};
+
+export type GoalsGoalBodyMetricsUpdateResponses = {
+    200: GoalBodyMetric;
+};
+
+export type GoalsGoalBodyMetricsUpdateResponse = GoalsGoalBodyMetricsUpdateResponses[keyof GoalsGoalBodyMetricsUpdateResponses];
+
+export type GoalsGoalNutrientsListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/goals/goal-nutrients/';
+};
+
+export type GoalsGoalNutrientsListResponses = {
+    200: Array<GoalNutrient>;
+};
+
+export type GoalsGoalNutrientsListResponse = GoalsGoalNutrientsListResponses[keyof GoalsGoalNutrientsListResponses];
+
+export type GoalsGoalNutrientsCreateData = {
+    body: GoalNutrientWritable;
+    path?: never;
+    query?: never;
+    url: '/api/goals/goal-nutrients/';
+};
+
+export type GoalsGoalNutrientsCreateResponses = {
+    201: GoalNutrient;
+};
+
+export type GoalsGoalNutrientsCreateResponse = GoalsGoalNutrientsCreateResponses[keyof GoalsGoalNutrientsCreateResponses];
+
+export type GoalsGoalNutrientsDestroyData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-nutrients/{id}/';
+};
+
+export type GoalsGoalNutrientsDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type GoalsGoalNutrientsDestroyResponse = GoalsGoalNutrientsDestroyResponses[keyof GoalsGoalNutrientsDestroyResponses];
+
+export type GoalsGoalNutrientsRetrieveData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-nutrients/{id}/';
+};
+
+export type GoalsGoalNutrientsRetrieveResponses = {
+    200: GoalNutrient;
+};
+
+export type GoalsGoalNutrientsRetrieveResponse = GoalsGoalNutrientsRetrieveResponses[keyof GoalsGoalNutrientsRetrieveResponses];
+
+export type GoalsGoalNutrientsPartialUpdateData = {
+    body?: PatchedGoalNutrientWritable;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-nutrients/{id}/';
+};
+
+export type GoalsGoalNutrientsPartialUpdateResponses = {
+    200: GoalNutrient;
+};
+
+export type GoalsGoalNutrientsPartialUpdateResponse = GoalsGoalNutrientsPartialUpdateResponses[keyof GoalsGoalNutrientsPartialUpdateResponses];
+
+export type GoalsGoalNutrientsUpdateData = {
+    body: GoalNutrientWritable;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-nutrients/{id}/';
+};
+
+export type GoalsGoalNutrientsUpdateResponses = {
+    200: GoalNutrient;
+};
+
+export type GoalsGoalNutrientsUpdateResponse = GoalsGoalNutrientsUpdateResponses[keyof GoalsGoalNutrientsUpdateResponses];
+
+export type GoalsGoalPlansListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/goals/goal-plans/';
+};
+
+export type GoalsGoalPlansListResponses = {
+    200: Array<GoalPlan>;
+};
+
+export type GoalsGoalPlansListResponse = GoalsGoalPlansListResponses[keyof GoalsGoalPlansListResponses];
+
+export type GoalsGoalPlansCreateData = {
+    body: GoalPlanWritable;
+    path?: never;
+    query?: never;
+    url: '/api/goals/goal-plans/';
+};
+
+export type GoalsGoalPlansCreateResponses = {
+    201: GoalPlan;
+};
+
+export type GoalsGoalPlansCreateResponse = GoalsGoalPlansCreateResponses[keyof GoalsGoalPlansCreateResponses];
+
+export type GoalsGoalPlansDestroyData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-plans/{id}/';
+};
+
+export type GoalsGoalPlansDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type GoalsGoalPlansDestroyResponse = GoalsGoalPlansDestroyResponses[keyof GoalsGoalPlansDestroyResponses];
+
+export type GoalsGoalPlansRetrieveData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-plans/{id}/';
+};
+
+export type GoalsGoalPlansRetrieveResponses = {
+    200: GoalPlan;
+};
+
+export type GoalsGoalPlansRetrieveResponse = GoalsGoalPlansRetrieveResponses[keyof GoalsGoalPlansRetrieveResponses];
+
+export type GoalsGoalPlansPartialUpdateData = {
+    body?: PatchedGoalPlanWritable;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-plans/{id}/';
+};
+
+export type GoalsGoalPlansPartialUpdateResponses = {
+    200: GoalPlan;
+};
+
+export type GoalsGoalPlansPartialUpdateResponse = GoalsGoalPlansPartialUpdateResponses[keyof GoalsGoalPlansPartialUpdateResponses];
+
+export type GoalsGoalPlansUpdateData = {
+    body: GoalPlanWritable;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/goals/goal-plans/{id}/';
+};
+
+export type GoalsGoalPlansUpdateResponses = {
+    200: GoalPlan;
+};
+
+export type GoalsGoalPlansUpdateResponse = GoalsGoalPlansUpdateResponses[keyof GoalsGoalPlansUpdateResponses];
 
 export type GroceriesListData = {
     body?: never;

@@ -2,7 +2,7 @@
 
 import { type Client, type ClientMeta, formDataBodySerializer, type Options as Options2, type RequestResult, type TDataShape } from './client';
 import { client } from './client.gen';
-import type { AccountsCsrfRetrieveData, AccountsCsrfRetrieveResponses, AccountsLoginCreateData, AccountsLoginCreateErrors, AccountsLoginCreateResponses, AccountsLogoutCreateData, AccountsLogoutCreateResponses, AccountsMeRetrieveData, AccountsMeRetrieveResponses, AccountsPreferencesPartialUpdateData, AccountsPreferencesPartialUpdateResponses, AccountsPreferencesRetrieveData, AccountsPreferencesRetrieveResponses, BodyMetricsBodyMetricLogsCreateData, BodyMetricsBodyMetricLogsCreateResponses, BodyMetricsBodyMetricLogsDestroyData, BodyMetricsBodyMetricLogsDestroyResponses, BodyMetricsBodyMetricLogsListData, BodyMetricsBodyMetricLogsListResponses, BodyMetricsBodyMetricLogsPartialUpdateData, BodyMetricsBodyMetricLogsPartialUpdateResponses, BodyMetricsBodyMetricLogsRetrieveData, BodyMetricsBodyMetricLogsRetrieveResponses, BodyMetricsBodyMetricLogsUpdateData, BodyMetricsBodyMetricLogsUpdateResponses, BodyMetricsBodyMetricsListData, BodyMetricsBodyMetricsListResponses, BodyMetricsBodyMetricsRetrieveData, BodyMetricsBodyMetricsRetrieveResponses, FoodsCreateData, FoodsCreateResponses, FoodsDestroyData, FoodsDestroyResponses, FoodsListData, FoodsListResponses, FoodsPartialUpdateData, FoodsPartialUpdateResponses, FoodsRetrieveData, FoodsRetrieveResponses, FoodsTagsCreateData, FoodsTagsCreateResponses, FoodsTagsDestroyData, FoodsTagsDestroyResponses, FoodsTagsListData, FoodsTagsListResponses, FoodsTagsPartialUpdateData, FoodsTagsPartialUpdateResponses, FoodsTagsRetrieveData, FoodsTagsRetrieveResponses, FoodsTagsUpdateData, FoodsTagsUpdateResponses, FoodsUpdateData, FoodsUpdateResponses, GroceriesCreateData, GroceriesCreateResponses, GroceriesDestroyData, GroceriesDestroyResponses, GroceriesGenerateCreateData, GroceriesGenerateCreateResponses, GroceriesItemsCreateData, GroceriesItemsCreateResponses, GroceriesItemsDestroyData, GroceriesItemsDestroyResponses, GroceriesItemsListData, GroceriesItemsListResponses, GroceriesItemsPartialUpdateData, GroceriesItemsPartialUpdateResponses, GroceriesItemsRetrieveData, GroceriesItemsRetrieveResponses, GroceriesItemsToggleCreateData, GroceriesItemsToggleCreateResponses, GroceriesItemsUpdateData, GroceriesItemsUpdateResponses, GroceriesListData, GroceriesListResponses, GroceriesPartialUpdateData, GroceriesPartialUpdateResponses, GroceriesRetrieveData, GroceriesRetrieveResponses, GroceriesUpdateData, GroceriesUpdateResponses, IntegrationsAddCreateData, IntegrationsAddCreateResponses, IntegrationsSearchListData, IntegrationsSearchListResponses, MealPlansActivateCreateData, MealPlansActivateCreateResponses, MealPlansActiveRetrieveData, MealPlansActiveRetrieveResponses, MealPlansApplyCreateData, MealPlansApplyCreateResponses, MealPlansCreateData, MealPlansCreateResponses, MealPlansDeactivateCreateData, MealPlansDeactivateCreateResponses, MealPlansDestroyData, MealPlansDestroyResponses, MealPlansFoodsCreateData, MealPlansFoodsCreateResponses, MealPlansFoodsDestroyData, MealPlansFoodsDestroyResponses, MealPlansFoodsListData, MealPlansFoodsListResponses, MealPlansFoodsPartialUpdateData, MealPlansFoodsPartialUpdateResponses, MealPlansFoodsRetrieveData, MealPlansFoodsRetrieveResponses, MealPlansFoodsUpdateData, MealPlansFoodsUpdateResponses, MealPlansListData, MealPlansListResponses, MealPlansMarkFavoriteCreateData, MealPlansMarkFavoriteCreateResponses, MealPlansMarkUsedCreateData, MealPlansMarkUsedCreateResponses, MealPlansPartialUpdateData, MealPlansPartialUpdateResponses, MealPlansPlannedMealsCreateData, MealPlansPlannedMealsCreateResponses, MealPlansPlannedMealsDestroyData, MealPlansPlannedMealsDestroyResponses, MealPlansPlannedMealsListData, MealPlansPlannedMealsListResponses, MealPlansPlannedMealsPartialUpdateData, MealPlansPlannedMealsPartialUpdateResponses, MealPlansPlannedMealsRetrieveData, MealPlansPlannedMealsRetrieveResponses, MealPlansPlannedMealsUpdateData, MealPlansPlannedMealsUpdateResponses, MealPlansRecipesCreateData, MealPlansRecipesCreateResponses, MealPlansRecipesDestroyData, MealPlansRecipesDestroyResponses, MealPlansRecipesListData, MealPlansRecipesListResponses, MealPlansRecipesPartialUpdateData, MealPlansRecipesPartialUpdateResponses, MealPlansRecipesRetrieveData, MealPlansRecipesRetrieveResponses, MealPlansRecipesUpdateData, MealPlansRecipesUpdateResponses, MealPlansRetrieveData, MealPlansRetrieveResponses, MealPlansUnmarkFavoriteCreateData, MealPlansUnmarkFavoriteCreateResponses, MealPlansUpdateData, MealPlansUpdateResponses, MealsCreateData, MealsCreateResponses, MealsDayListData, MealsDayListResponses, MealsDefaultsCreateData, MealsDefaultsCreateResponses, MealsDefaultsDestroyData, MealsDefaultsDestroyResponses, MealsDefaultsListData, MealsDefaultsListResponses, MealsDefaultsPartialUpdateData, MealsDefaultsPartialUpdateResponses, MealsDefaultsRetrieveData, MealsDefaultsRetrieveResponses, MealsDefaultsUpdateData, MealsDefaultsUpdateResponses, MealsDestroyData, MealsDestroyResponses, MealsListData, MealsListResponses, MealsMealFoodsCreateData, MealsMealFoodsCreateResponses, MealsMealFoodsDestroyData, MealsMealFoodsDestroyResponses, MealsMealFoodsPartialUpdateData, MealsMealFoodsPartialUpdateResponses, MealsMealFoodsUpdateData, MealsMealFoodsUpdateResponses, MealsPartialUpdateData, MealsPartialUpdateResponses, MealsRetrieveData, MealsRetrieveResponses, MealsUpdateData, MealsUpdateResponses, NutrientsListData, NutrientsListResponses, NutrientsRetrieveData, NutrientsRetrieveResponses, RecipesCopyCreateData, RecipesCopyCreateResponses, RecipesCreateData, RecipesCreateResponses, RecipesDestroyData, RecipesDestroyResponses, RecipesIngredientsCreateData, RecipesIngredientsCreateResponses, RecipesIngredientsDestroyData, RecipesIngredientsDestroyResponses, RecipesIngredientsListData, RecipesIngredientsListResponses, RecipesIngredientsPartialUpdateData, RecipesIngredientsPartialUpdateResponses, RecipesIngredientsRetrieveData, RecipesIngredientsRetrieveResponses, RecipesIngredientsUpdateData, RecipesIngredientsUpdateResponses, RecipesListData, RecipesListResponses, RecipesPartialUpdateData, RecipesPartialUpdateResponses, RecipesPictureCreateData, RecipesPictureCreateResponses, RecipesPictureDestroyData, RecipesPictureDestroyResponses, RecipesPictureRetrieveData, RecipesPictureRetrieveResponses, RecipesRetrieveData, RecipesRetrieveResponses, RecipesTagsCreateData, RecipesTagsCreateResponses, RecipesTagsDestroyData, RecipesTagsDestroyResponses, RecipesTagsListData, RecipesTagsListResponses, RecipesTagsPartialUpdateData, RecipesTagsPartialUpdateResponses, RecipesTagsUpdateData, RecipesTagsUpdateResponses, RecipesToggleFavoriteCreateData, RecipesToggleFavoriteCreateResponses, RecipesUpdateData, RecipesUpdateResponses, SchemaRetrieveData, SchemaRetrieveResponses, UnitsListData, UnitsListResponses, UserStatisticsGraphLinesCreateData, UserStatisticsGraphLinesCreateResponses, UserStatisticsGraphLinesDestroyData, UserStatisticsGraphLinesDestroyResponses, UserStatisticsGraphLinesListData, UserStatisticsGraphLinesListResponses, UserStatisticsGraphLinesPartialUpdateData, UserStatisticsGraphLinesPartialUpdateResponses, UserStatisticsGraphLinesRetrieveData, UserStatisticsGraphLinesRetrieveResponses, UserStatisticsGraphLinesUpdateData, UserStatisticsGraphLinesUpdateResponses, UserStatisticsGraphsCreateData, UserStatisticsGraphsCreateResponses, UserStatisticsGraphsDestroyData, UserStatisticsGraphsDestroyResponses, UserStatisticsGraphsListData, UserStatisticsGraphsListResponses, UserStatisticsGraphsPartialUpdateData, UserStatisticsGraphsPartialUpdateResponses, UserStatisticsGraphsRetrieveData, UserStatisticsGraphsRetrieveResponses, UserStatisticsGraphsUpdateData, UserStatisticsGraphsUpdateResponses } from './types.gen';
+import type { AccountsCsrfRetrieveData, AccountsCsrfRetrieveResponses, AccountsLoginCreateData, AccountsLoginCreateErrors, AccountsLoginCreateResponses, AccountsLogoutCreateData, AccountsLogoutCreateResponses, AccountsMeRetrieveData, AccountsMeRetrieveResponses, AccountsPreferencesPartialUpdateData, AccountsPreferencesPartialUpdateResponses, AccountsPreferencesRetrieveData, AccountsPreferencesRetrieveResponses, BodyMetricsBodyMetricLogsCreateData, BodyMetricsBodyMetricLogsCreateResponses, BodyMetricsBodyMetricLogsDestroyData, BodyMetricsBodyMetricLogsDestroyResponses, BodyMetricsBodyMetricLogsListData, BodyMetricsBodyMetricLogsListResponses, BodyMetricsBodyMetricLogsPartialUpdateData, BodyMetricsBodyMetricLogsPartialUpdateResponses, BodyMetricsBodyMetricLogsRetrieveData, BodyMetricsBodyMetricLogsRetrieveResponses, BodyMetricsBodyMetricLogsUpdateData, BodyMetricsBodyMetricLogsUpdateResponses, BodyMetricsBodyMetricsListData, BodyMetricsBodyMetricsListResponses, BodyMetricsBodyMetricsRetrieveData, BodyMetricsBodyMetricsRetrieveResponses, FoodsCreateData, FoodsCreateResponses, FoodsDestroyData, FoodsDestroyResponses, FoodsListData, FoodsListResponses, FoodsPartialUpdateData, FoodsPartialUpdateResponses, FoodsRetrieveData, FoodsRetrieveResponses, FoodsTagsCreateData, FoodsTagsCreateResponses, FoodsTagsDestroyData, FoodsTagsDestroyResponses, FoodsTagsListData, FoodsTagsListResponses, FoodsTagsPartialUpdateData, FoodsTagsPartialUpdateResponses, FoodsTagsRetrieveData, FoodsTagsRetrieveResponses, FoodsTagsUpdateData, FoodsTagsUpdateResponses, FoodsUpdateData, FoodsUpdateResponses, GoalsGoalBodyMetricsCreateData, GoalsGoalBodyMetricsCreateResponses, GoalsGoalBodyMetricsDestroyData, GoalsGoalBodyMetricsDestroyResponses, GoalsGoalBodyMetricsListData, GoalsGoalBodyMetricsListResponses, GoalsGoalBodyMetricsPartialUpdateData, GoalsGoalBodyMetricsPartialUpdateResponses, GoalsGoalBodyMetricsRetrieveData, GoalsGoalBodyMetricsRetrieveResponses, GoalsGoalBodyMetricsUpdateData, GoalsGoalBodyMetricsUpdateResponses, GoalsGoalNutrientsCreateData, GoalsGoalNutrientsCreateResponses, GoalsGoalNutrientsDestroyData, GoalsGoalNutrientsDestroyResponses, GoalsGoalNutrientsListData, GoalsGoalNutrientsListResponses, GoalsGoalNutrientsPartialUpdateData, GoalsGoalNutrientsPartialUpdateResponses, GoalsGoalNutrientsRetrieveData, GoalsGoalNutrientsRetrieveResponses, GoalsGoalNutrientsUpdateData, GoalsGoalNutrientsUpdateResponses, GoalsGoalPlansCreateData, GoalsGoalPlansCreateResponses, GoalsGoalPlansDestroyData, GoalsGoalPlansDestroyResponses, GoalsGoalPlansListData, GoalsGoalPlansListResponses, GoalsGoalPlansPartialUpdateData, GoalsGoalPlansPartialUpdateResponses, GoalsGoalPlansRetrieveData, GoalsGoalPlansRetrieveResponses, GoalsGoalPlansUpdateData, GoalsGoalPlansUpdateResponses, GroceriesCreateData, GroceriesCreateResponses, GroceriesDestroyData, GroceriesDestroyResponses, GroceriesGenerateCreateData, GroceriesGenerateCreateResponses, GroceriesItemsCreateData, GroceriesItemsCreateResponses, GroceriesItemsDestroyData, GroceriesItemsDestroyResponses, GroceriesItemsListData, GroceriesItemsListResponses, GroceriesItemsPartialUpdateData, GroceriesItemsPartialUpdateResponses, GroceriesItemsRetrieveData, GroceriesItemsRetrieveResponses, GroceriesItemsToggleCreateData, GroceriesItemsToggleCreateResponses, GroceriesItemsUpdateData, GroceriesItemsUpdateResponses, GroceriesListData, GroceriesListResponses, GroceriesPartialUpdateData, GroceriesPartialUpdateResponses, GroceriesRetrieveData, GroceriesRetrieveResponses, GroceriesUpdateData, GroceriesUpdateResponses, IntegrationsAddCreateData, IntegrationsAddCreateResponses, IntegrationsSearchListData, IntegrationsSearchListResponses, MealPlansActivateCreateData, MealPlansActivateCreateResponses, MealPlansActiveRetrieveData, MealPlansActiveRetrieveResponses, MealPlansApplyCreateData, MealPlansApplyCreateResponses, MealPlansCreateData, MealPlansCreateResponses, MealPlansDeactivateCreateData, MealPlansDeactivateCreateResponses, MealPlansDestroyData, MealPlansDestroyResponses, MealPlansFoodsCreateData, MealPlansFoodsCreateResponses, MealPlansFoodsDestroyData, MealPlansFoodsDestroyResponses, MealPlansFoodsListData, MealPlansFoodsListResponses, MealPlansFoodsPartialUpdateData, MealPlansFoodsPartialUpdateResponses, MealPlansFoodsRetrieveData, MealPlansFoodsRetrieveResponses, MealPlansFoodsUpdateData, MealPlansFoodsUpdateResponses, MealPlansListData, MealPlansListResponses, MealPlansMarkFavoriteCreateData, MealPlansMarkFavoriteCreateResponses, MealPlansMarkUsedCreateData, MealPlansMarkUsedCreateResponses, MealPlansPartialUpdateData, MealPlansPartialUpdateResponses, MealPlansPlannedMealsCreateData, MealPlansPlannedMealsCreateResponses, MealPlansPlannedMealsDestroyData, MealPlansPlannedMealsDestroyResponses, MealPlansPlannedMealsListData, MealPlansPlannedMealsListResponses, MealPlansPlannedMealsPartialUpdateData, MealPlansPlannedMealsPartialUpdateResponses, MealPlansPlannedMealsRetrieveData, MealPlansPlannedMealsRetrieveResponses, MealPlansPlannedMealsUpdateData, MealPlansPlannedMealsUpdateResponses, MealPlansRecipesCreateData, MealPlansRecipesCreateResponses, MealPlansRecipesDestroyData, MealPlansRecipesDestroyResponses, MealPlansRecipesListData, MealPlansRecipesListResponses, MealPlansRecipesPartialUpdateData, MealPlansRecipesPartialUpdateResponses, MealPlansRecipesRetrieveData, MealPlansRecipesRetrieveResponses, MealPlansRecipesUpdateData, MealPlansRecipesUpdateResponses, MealPlansRetrieveData, MealPlansRetrieveResponses, MealPlansUnmarkFavoriteCreateData, MealPlansUnmarkFavoriteCreateResponses, MealPlansUpdateData, MealPlansUpdateResponses, MealsCreateData, MealsCreateResponses, MealsDayListData, MealsDayListResponses, MealsDefaultsCreateData, MealsDefaultsCreateResponses, MealsDefaultsDestroyData, MealsDefaultsDestroyResponses, MealsDefaultsListData, MealsDefaultsListResponses, MealsDefaultsPartialUpdateData, MealsDefaultsPartialUpdateResponses, MealsDefaultsRetrieveData, MealsDefaultsRetrieveResponses, MealsDefaultsUpdateData, MealsDefaultsUpdateResponses, MealsDestroyData, MealsDestroyResponses, MealsListData, MealsListResponses, MealsMealFoodsCreateData, MealsMealFoodsCreateResponses, MealsMealFoodsDestroyData, MealsMealFoodsDestroyResponses, MealsMealFoodsPartialUpdateData, MealsMealFoodsPartialUpdateResponses, MealsMealFoodsUpdateData, MealsMealFoodsUpdateResponses, MealsPartialUpdateData, MealsPartialUpdateResponses, MealsRetrieveData, MealsRetrieveResponses, MealsUpdateData, MealsUpdateResponses, NutrientsListData, NutrientsListResponses, NutrientsRetrieveData, NutrientsRetrieveResponses, RecipesCopyCreateData, RecipesCopyCreateResponses, RecipesCreateData, RecipesCreateResponses, RecipesDestroyData, RecipesDestroyResponses, RecipesIngredientsCreateData, RecipesIngredientsCreateResponses, RecipesIngredientsDestroyData, RecipesIngredientsDestroyResponses, RecipesIngredientsListData, RecipesIngredientsListResponses, RecipesIngredientsPartialUpdateData, RecipesIngredientsPartialUpdateResponses, RecipesIngredientsRetrieveData, RecipesIngredientsRetrieveResponses, RecipesIngredientsUpdateData, RecipesIngredientsUpdateResponses, RecipesListData, RecipesListResponses, RecipesPartialUpdateData, RecipesPartialUpdateResponses, RecipesPictureCreateData, RecipesPictureCreateResponses, RecipesPictureDestroyData, RecipesPictureDestroyResponses, RecipesPictureRetrieveData, RecipesPictureRetrieveResponses, RecipesRetrieveData, RecipesRetrieveResponses, RecipesTagsCreateData, RecipesTagsCreateResponses, RecipesTagsDestroyData, RecipesTagsDestroyResponses, RecipesTagsListData, RecipesTagsListResponses, RecipesTagsPartialUpdateData, RecipesTagsPartialUpdateResponses, RecipesTagsUpdateData, RecipesTagsUpdateResponses, RecipesToggleFavoriteCreateData, RecipesToggleFavoriteCreateResponses, RecipesUpdateData, RecipesUpdateResponses, SchemaRetrieveData, SchemaRetrieveResponses, UnitsListData, UnitsListResponses, UserStatisticsGraphLinesCreateData, UserStatisticsGraphLinesCreateResponses, UserStatisticsGraphLinesDestroyData, UserStatisticsGraphLinesDestroyResponses, UserStatisticsGraphLinesListData, UserStatisticsGraphLinesListResponses, UserStatisticsGraphLinesPartialUpdateData, UserStatisticsGraphLinesPartialUpdateResponses, UserStatisticsGraphLinesRetrieveData, UserStatisticsGraphLinesRetrieveResponses, UserStatisticsGraphLinesUpdateData, UserStatisticsGraphLinesUpdateResponses, UserStatisticsGraphsCreateData, UserStatisticsGraphsCreateResponses, UserStatisticsGraphsDestroyData, UserStatisticsGraphsDestroyResponses, UserStatisticsGraphsListData, UserStatisticsGraphsListResponses, UserStatisticsGraphsPartialUpdateData, UserStatisticsGraphsPartialUpdateResponses, UserStatisticsGraphsRetrieveData, UserStatisticsGraphsRetrieveResponses, UserStatisticsGraphsUpdateData, UserStatisticsGraphsUpdateResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -315,6 +315,312 @@ export const foodsTagsUpdate = <ThrowOnError extends boolean = false>(options: O
             type: 'apiKey'
         }],
     url: '/api/foods/tags/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for individual body metric targets, scoped to the current
+ * user's goal plans. Expects a `goal_plan` id in the request body on
+ * create.
+ */
+export const goalsGoalBodyMetricsList = <ThrowOnError extends boolean = false>(options?: Options<GoalsGoalBodyMetricsListData, ThrowOnError>): RequestResult<GoalsGoalBodyMetricsListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GoalsGoalBodyMetricsListResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-body-metrics/',
+    ...options
+});
+
+/**
+ * CRUD for individual body metric targets, scoped to the current
+ * user's goal plans. Expects a `goal_plan` id in the request body on
+ * create.
+ */
+export const goalsGoalBodyMetricsCreate = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalBodyMetricsCreateData, ThrowOnError>): RequestResult<GoalsGoalBodyMetricsCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<GoalsGoalBodyMetricsCreateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-body-metrics/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for individual body metric targets, scoped to the current
+ * user's goal plans. Expects a `goal_plan` id in the request body on
+ * create.
+ */
+export const goalsGoalBodyMetricsDestroy = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalBodyMetricsDestroyData, ThrowOnError>): RequestResult<GoalsGoalBodyMetricsDestroyResponses, unknown, ThrowOnError> => (options.client ?? client).delete<GoalsGoalBodyMetricsDestroyResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-body-metrics/{id}/',
+    ...options
+});
+
+/**
+ * CRUD for individual body metric targets, scoped to the current
+ * user's goal plans. Expects a `goal_plan` id in the request body on
+ * create.
+ */
+export const goalsGoalBodyMetricsRetrieve = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalBodyMetricsRetrieveData, ThrowOnError>): RequestResult<GoalsGoalBodyMetricsRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<GoalsGoalBodyMetricsRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-body-metrics/{id}/',
+    ...options
+});
+
+/**
+ * CRUD for individual body metric targets, scoped to the current
+ * user's goal plans. Expects a `goal_plan` id in the request body on
+ * create.
+ */
+export const goalsGoalBodyMetricsPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalBodyMetricsPartialUpdateData, ThrowOnError>): RequestResult<GoalsGoalBodyMetricsPartialUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).patch<GoalsGoalBodyMetricsPartialUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-body-metrics/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for individual body metric targets, scoped to the current
+ * user's goal plans. Expects a `goal_plan` id in the request body on
+ * create.
+ */
+export const goalsGoalBodyMetricsUpdate = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalBodyMetricsUpdateData, ThrowOnError>): RequestResult<GoalsGoalBodyMetricsUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<GoalsGoalBodyMetricsUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-body-metrics/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for individual nutrient targets, scoped to the current user's
+ * goal plans. Expects a `goal_plan` id in the request body on create.
+ */
+export const goalsGoalNutrientsList = <ThrowOnError extends boolean = false>(options?: Options<GoalsGoalNutrientsListData, ThrowOnError>): RequestResult<GoalsGoalNutrientsListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GoalsGoalNutrientsListResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-nutrients/',
+    ...options
+});
+
+/**
+ * CRUD for individual nutrient targets, scoped to the current user's
+ * goal plans. Expects a `goal_plan` id in the request body on create.
+ */
+export const goalsGoalNutrientsCreate = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalNutrientsCreateData, ThrowOnError>): RequestResult<GoalsGoalNutrientsCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<GoalsGoalNutrientsCreateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-nutrients/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for individual nutrient targets, scoped to the current user's
+ * goal plans. Expects a `goal_plan` id in the request body on create.
+ */
+export const goalsGoalNutrientsDestroy = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalNutrientsDestroyData, ThrowOnError>): RequestResult<GoalsGoalNutrientsDestroyResponses, unknown, ThrowOnError> => (options.client ?? client).delete<GoalsGoalNutrientsDestroyResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-nutrients/{id}/',
+    ...options
+});
+
+/**
+ * CRUD for individual nutrient targets, scoped to the current user's
+ * goal plans. Expects a `goal_plan` id in the request body on create.
+ */
+export const goalsGoalNutrientsRetrieve = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalNutrientsRetrieveData, ThrowOnError>): RequestResult<GoalsGoalNutrientsRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<GoalsGoalNutrientsRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-nutrients/{id}/',
+    ...options
+});
+
+/**
+ * CRUD for individual nutrient targets, scoped to the current user's
+ * goal plans. Expects a `goal_plan` id in the request body on create.
+ */
+export const goalsGoalNutrientsPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalNutrientsPartialUpdateData, ThrowOnError>): RequestResult<GoalsGoalNutrientsPartialUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).patch<GoalsGoalNutrientsPartialUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-nutrients/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for individual nutrient targets, scoped to the current user's
+ * goal plans. Expects a `goal_plan` id in the request body on create.
+ */
+export const goalsGoalNutrientsUpdate = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalNutrientsUpdateData, ThrowOnError>): RequestResult<GoalsGoalNutrientsUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<GoalsGoalNutrientsUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-nutrients/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for a user's goal plans, including their nested nutrient and
+ * body metric targets. Use this endpoint for normal goal-plan editing;
+ * the nutrient/body-metric endpoints below exist for editing a single
+ * target in place without resending the whole plan.
+ */
+export const goalsGoalPlansList = <ThrowOnError extends boolean = false>(options?: Options<GoalsGoalPlansListData, ThrowOnError>): RequestResult<GoalsGoalPlansListResponses, unknown, ThrowOnError> => (options?.client ?? client).get<GoalsGoalPlansListResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-plans/',
+    ...options
+});
+
+/**
+ * CRUD for a user's goal plans, including their nested nutrient and
+ * body metric targets. Use this endpoint for normal goal-plan editing;
+ * the nutrient/body-metric endpoints below exist for editing a single
+ * target in place without resending the whole plan.
+ */
+export const goalsGoalPlansCreate = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalPlansCreateData, ThrowOnError>): RequestResult<GoalsGoalPlansCreateResponses, unknown, ThrowOnError> => (options.client ?? client).post<GoalsGoalPlansCreateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-plans/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for a user's goal plans, including their nested nutrient and
+ * body metric targets. Use this endpoint for normal goal-plan editing;
+ * the nutrient/body-metric endpoints below exist for editing a single
+ * target in place without resending the whole plan.
+ */
+export const goalsGoalPlansDestroy = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalPlansDestroyData, ThrowOnError>): RequestResult<GoalsGoalPlansDestroyResponses, unknown, ThrowOnError> => (options.client ?? client).delete<GoalsGoalPlansDestroyResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-plans/{id}/',
+    ...options
+});
+
+/**
+ * CRUD for a user's goal plans, including their nested nutrient and
+ * body metric targets. Use this endpoint for normal goal-plan editing;
+ * the nutrient/body-metric endpoints below exist for editing a single
+ * target in place without resending the whole plan.
+ */
+export const goalsGoalPlansRetrieve = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalPlansRetrieveData, ThrowOnError>): RequestResult<GoalsGoalPlansRetrieveResponses, unknown, ThrowOnError> => (options.client ?? client).get<GoalsGoalPlansRetrieveResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-plans/{id}/',
+    ...options
+});
+
+/**
+ * CRUD for a user's goal plans, including their nested nutrient and
+ * body metric targets. Use this endpoint for normal goal-plan editing;
+ * the nutrient/body-metric endpoints below exist for editing a single
+ * target in place without resending the whole plan.
+ */
+export const goalsGoalPlansPartialUpdate = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalPlansPartialUpdateData, ThrowOnError>): RequestResult<GoalsGoalPlansPartialUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).patch<GoalsGoalPlansPartialUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-plans/{id}/',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * CRUD for a user's goal plans, including their nested nutrient and
+ * body metric targets. Use this endpoint for normal goal-plan editing;
+ * the nutrient/body-metric endpoints below exist for editing a single
+ * target in place without resending the whole plan.
+ */
+export const goalsGoalPlansUpdate = <ThrowOnError extends boolean = false>(options: Options<GoalsGoalPlansUpdateData, ThrowOnError>): RequestResult<GoalsGoalPlansUpdateResponses, unknown, ThrowOnError> => (options.client ?? client).put<GoalsGoalPlansUpdateResponses, unknown, ThrowOnError>({
+    security: [{
+            in: 'cookie',
+            name: 'sessionid',
+            type: 'apiKey'
+        }],
+    url: '/api/goals/goal-plans/{id}/',
     ...options,
     headers: {
         'Content-Type': 'application/json',

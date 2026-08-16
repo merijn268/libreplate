@@ -590,6 +590,489 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/goals/goal-body-metrics/:
+    get:
+      operationId: goals_goal_body_metrics_list
+      description: |-
+        CRUD for individual body metric targets, scoped to the current
+        user's goal plans. Expects a `goal_plan` id in the request body on
+        create.
+      tags:
+      - goals
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GoalBodyMetric'
+          description: ''
+    post:
+      operationId: goals_goal_body_metrics_create
+      description: |-
+        CRUD for individual body metric targets, scoped to the current
+        user's goal plans. Expects a `goal_plan` id in the request body on
+        create.
+      tags:
+      - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalBodyMetric'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GoalBodyMetric'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GoalBodyMetric'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalBodyMetric'
+          description: ''
+  /api/goals/goal-body-metrics/{id}/:
+    get:
+      operationId: goals_goal_body_metrics_retrieve
+      description: |-
+        CRUD for individual body metric targets, scoped to the current
+        user's goal plans. Expects a `goal_plan` id in the request body on
+        create.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalBodyMetric'
+          description: ''
+    put:
+      operationId: goals_goal_body_metrics_update
+      description: |-
+        CRUD for individual body metric targets, scoped to the current
+        user's goal plans. Expects a `goal_plan` id in the request body on
+        create.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalBodyMetric'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GoalBodyMetric'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GoalBodyMetric'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalBodyMetric'
+          description: ''
+    patch:
+      operationId: goals_goal_body_metrics_partial_update
+      description: |-
+        CRUD for individual body metric targets, scoped to the current
+        user's goal plans. Expects a `goal_plan` id in the request body on
+        create.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGoalBodyMetric'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGoalBodyMetric'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGoalBodyMetric'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalBodyMetric'
+          description: ''
+    delete:
+      operationId: goals_goal_body_metrics_destroy
+      description: |-
+        CRUD for individual body metric targets, scoped to the current
+        user's goal plans. Expects a `goal_plan` id in the request body on
+        create.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/goals/goal-nutrients/:
+    get:
+      operationId: goals_goal_nutrients_list
+      description: |-
+        CRUD for individual nutrient targets, scoped to the current user's
+        goal plans. Expects a `goal_plan` id in the request body on create.
+      tags:
+      - goals
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GoalNutrient'
+          description: ''
+    post:
+      operationId: goals_goal_nutrients_create
+      description: |-
+        CRUD for individual nutrient targets, scoped to the current user's
+        goal plans. Expects a `goal_plan` id in the request body on create.
+      tags:
+      - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalNutrient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GoalNutrient'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GoalNutrient'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalNutrient'
+          description: ''
+  /api/goals/goal-nutrients/{id}/:
+    get:
+      operationId: goals_goal_nutrients_retrieve
+      description: |-
+        CRUD for individual nutrient targets, scoped to the current user's
+        goal plans. Expects a `goal_plan` id in the request body on create.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalNutrient'
+          description: ''
+    put:
+      operationId: goals_goal_nutrients_update
+      description: |-
+        CRUD for individual nutrient targets, scoped to the current user's
+        goal plans. Expects a `goal_plan` id in the request body on create.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalNutrient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GoalNutrient'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GoalNutrient'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalNutrient'
+          description: ''
+    patch:
+      operationId: goals_goal_nutrients_partial_update
+      description: |-
+        CRUD for individual nutrient targets, scoped to the current user's
+        goal plans. Expects a `goal_plan` id in the request body on create.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGoalNutrient'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGoalNutrient'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGoalNutrient'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalNutrient'
+          description: ''
+    delete:
+      operationId: goals_goal_nutrients_destroy
+      description: |-
+        CRUD for individual nutrient targets, scoped to the current user's
+        goal plans. Expects a `goal_plan` id in the request body on create.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/goals/goal-plans/:
+    get:
+      operationId: goals_goal_plans_list
+      description: |-
+        CRUD for a user's goal plans, including their nested nutrient and
+        body metric targets. Use this endpoint for normal goal-plan editing;
+        the nutrient/body-metric endpoints below exist for editing a single
+        target in place without resending the whole plan.
+      tags:
+      - goals
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GoalPlan'
+          description: ''
+    post:
+      operationId: goals_goal_plans_create
+      description: |-
+        CRUD for a user's goal plans, including their nested nutrient and
+        body metric targets. Use this endpoint for normal goal-plan editing;
+        the nutrient/body-metric endpoints below exist for editing a single
+        target in place without resending the whole plan.
+      tags:
+      - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalPlan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GoalPlan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GoalPlan'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalPlan'
+          description: ''
+  /api/goals/goal-plans/{id}/:
+    get:
+      operationId: goals_goal_plans_retrieve
+      description: |-
+        CRUD for a user's goal plans, including their nested nutrient and
+        body metric targets. Use this endpoint for normal goal-plan editing;
+        the nutrient/body-metric endpoints below exist for editing a single
+        target in place without resending the whole plan.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalPlan'
+          description: ''
+    put:
+      operationId: goals_goal_plans_update
+      description: |-
+        CRUD for a user's goal plans, including their nested nutrient and
+        body metric targets. Use this endpoint for normal goal-plan editing;
+        the nutrient/body-metric endpoints below exist for editing a single
+        target in place without resending the whole plan.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoalPlan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GoalPlan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GoalPlan'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalPlan'
+          description: ''
+    patch:
+      operationId: goals_goal_plans_partial_update
+      description: |-
+        CRUD for a user's goal plans, including their nested nutrient and
+        body metric targets. Use this endpoint for normal goal-plan editing;
+        the nutrient/body-metric endpoints below exist for editing a single
+        target in place without resending the whole plan.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGoalPlan'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGoalPlan'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGoalPlan'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GoalPlan'
+          description: ''
+    delete:
+      operationId: goals_goal_plans_destroy
+      description: |-
+        CRUD for a user's goal plans, including their nested nutrient and
+        body metric targets. Use this endpoint for normal goal-plan editing;
+        the nutrient/body-metric endpoints below exist for editing a single
+        target in place without resending the whole plan.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - goals
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
   /api/groceries/:
     get:
       operationId: groceries_list
@@ -3488,6 +3971,87 @@ components:
       - amount
       - nutrient
       - nutrient_id
+    GoalBodyMetric:
+      type: object
+      description: A single body metric target within a goal plan.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        body_metric:
+          allOf:
+          - $ref: '#/components/schemas/BodyMetric'
+          readOnly: true
+        body_metric_id:
+          type: integer
+          writeOnly: true
+        amount:
+          type: number
+          format: double
+      required:
+      - amount
+      - body_metric
+      - body_metric_id
+      - id
+    GoalNutrient:
+      type: object
+      description: A single nutrient target within a goal plan.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nutrient:
+          allOf:
+          - $ref: '#/components/schemas/NutrientBrief'
+          readOnly: true
+        nutrient_id:
+          type: integer
+          writeOnly: true
+        amount:
+          type: number
+          format: double
+      required:
+      - amount
+      - id
+      - nutrient
+      - nutrient_id
+    GoalPlan:
+      type: object
+      description: |-
+        A goal plan, with its nested nutrient and body metric targets.
+
+        On write, `nutrient_goals` / `body_metric_goals` are treated as the
+        full desired set: items already present (matched by nutrient /
+        body_metric) are updated, new items are created, and anything left
+        out of the payload is removed.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        nutrient_goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalNutrient'
+        body_metric_goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalBodyMetric'
+      required:
+      - id
+      - name
     Graph:
       type: object
       properties:
@@ -4091,6 +4655,74 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FoodNutrient'
+    PatchedGoalBodyMetric:
+      type: object
+      description: A single body metric target within a goal plan.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        body_metric:
+          allOf:
+          - $ref: '#/components/schemas/BodyMetric'
+          readOnly: true
+        body_metric_id:
+          type: integer
+          writeOnly: true
+        amount:
+          type: number
+          format: double
+    PatchedGoalNutrient:
+      type: object
+      description: A single nutrient target within a goal plan.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nutrient:
+          allOf:
+          - $ref: '#/components/schemas/NutrientBrief'
+          readOnly: true
+        nutrient_id:
+          type: integer
+          writeOnly: true
+        amount:
+          type: number
+          format: double
+    PatchedGoalPlan:
+      type: object
+      description: |-
+        A goal plan, with its nested nutrient and body metric targets.
+
+        On write, `nutrient_goals` / `body_metric_goals` are treated as the
+        full desired set: items already present (matched by nutrient /
+        body_metric) are updated, new items are created, and anything left
+        out of the payload is removed.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        start_date:
+          type: string
+          format: date
+          nullable: true
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        nutrient_goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalNutrient'
+        body_metric_goals:
+          type: array
+          items:
+            $ref: '#/components/schemas/GoalBodyMetric'
     PatchedGraph:
       type: object
       properties:

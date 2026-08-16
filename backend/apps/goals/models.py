@@ -2,7 +2,7 @@ from apps.core.models import base as base_models
 from django.db import models
 
 
-class GoalGroup(
+class GoalPlan(
     base_models.BelongsToUser,
     base_models.CanBeFavorited,
     base_models.HasDescription,
@@ -20,11 +20,19 @@ class GoalGroup(
 class GoalNutrient(models.Model):
     nutrient = models.ForeignKey("nutrients.Nutrient", on_delete=models.CASCADE)
     amount = models.FloatField()
-    goal_group = models.ForeignKey(
-        GoalGroup,
+    goal_plan = models.ForeignKey(
+        GoalPlan,
         on_delete=models.CASCADE,
         related_name="nutrient_goals",
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["goal_plan", "nutrient"],
+                name="unique_nutrient_per_goal_plan",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.nutrient.name} - {self.amount}"
@@ -36,11 +44,19 @@ class GoalBodyMetric(models.Model):
         on_delete=models.CASCADE,
     )
     amount = models.FloatField()
-    goal_group = models.ForeignKey(
-        GoalGroup,
+    goal_plan = models.ForeignKey(
+        GoalPlan,
         on_delete=models.CASCADE,
-        related_name="body_measurement_goals",
+        related_name="body_metric_goals",
     )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["goal_plan", "body_metric"],
+                name="unique_body_metric_per_goal_plan",
+            ),
+        ]
 
     def __str__(self):
         return f"{self.body_metric.name} - {self.amount}"
