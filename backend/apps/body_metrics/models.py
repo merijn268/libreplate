@@ -18,13 +18,6 @@ class BodyMetric(
     base_models.HasTimestamps,
     base_models.TracksUsage,
 ):
-    # TODO this variable may not be needed with the proper visibility classes.
-    # A user may not want to enter their height multiple times for example.
-    # But depending on where this is entered, a visibility class could be used.
-    is_single_entry = models.BooleanField(
-        default=False, help_text="If only one log entry can be entered."
-    )
-
     visibility = models.OneToOneField(
         BodyMetricsVisibility,
         on_delete=models.CASCADE,

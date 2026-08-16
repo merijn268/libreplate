@@ -21,7 +21,6 @@ class BodyMetricSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "description",
-            "is_single_entry",
             "visibility",
         )
         read_only_fields = fields
@@ -54,19 +53,6 @@ class BodyMetricLogSerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         body_metric = attrs["body_metric"]
         date = attrs["date"]
-
-        if body_metric.is_single_entry:
-            if BodyMetricLog.objects.filter(
-                body_metric=body_metric,
-                user=user,
-            ).exists():
-                raise serializers.ValidationError(
-                    {
-                        "body_metric": (
-                            "This body metric only allows a single log entry."
-                        )
-                    }
-                )
 
         if BodyMetricLog.objects.filter(
             body_metric=body_metric,

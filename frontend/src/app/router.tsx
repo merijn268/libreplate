@@ -14,6 +14,8 @@ import GroceriesPage from "@/features/groceries/GroceriesPage";
 import GroceriesEditPage from "@/features/groceries/GropceriesEditPage";
 import MealPlansPage from "../features/meal_plans/MealPlansPage";
 import MealPlanEditPage from "../features/meal_plans/MealPlanEditPage";
+import StatisticsPage from "@/features/statistics/StatisticsPage";
+import StatisticsEditPage from "@/features/statistics/StatisticsEditPage";
 import SettingsPage from "../features/settings/SettingsPage";
 import AppearanceSettingsPage from "../features/settings/AppearanceSettingsPage";
 
@@ -125,9 +127,25 @@ const router = createBrowserRouter([
 
       {
         path: "statistics",
-        element: placeholder("Statistics"),
+        element: <StatisticsPage />,
         handle: {
           title: "Statistics",
+        },
+      },
+
+      {
+        path: "statistics/new",
+        element: <StatisticsEditPage />,
+        handle: {
+          title: "New Graph",
+        },
+      },
+
+      {
+        path: "statistics/:id/edit",
+        element: <StatisticsEditPage />,
+        handle: {
+          title: "Edit Graph",
         },
       },
 

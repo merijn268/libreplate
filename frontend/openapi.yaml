@@ -2992,8 +2992,293 @@ paths:
                 items:
                   $ref: '#/components/schemas/Unit'
           description: ''
+  /api/user-statistics/graph-lines/:
+    get:
+      operationId: user_statistics_graph_lines_list
+      tags:
+      - user-statistics
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GraphLine'
+          description: ''
+    post:
+      operationId: user_statistics_graph_lines_create
+      tags:
+      - user-statistics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphLine'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GraphLine'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GraphLine'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphLine'
+          description: ''
+  /api/user-statistics/graph-lines/{id}/:
+    get:
+      operationId: user_statistics_graph_lines_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this graph line.
+        required: true
+      tags:
+      - user-statistics
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphLine'
+          description: ''
+    put:
+      operationId: user_statistics_graph_lines_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this graph line.
+        required: true
+      tags:
+      - user-statistics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GraphLine'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/GraphLine'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/GraphLine'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphLine'
+          description: ''
+    patch:
+      operationId: user_statistics_graph_lines_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this graph line.
+        required: true
+      tags:
+      - user-statistics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGraphLine'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGraphLine'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGraphLine'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GraphLine'
+          description: ''
+    delete:
+      operationId: user_statistics_graph_lines_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this graph line.
+        required: true
+      tags:
+      - user-statistics
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/user-statistics/graphs/:
+    get:
+      operationId: user_statistics_graphs_list
+      tags:
+      - user-statistics
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Graph'
+          description: ''
+    post:
+      operationId: user_statistics_graphs_create
+      tags:
+      - user-statistics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Graph'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Graph'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Graph'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Graph'
+          description: ''
+  /api/user-statistics/graphs/{id}/:
+    get:
+      operationId: user_statistics_graphs_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this graph.
+        required: true
+      tags:
+      - user-statistics
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Graph'
+          description: ''
+    put:
+      operationId: user_statistics_graphs_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this graph.
+        required: true
+      tags:
+      - user-statistics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Graph'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Graph'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Graph'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Graph'
+          description: ''
+    patch:
+      operationId: user_statistics_graphs_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this graph.
+        required: true
+      tags:
+      - user-statistics
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedGraph'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedGraph'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedGraph'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Graph'
+          description: ''
+    delete:
+      operationId: user_statistics_graphs_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this graph.
+        required: true
+      tags:
+      - user-statistics
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
 components:
   schemas:
+    BlankEnum:
+      enum:
+      - ''
     BodyMetric:
       type: object
       properties:
@@ -3006,10 +3291,6 @@ components:
         description:
           type: string
           readOnly: true
-        is_single_entry:
-          type: boolean
-          readOnly: true
-          description: If only one log entry can be entered.
         visibility:
           allOf:
           - $ref: '#/components/schemas/BodyMetricVisibility'
@@ -3017,7 +3298,6 @@ components:
       required:
       - description
       - id
-      - is_single_entry
       - name
       - visibility
     BodyMetricLog:
@@ -3208,6 +3488,120 @@ components:
       - amount
       - nutrient
       - nutrient_id
+    Graph:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        is_favorite:
+          type: boolean
+        graph_type:
+          $ref: '#/components/schemas/GraphTypeEnum'
+        period_unit:
+          $ref: '#/components/schemas/PeriodUnitEnum'
+        period_amount:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        period_end_mode:
+          $ref: '#/components/schemas/PeriodEndModeEnum'
+        period_end_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Only used when period_end_mode is CUSTOM.
+        range_type:
+          $ref: '#/components/schemas/RangeTypeEnum'
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/GraphLine'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - graph_type
+      - id
+      - lines
+      - name
+      - updated_at
+      - user
+    GraphLine:
+      type: object
+      description: |-
+        Nested writable serializer for GraphLine. Exactly one of `body_metric` /
+        `nutrient` must be provided, mirroring GraphLine.clean().
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        graph:
+          type: integer
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        moving_average_unit:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/MovingAverageUnitEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        moving_average_amount:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        body_metric:
+          allOf:
+          - $ref: '#/components/schemas/GraphLineBodyMetric'
+          nullable: true
+        nutrient:
+          allOf:
+          - $ref: '#/components/schemas/GraphLineNutrient'
+          nullable: true
+      required:
+      - graph
+      - id
+      - name
+    GraphLineBodyMetric:
+      type: object
+      properties:
+        body_metric:
+          type: integer
+      required:
+      - body_metric
+    GraphLineNutrient:
+      type: object
+      properties:
+        nutrient:
+          type: integer
+      required:
+      - nutrient
+    GraphTypeEnum:
+      enum:
+      - line
+      - bar
+      type: string
+      description: |-
+        * `line` - Line Graph
+        * `bar` - Bar Graph
     GroceryList:
       type: object
       properties:
@@ -3502,6 +3896,21 @@ components:
           type: string
       required:
       - detail
+    MovingAverageUnitEnum:
+      enum:
+      - day
+      - week
+      - month
+      - year
+      type: string
+      description: |-
+        * `day` - Day
+        * `week` - Week
+        * `month` - Month
+        * `year` - Year
+    NullEnum:
+      enum:
+      - null
     Nutrient:
       type: object
       properties:
@@ -3682,6 +4091,86 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/FoodNutrient'
+    PatchedGraph:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        is_favorite:
+          type: boolean
+        graph_type:
+          $ref: '#/components/schemas/GraphTypeEnum'
+        period_unit:
+          $ref: '#/components/schemas/PeriodUnitEnum'
+        period_amount:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        period_end_mode:
+          $ref: '#/components/schemas/PeriodEndModeEnum'
+        period_end_date:
+          type: string
+          format: date-time
+          nullable: true
+          description: Only used when period_end_mode is CUSTOM.
+        range_type:
+          $ref: '#/components/schemas/RangeTypeEnum'
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/GraphLine'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+    PatchedGraphLine:
+      type: object
+      description: |-
+        Nested writable serializer for GraphLine. Exactly one of `body_metric` /
+        `nutrient` must be provided, mirroring GraphLine.clean().
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        graph:
+          type: integer
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        moving_average_unit:
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/MovingAverageUnitEnum'
+          - $ref: '#/components/schemas/BlankEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        moving_average_amount:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+        body_metric:
+          allOf:
+          - $ref: '#/components/schemas/GraphLineBodyMetric'
+          nullable: true
+        nutrient:
+          allOf:
+          - $ref: '#/components/schemas/GraphLineNutrient'
+          nullable: true
     PatchedGroceryList:
       type: object
       properties:
@@ -4038,6 +4527,30 @@ components:
           type: string
           pattern: ^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$
           maxLength: 25
+    PeriodEndModeEnum:
+      enum:
+      - last_data_point
+      - now
+      - custom
+      type: string
+      description: |-
+        * `last_data_point` - Last Data Point
+        * `now` - Now
+        * `custom` - Custom
+    PeriodUnitEnum:
+      enum:
+      - all
+      - day
+      - week
+      - month
+      - year
+      type: string
+      description: |-
+        * `all` - All Data
+        * `day` - Day
+        * `week` - Week
+        * `month` - Month
+        * `year` - Year
     PlannedMeal:
       type: object
       properties:
@@ -4183,6 +4696,14 @@ components:
       - planned_meal_id
       - recipe
       - recipe_id
+    RangeTypeEnum:
+      enum:
+      - fixed
+      - dynamic
+      type: string
+      description: |-
+        * `fixed` - Fixed
+        * `dynamic` - Dynamic
     Recipe:
       type: object
       properties:

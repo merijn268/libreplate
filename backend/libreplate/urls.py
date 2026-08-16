@@ -48,6 +48,7 @@ urlpatterns = [
     path("api/recipes/", include("apps.recipes.urls")),
     path("api/meal-plans/", include("apps.meal_plans.urls")),
     path("api/body-metrics/", include("apps.body_metrics.urls")),
+    path("api/user-statistics/", include("apps.user_statistics.urls")),
 ]
 
 

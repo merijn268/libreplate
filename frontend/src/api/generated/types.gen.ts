@@ -4,14 +4,12 @@ export type ClientOptions = {
     baseUrl: `${string}://${string}` | (string & {});
 };
 
+export type BlankEnum = '';
+
 export type BodyMetric = {
     readonly id: number;
     readonly name: string;
     readonly description: string;
-    /**
-     * If only one log entry can be entered.
-     */
-    readonly is_single_entry: boolean;
     visibility: BodyMetricVisibility;
 };
 
@@ -85,6 +83,55 @@ export type FoodNutrient = {
     nutrient: NutrientBrief;
     amount: number;
 };
+
+export type Graph = {
+    readonly id: number;
+    readonly user: number;
+    name: string;
+    description?: string;
+    is_favorite?: boolean;
+    graph_type: GraphTypeEnum;
+    period_unit?: PeriodUnitEnum;
+    period_amount?: number;
+    period_end_mode?: PeriodEndModeEnum;
+    /**
+     * Only used when period_end_mode is CUSTOM.
+     */
+    period_end_date?: string | null;
+    range_type?: RangeTypeEnum;
+    readonly lines: Array<GraphLine>;
+    readonly created_at: string;
+    readonly updated_at: string;
+};
+
+/**
+ * Nested writable serializer for GraphLine. Exactly one of `body_metric` /
+ * `nutrient` must be provided, mirroring GraphLine.clean().
+ */
+export type GraphLine = {
+    readonly id: number;
+    graph: number;
+    name: string;
+    description?: string;
+    moving_average_unit?: MovingAverageUnitEnum | BlankEnum | NullEnum | null;
+    moving_average_amount?: number;
+    body_metric?: GraphLineBodyMetric | null;
+    nutrient?: GraphLineNutrient | null;
+};
+
+export type GraphLineBodyMetric = {
+    body_metric: number;
+};
+
+export type GraphLineNutrient = {
+    nutrient: number;
+};
+
+/**
+ * * `line` - Line Graph
+ * * `bar` - Bar Graph
+ */
+export type GraphTypeEnum = 'line' | 'bar';
 
 export type GroceryList = {
     readonly id: number;
@@ -209,6 +256,16 @@ export type Message = {
     detail: string;
 };
 
+/**
+ * * `day` - Day
+ * * `week` - Week
+ * * `month` - Month
+ * * `year` - Year
+ */
+export type MovingAverageUnitEnum = 'day' | 'week' | 'month' | 'year';
+
+export type NullEnum = never;
+
 export type Nutrient = {
     readonly id: number;
     readonly name: string;
@@ -290,6 +347,41 @@ export type PatchedFood = {
     external_id?: string | null;
     readonly tags?: Array<Tag>;
     nutrients?: Array<FoodNutrient>;
+};
+
+export type PatchedGraph = {
+    readonly id?: number;
+    readonly user?: number;
+    name?: string;
+    description?: string;
+    is_favorite?: boolean;
+    graph_type?: GraphTypeEnum;
+    period_unit?: PeriodUnitEnum;
+    period_amount?: number;
+    period_end_mode?: PeriodEndModeEnum;
+    /**
+     * Only used when period_end_mode is CUSTOM.
+     */
+    period_end_date?: string | null;
+    range_type?: RangeTypeEnum;
+    readonly lines?: Array<GraphLine>;
+    readonly created_at?: string;
+    readonly updated_at?: string;
+};
+
+/**
+ * Nested writable serializer for GraphLine. Exactly one of `body_metric` /
+ * `nutrient` must be provided, mirroring GraphLine.clean().
+ */
+export type PatchedGraphLine = {
+    readonly id?: number;
+    graph?: number;
+    name?: string;
+    description?: string;
+    moving_average_unit?: MovingAverageUnitEnum | BlankEnum | NullEnum | null;
+    moving_average_amount?: number;
+    body_metric?: GraphLineBodyMetric | null;
+    nutrient?: GraphLineNutrient | null;
 };
 
 export type PatchedGroceryList = {
@@ -452,6 +544,22 @@ export type PatchedUserPreferences = {
     theme_color?: string;
 };
 
+/**
+ * * `last_data_point` - Last Data Point
+ * * `now` - Now
+ * * `custom` - Custom
+ */
+export type PeriodEndModeEnum = 'last_data_point' | 'now' | 'custom';
+
+/**
+ * * `all` - All Data
+ * * `day` - Day
+ * * `week` - Week
+ * * `month` - Month
+ * * `year` - Year
+ */
+export type PeriodUnitEnum = 'all' | 'day' | 'week' | 'month' | 'year';
+
 export type PlannedMeal = {
     readonly id: number;
     readonly is_virtual: boolean;
@@ -521,6 +629,12 @@ export type PlannedMealRecipe = {
     number_of_servings?: number;
     recurrence?: PlannedMealEntryRecurrence | null;
 };
+
+/**
+ * * `fixed` - Fixed
+ * * `dynamic` - Dynamic
+ */
+export type RangeTypeEnum = 'fixed' | 'dynamic';
 
 export type Recipe = {
     readonly id: number;
@@ -655,6 +769,35 @@ export type FoodNutrientWritable = {
     amount: number;
 };
 
+export type GraphWritable = {
+    name: string;
+    description?: string;
+    is_favorite?: boolean;
+    graph_type: GraphTypeEnum;
+    period_unit?: PeriodUnitEnum;
+    period_amount?: number;
+    period_end_mode?: PeriodEndModeEnum;
+    /**
+     * Only used when period_end_mode is CUSTOM.
+     */
+    period_end_date?: string | null;
+    range_type?: RangeTypeEnum;
+};
+
+/**
+ * Nested writable serializer for GraphLine. Exactly one of `body_metric` /
+ * `nutrient` must be provided, mirroring GraphLine.clean().
+ */
+export type GraphLineWritable = {
+    graph: number;
+    name: string;
+    description?: string;
+    moving_average_unit?: MovingAverageUnitEnum | BlankEnum | NullEnum | null;
+    moving_average_amount?: number;
+    body_metric?: GraphLineBodyMetric | null;
+    nutrient?: GraphLineNutrient | null;
+};
+
 export type GroceryListWritable = {
     name: string;
     description?: string;
@@ -782,6 +925,35 @@ export type PatchedFoodWritable = {
     external_id?: string | null;
     tag_ids?: Array<number>;
     nutrients?: Array<FoodNutrientWritable>;
+};
+
+export type PatchedGraphWritable = {
+    name?: string;
+    description?: string;
+    is_favorite?: boolean;
+    graph_type?: GraphTypeEnum;
+    period_unit?: PeriodUnitEnum;
+    period_amount?: number;
+    period_end_mode?: PeriodEndModeEnum;
+    /**
+     * Only used when period_end_mode is CUSTOM.
+     */
+    period_end_date?: string | null;
+    range_type?: RangeTypeEnum;
+};
+
+/**
+ * Nested writable serializer for GraphLine. Exactly one of `body_metric` /
+ * `nutrient` must be provided, mirroring GraphLine.clean().
+ */
+export type PatchedGraphLineWritable = {
+    graph?: number;
+    name?: string;
+    description?: string;
+    moving_average_unit?: MovingAverageUnitEnum | BlankEnum | NullEnum | null;
+    moving_average_amount?: number;
+    body_metric?: GraphLineBodyMetric | null;
+    nutrient?: GraphLineNutrient | null;
 };
 
 export type PatchedGroceryListWritable = {
@@ -2834,3 +3006,205 @@ export type UnitsListResponses = {
 };
 
 export type UnitsListResponse = UnitsListResponses[keyof UnitsListResponses];
+
+export type UserStatisticsGraphLinesListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/user-statistics/graph-lines/';
+};
+
+export type UserStatisticsGraphLinesListResponses = {
+    200: Array<GraphLine>;
+};
+
+export type UserStatisticsGraphLinesListResponse = UserStatisticsGraphLinesListResponses[keyof UserStatisticsGraphLinesListResponses];
+
+export type UserStatisticsGraphLinesCreateData = {
+    body: GraphLineWritable;
+    path?: never;
+    query?: never;
+    url: '/api/user-statistics/graph-lines/';
+};
+
+export type UserStatisticsGraphLinesCreateResponses = {
+    201: GraphLine;
+};
+
+export type UserStatisticsGraphLinesCreateResponse = UserStatisticsGraphLinesCreateResponses[keyof UserStatisticsGraphLinesCreateResponses];
+
+export type UserStatisticsGraphLinesDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this graph line.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/user-statistics/graph-lines/{id}/';
+};
+
+export type UserStatisticsGraphLinesDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type UserStatisticsGraphLinesDestroyResponse = UserStatisticsGraphLinesDestroyResponses[keyof UserStatisticsGraphLinesDestroyResponses];
+
+export type UserStatisticsGraphLinesRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this graph line.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/user-statistics/graph-lines/{id}/';
+};
+
+export type UserStatisticsGraphLinesRetrieveResponses = {
+    200: GraphLine;
+};
+
+export type UserStatisticsGraphLinesRetrieveResponse = UserStatisticsGraphLinesRetrieveResponses[keyof UserStatisticsGraphLinesRetrieveResponses];
+
+export type UserStatisticsGraphLinesPartialUpdateData = {
+    body?: PatchedGraphLineWritable;
+    path: {
+        /**
+         * A unique integer value identifying this graph line.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/user-statistics/graph-lines/{id}/';
+};
+
+export type UserStatisticsGraphLinesPartialUpdateResponses = {
+    200: GraphLine;
+};
+
+export type UserStatisticsGraphLinesPartialUpdateResponse = UserStatisticsGraphLinesPartialUpdateResponses[keyof UserStatisticsGraphLinesPartialUpdateResponses];
+
+export type UserStatisticsGraphLinesUpdateData = {
+    body: GraphLineWritable;
+    path: {
+        /**
+         * A unique integer value identifying this graph line.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/user-statistics/graph-lines/{id}/';
+};
+
+export type UserStatisticsGraphLinesUpdateResponses = {
+    200: GraphLine;
+};
+
+export type UserStatisticsGraphLinesUpdateResponse = UserStatisticsGraphLinesUpdateResponses[keyof UserStatisticsGraphLinesUpdateResponses];
+
+export type UserStatisticsGraphsListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/user-statistics/graphs/';
+};
+
+export type UserStatisticsGraphsListResponses = {
+    200: Array<Graph>;
+};
+
+export type UserStatisticsGraphsListResponse = UserStatisticsGraphsListResponses[keyof UserStatisticsGraphsListResponses];
+
+export type UserStatisticsGraphsCreateData = {
+    body: GraphWritable;
+    path?: never;
+    query?: never;
+    url: '/api/user-statistics/graphs/';
+};
+
+export type UserStatisticsGraphsCreateResponses = {
+    201: Graph;
+};
+
+export type UserStatisticsGraphsCreateResponse = UserStatisticsGraphsCreateResponses[keyof UserStatisticsGraphsCreateResponses];
+
+export type UserStatisticsGraphsDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this graph.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/user-statistics/graphs/{id}/';
+};
+
+export type UserStatisticsGraphsDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type UserStatisticsGraphsDestroyResponse = UserStatisticsGraphsDestroyResponses[keyof UserStatisticsGraphsDestroyResponses];
+
+export type UserStatisticsGraphsRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this graph.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/user-statistics/graphs/{id}/';
+};
+
+export type UserStatisticsGraphsRetrieveResponses = {
+    200: Graph;
+};
+
+export type UserStatisticsGraphsRetrieveResponse = UserStatisticsGraphsRetrieveResponses[keyof UserStatisticsGraphsRetrieveResponses];
+
+export type UserStatisticsGraphsPartialUpdateData = {
+    body?: PatchedGraphWritable;
+    path: {
+        /**
+         * A unique integer value identifying this graph.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/user-statistics/graphs/{id}/';
+};
+
+export type UserStatisticsGraphsPartialUpdateResponses = {
+    200: Graph;
+};
+
+export type UserStatisticsGraphsPartialUpdateResponse = UserStatisticsGraphsPartialUpdateResponses[keyof UserStatisticsGraphsPartialUpdateResponses];
+
+export type UserStatisticsGraphsUpdateData = {
+    body: GraphWritable;
+    path: {
+        /**
+         * A unique integer value identifying this graph.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/user-statistics/graphs/{id}/';
+};
+
+export type UserStatisticsGraphsUpdateResponses = {
+    200: Graph;
+};
+
+export type UserStatisticsGraphsUpdateResponse = UserStatisticsGraphsUpdateResponses[keyof UserStatisticsGraphsUpdateResponses];

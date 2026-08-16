@@ -6,11 +6,17 @@ from apps.core.models.base import (
     HasTimestamps,
     TracksUsage,
 )
+from django.core.exceptions import ValidationError
 from django.db import models
 
 
 class Graph(
-    HasName, CanBeFavorited, BelongsToUser, HasDescription, HasTimestamps, TracksUsage
+    HasName,
+    CanBeFavorited,
+    BelongsToUser,
+    HasDescription,
+    HasTimestamps,
+    TracksUsage,
 ):
     class GraphType(models.TextChoices):
         LINE = "line", "Line Graph"
@@ -86,8 +92,6 @@ class GraphLine(HasName, HasDescription):
     )
 
     def clean(self):
-        from django.core.exceptions import ValidationError
-
         has_body_metric = hasattr(self, "body_metric")
         has_nutrient = hasattr(self, "nutrient")
 
