@@ -6,7 +6,6 @@ import ItemCardActions, {
 import type { Graph } from "@/api/generated/types.gen";
 
 import { getLineColor } from "../utils/colors";
-import { describeDateRange } from "../utils/graphData";
 import GraphChart from "./GraphChart";
 
 type Props = {
@@ -99,10 +98,6 @@ export default function GraphCard({
             </div>
 
             <GraphChart graph={graph} />
-
-            <p className="text-muted small mb-0 mt-2">
-              {describeDateRange(graph)}
-            </p>
           </>
         ) : (
           <p className="text-muted small mb-0">

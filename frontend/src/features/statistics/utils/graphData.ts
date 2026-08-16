@@ -3,7 +3,6 @@ import {
   addMonths,
   addWeeks,
   addYears,
-  format,
   parseISO,
   subDays,
 } from "date-fns";
@@ -154,22 +153,4 @@ export function buildChartData(seriesList: LineSeries[]): ChartPoint[] {
 
     return point;
   });
-}
-
-export function describeDateRange(graph: Graph): string {
-  if (graph.period_unit === "all") return "All time";
-
-  const amount = graph.period_amount ?? 1;
-  const unitLabel = graph.period_unit;
-  const amountLabel =
-    amount === 1 ? `1 ${unitLabel}` : `${amount} ${unitLabel}s`;
-
-  const endLabel =
-    graph.period_end_mode === "custom" && graph.period_end_date
-      ? `ending ${format(parseISO(graph.period_end_date), "MMM d, yyyy")}`
-      : graph.period_end_mode === "now"
-        ? "ending today"
-        : "ending at the last data point";
-
-  return `Last ${amountLabel}, ${endLabel}`;
 }
