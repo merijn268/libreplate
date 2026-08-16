@@ -12,7 +12,8 @@ def sync_default_body_metrics(overwrite=False):
         metric_data = body_metric.model_dump(exclude={"name"})
 
         visibility_data = {
-            "show_in_diary": metric_data.pop("show_in_diary"),
+            # TODO, don't redefine this here!! Use modal data
+            "show_in_daily_log": metric_data.pop("show_in_daily_log"),
             "show_in_goal_edit": metric_data.pop("show_in_goal_edit"),
         }
 

@@ -5,7 +5,7 @@ from django.db.models import Q
 
 
 class BodyMetricsVisibility(
-    visibility_models.DiaryVisibility,
+    visibility_models.DailyLogVisibility,
     visibility_models.GoalEditVisibility,
 ):
     pass

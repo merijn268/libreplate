@@ -12,6 +12,7 @@ export type BodyMetric = {
      * If only one log entry can be entered.
      */
     readonly is_single_entry: boolean;
+    visibility: BodyMetricVisibility;
 };
 
 export type BodyMetricLog = {
@@ -20,6 +21,11 @@ export type BodyMetricLog = {
     date: string;
     amount: number;
     note?: string | null;
+};
+
+export type BodyMetricVisibility = {
+    readonly show_in_daily_log: boolean;
+    readonly show_in_goal_edit: boolean;
 };
 
 export type Csrf = {

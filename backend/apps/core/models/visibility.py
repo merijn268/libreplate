@@ -27,3 +27,10 @@ class DiaryVisibility(models.Model):
 
     class Meta:
         abstract = True
+
+
+class DailyLogVisibility(models.Model):
+    show_in_daily_log = models.BooleanField(default=True)
+
+    class Meta:
+        abstract = True

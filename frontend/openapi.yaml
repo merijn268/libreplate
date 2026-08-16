@@ -3010,11 +3010,16 @@ components:
           type: boolean
           readOnly: true
           description: If only one log entry can be entered.
+        visibility:
+          allOf:
+          - $ref: '#/components/schemas/BodyMetricVisibility'
+          readOnly: true
       required:
       - description
       - id
       - is_single_entry
       - name
+      - visibility
     BodyMetricLog:
       type: object
       properties:
@@ -3037,6 +3042,18 @@ components:
       - body_metric
       - date
       - id
+    BodyMetricVisibility:
+      type: object
+      properties:
+        show_in_daily_log:
+          type: boolean
+          readOnly: true
+        show_in_goal_edit:
+          type: boolean
+          readOnly: true
+      required:
+      - show_in_daily_log
+      - show_in_goal_edit
     Csrf:
       type: object
       properties:

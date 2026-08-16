@@ -10,7 +10,6 @@ import {
 
 import type { BodyMetric, BodyMetricLog } from "@/api/generated";
 
-// Adjust this import to match where the shared Modal actually lives in your tree.
 import Modal from "../../components/modals/Modal";
 
 interface BodyMetricsEditModalProps {
@@ -49,7 +48,9 @@ export default function BodyMetricsEditModal({
         path: {} as unknown as { id: number },
       });
 
-      return response.data ?? [];
+      return (response.data ?? []).filter(
+        (metric: BodyMetric) => metric.visibility.show_in_daily_log,
+      );
     },
     enabled: isOpen,
   });
@@ -210,7 +211,9 @@ export default function BodyMetricsEditModal({
       {isLoading && !hasError && <div>Loading...</div>}
 
       {!isLoading && !hasError && metrics.length === 0 && (
-        <div className="alert alert-secondary">No body metrics configured.</div>
+        <div className="alert alert-secondary">
+          No body metrics configured for the daily log.
+        </div>
       )}
 
       {!isLoading && !hasError && metrics.length > 0 && (
@@ -224,6 +227,7 @@ export default function BodyMetricsEditModal({
                 {metric.name}
                 {/* TODO add units {metric.unit ? ` (${metric.unit})` : ""} */}
               </label>
+
               <input
                 id={`body-metric-${metric.id}`}
                 type="number"

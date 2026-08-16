@@ -1,8 +1,20 @@
-from apps.body_metrics.models import BodyMetric, BodyMetricLog
+from apps.body_metrics.models import BodyMetric, BodyMetricLog, BodyMetricsVisibility
 from rest_framework import serializers
 
 
+class BodyMetricVisibilitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BodyMetricsVisibility
+        fields = (
+            "show_in_daily_log",
+            "show_in_goal_edit",
+        )
+        read_only_fields = fields
+
+
 class BodyMetricSerializer(serializers.ModelSerializer):
+    visibility = BodyMetricVisibilitySerializer(read_only=True)
+
     class Meta:
         model = BodyMetric
         fields = (
@@ -10,6 +22,7 @@ class BodyMetricSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "is_single_entry",
+            "visibility",
         )
         read_only_fields = fields
 
