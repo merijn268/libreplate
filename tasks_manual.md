@@ -35,6 +35,9 @@ invoke --help
 - [`data.create-cache-table`](#data-create-cache-table)
 - [`data.migrate`](#data-migrate)
 - [`data.sync-default-data`](#data-sync-default-data)
+- [`deploy.create-cache-table`](#deploy-create-cache-table)
+- [`deploy.migrate`](#deploy-migrate)
+- [`deploy.update`](#deploy-update)
 - [`dev.check`](#dev-check)
 - [`dev.django-shell`](#dev-django-shell)
 - [`dev.format`](#dev-format)
@@ -47,9 +50,6 @@ invoke --help
 - [`dev.user-add-dummy`](#dev-user-add-dummy)
 - [`dev.verify`](#dev-verify)
 - [`docs.generate-invoke-manual`](#docs-generate-invoke-manual)
-- [`manage.create-cache-table`](#manage-create-cache-table)
-- [`manage.migrate`](#manage-migrate)
-- [`manage.update`](#manage-update)
 - [`setup.add-usda-api-key`](#setup-add-usda-api-key)
 - [`setup.build-front-end`](#setup-build-front-end)
 - [`setup.init`](#setup-init)
@@ -94,6 +94,44 @@ Docstring:
 
 Options:
   -o, --overwrite
+```
+<a id="deploy-create-cache-table"></a>
+
+## `deploy.create-cache-table`
+
+```text
+Usage: inv[oke] [--core-opts] deploy.create-cache-table [other tasks here ...]
+
+Docstring:
+  Create the Django database cache table.
+```
+<a id="deploy-migrate"></a>
+
+## `deploy.migrate`
+
+**Aliases:** `deploy.m`
+
+```text
+Usage: inv[oke] [--core-opts] deploy.migrate [other tasks here ...]
+
+Docstring:
+  Create and apply Django migrations.
+```
+<a id="deploy-update"></a>
+
+## `deploy.update`
+
+**Aliases:** `deploy.u`
+
+```text
+Usage: inv[oke] [--core-opts] deploy.update [--options] [other tasks here ...]
+
+Docstring:
+  Update LibrePlate dependencies, source code, frontend assets, and database state.
+
+Options:
+  -f, --force   Force the update even if the current checkout is already up to
+                date.
 ```
 <a id="dev-check"></a>
 
@@ -280,44 +318,6 @@ Options:
                   existing file.
   -f, --force     Force generation, even when there are no changes.
   -v, --verbose
-```
-<a id="manage-create-cache-table"></a>
-
-## `manage.create-cache-table`
-
-```text
-Usage: inv[oke] [--core-opts] manage.create-cache-table [other tasks here ...]
-
-Docstring:
-  Create the Django database cache table.
-```
-<a id="manage-migrate"></a>
-
-## `manage.migrate`
-
-**Aliases:** `manage.m`
-
-```text
-Usage: inv[oke] [--core-opts] manage.migrate [other tasks here ...]
-
-Docstring:
-  Create and apply Django migrations.
-```
-<a id="manage-update"></a>
-
-## `manage.update`
-
-**Aliases:** `manage.u`
-
-```text
-Usage: inv[oke] [--core-opts] manage.update [--options] [other tasks here ...]
-
-Docstring:
-  Update LibrePlate dependencies, source code, frontend assets, and database state.
-
-Options:
-  -f, --force   Force the update even if the current checkout is already up to
-                date.
 ```
 <a id="setup-add-usda-api-key"></a>
 

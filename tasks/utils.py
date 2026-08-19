@@ -26,6 +26,8 @@ class GitDiffExitCode(IntEnum):
 BASE_DIR = Path(__file__).parent.parent.resolve()
 VENV_DIR = BASE_DIR / ".venv"
 
+# TODO decide if tools is the right location for this, Django also may want
+# to use it.
 spec = spec_from_file_location(
     name="verify_env", location=BASE_DIR / "tools" / "verify_env.py"
 )
