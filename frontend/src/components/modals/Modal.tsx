@@ -45,12 +45,12 @@ export default function Modal({
       >
         <div
           onClick={(e) => e.stopPropagation()}
-          className="app-surface modal-responsive rounded-3 shadow-lg d-flex flex-column p-4"
+          className="app-surface modal-responsive rounded-3 shadow-lg d-flex flex-column p-3"
           style={{
             maxHeight: "80vh",
           }}
         >
-          <h4>{title}</h4>
+          <h4 className="mb-3">{title}</h4>
 
           <div className="flex-grow-1 overflow-auto" style={{ minHeight: 0 }}>
             {children}
