@@ -73,7 +73,6 @@ def ruff_check_cmd(fix: bool = False, exit_zero: bool = False) -> str:
     return " ".join(args)
 
 
-# TODO add a "changes in" function. not all code has to be checked every run
 @task(
     aliases=["v"],
     help={
@@ -188,7 +187,6 @@ def check(c: Context, verbose: bool = False, force: bool = False) -> None:
         print_success(message="React Code checks passed")
 
 
-# TODO Formatter still formats react code, not sure what... probably the generated API.
 # TODO IDE should automatically format!
 @task(
     aliases=["f"],
@@ -321,7 +319,5 @@ def generate_api(
     with c.cd(BASE_DIR / "backend"):
         venv_run(c, f"python manage.py spectacular --file {schema_path}", verbose)
 
-    # TODO find cleaner solution to "not verbose" and "quiet stdout". They
-    # are confusing. There should only be one.
     npm_run(c, "run api:generate", quiet_stdout=not verbose)
     print_success("Frontend API generated")

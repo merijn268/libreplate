@@ -1,3 +1,4 @@
 src/api/generated/
 openapi.yaml
 dist/assets/
+node_modules

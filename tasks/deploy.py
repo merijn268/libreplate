@@ -10,10 +10,6 @@ from invoke import Context, task
 from .data import create_cache_table, migrate
 from .utils import info
 
-# TODO There should be a task that makes proper migrations for release. Some
-# fields don't get the proper values automatically.
-# Update: Migrations should be commited!
-
 
 def latest_master_sha():
     """
@@ -172,22 +168,11 @@ def update(c: Context, force=False):
     info(f"Latest master commit {sha[:7]} passed CI")
     info("Updating LibrePlate")
 
-    # Remember the current state so we can restore it if anything fails.
     previous_sha = current
-    previous_branch = c.run(
-        "git branch --show-current",
-        hide=True,
-    ).stdout.strip()
 
     try:
-        # Sync the local checkout exactly to the verified upstream commit.
         c.run("git fetch origin")
         c.run("git checkout master")
-
-        # TODO check that there can never be artifacts some other way.
-        # Warn if they are created. This is not a good approach.
-        c.run("git reset --hard origin/master")
-
         c.run("uv sync")
         migrate(c)
         create_cache_table(c)
@@ -195,14 +180,7 @@ def update(c: Context, force=False):
 
     except Exception:
         info(f"Update failed, rolling back to {previous_sha[:7]}")
-
-        # Restore the previous source tree.
         c.run(f"git reset --hard {previous_sha}")
-
-        # Restore the previous branch if there was one.
-        if previous_branch:
-            c.run(f"git checkout {previous_branch}")
-
         info(f"Rolled back to {previous_sha[:7]}")
         raise
 
