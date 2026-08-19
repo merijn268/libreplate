@@ -9,6 +9,7 @@ import shutil
 import subprocess
 import sys
 from enum import IntEnum
+from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -22,12 +23,14 @@ class GitDiffExitCode(IntEnum):
     CHANGES_FOUND = 1
 
 
-# This file is located in base_dir/tasks/utils.py. So 'parent' needs to be
-# called twice.
 BASE_DIR = Path(__file__).parent.parent.resolve()
 VENV_DIR = BASE_DIR / ".venv"
 
-# TODO add helper to verify the environment file.
+spec = spec_from_file_location(
+    name="verify_env", location=BASE_DIR / "tools" / "verify_env.py"
+)
+verify_env = module_from_spec(spec=spec)
+spec.loader.exec_module(module=verify_env)
 load_dotenv(BASE_DIR / ".env")
 
 IS_DEBUG = os.getenv("DEBUG", "false").lower() == "true"
@@ -56,20 +59,25 @@ def print_error(message: str) -> None:
     console.print(f"[bold red]ERROR[/bold red] {message}")
 
 
-# TODO Breaks formatting and pythons breakline(). messy when fails.
 def run_command(c: Context, command: str, quiet_stdout: bool = False) -> None:
     """
     Run a command, optionally suppressing normal output.
     """
-    if quiet_stdout:
-        result = c.run(command, hide=True, warn=True)
-
-        # Only show stderr when the command failed.
-        if result.exited != 0:
-            sys.stderr.write(result.stderr or "")
-            raise Failure(result)
-    else:
-        c.run(command)
+    result = c.run(
+        command,
+        hide=True if quiet_stdout else None,
+        warn=True,
+        pty=not quiet_stdout,
+        in_stream=False,
+    )
+    if result.exited != 0:
+        if quiet_stdout:
+            stderr = result.stderr or ""
+            if stderr and not stderr.endswith("\n"):
+                stderr += "\n"
+            sys.stderr.write(stderr)
+        sys.stderr.write(f"\n[failed] {command}\n")
+        raise Failure(result)
 
 
 def venv_run(c: Context, command: str, quiet_stdout: bool = False) -> None:
@@ -161,11 +169,16 @@ def codebase_has_changes(
         if not path.exists():
             raise FileNotFoundError(f"Path does not exist: {path}")
 
-    result = subprocess.run(
-        ["git", "diff", "--quiet", base_ref, "--", *paths],
-        cwd=Path.cwd(),
-        capture_output=True,
-    )
+    try:
+        result = subprocess.run(
+            ["git", "diff", "--quiet", base_ref, "--", *paths],
+            cwd=Path.cwd(),
+            capture_output=True,
+        )
+    except FileNotFoundError as exc:
+        raise RuntimeError(
+            "Git is not installed or could not be found on PATH."
+        ) from exc
 
     match result.returncode:
         case GitDiffExitCode.NO_CHANGES:
