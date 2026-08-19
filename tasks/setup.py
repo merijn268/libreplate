@@ -13,6 +13,8 @@ from .utils import copy_frontend_dist, django_run, info, npm_run, print_success
 
 # TODO use Docker for release.
 
+# TODO setup should probably just be in 'deploy' tasks file.
+
 
 @task(
     aliases=["bf"],
@@ -41,6 +43,7 @@ def init(c: Context):
     """
     info("Installing LibrePlate")
 
+    # TODO python manage.py createcachetable
     migrate(c)
     sync_default_data(c)
 

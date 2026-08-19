@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 import {
   mealPlansActiveRetrieve,
@@ -7,6 +8,8 @@ import {
   mealsDayList,
   mealsCreate,
   mealsMealFoodsCreate,
+  recipesCreate,
+  recipesIngredientsCreate,
 } from "@/api/generated";
 
 import type { DayMeal, Food, Recipe } from "@/api/generated";
@@ -14,7 +17,7 @@ import type { DayMeal, Food, Recipe } from "@/api/generated";
 import NutrientTotalsBar from "../../components/bars/NutrientsTotalBar";
 import FoodPickerModal from "../foods/components/FoodPickerModal";
 import RecipePickerModal from "../recipes/components/common/RecipePickermodal";
-import AddToMealModal from "../../components/modals/AddToMealModal";
+import MealActionsModal from "../../components/modals/MealActionsModal";
 import BodyMetricsEditModal from "@/features/body_metrics/BodyMetricsEditModal";
 
 import DiaryHeader from "../../components/DateSelector";
@@ -35,6 +38,8 @@ function formatDate(date: Date): string {
 
 export default function DiaryPage() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
   const todayString = formatDate(new Date());
   const [selectedDate, setSelectedDate] = useState(todayString);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -42,6 +47,7 @@ export default function DiaryPage() {
   const [isRecipePickerOpen, setIsRecipePickerOpen] = useState(false);
   const [isBodyMetricsOpen, setIsBodyMetricsOpen] = useState(false);
   const [selectedMeal, setSelectedMeal] = useState<DayMeal | null>(null);
+
   const diaryQueryKey = ["meals", "day", selectedDate] as const;
 
   const {
@@ -89,6 +95,24 @@ export default function DiaryPage() {
   const createMealFood = useMutation({
     mutationFn: async (options: Parameters<typeof mealsMealFoodsCreate>[0]) => {
       const response = await mealsMealFoodsCreate(options);
+
+      return response.data;
+    },
+  });
+
+  const createRecipe = useMutation({
+    mutationFn: async (options: Parameters<typeof recipesCreate>[0]) => {
+      const response = await recipesCreate(options);
+
+      return response.data;
+    },
+  });
+
+  const createRecipeIngredient = useMutation({
+    mutationFn: async (
+      options: Parameters<typeof recipesIngredientsCreate>[0],
+    ) => {
+      const response = await recipesIngredientsCreate(options);
 
       return response.data;
     },
@@ -225,6 +249,47 @@ export default function DiaryPage() {
     setSelectedMeal(null);
   }
 
+  async function handleSaveAsRecipe() {
+    if (!selectedMeal) {
+      return;
+    }
+
+    const mealFoods = selectedMeal.meal_foods ?? [];
+
+    if (mealFoods.length === 0) {
+      return;
+    }
+
+    const recipe = await createRecipe.mutateAsync({
+      body: {
+        name: `${selectedMeal.name} Recipe`,
+      },
+    });
+
+    if (!recipe) {
+      throw new Error("Failed to create recipe");
+    }
+
+    for (const [index, mealFood] of mealFoods.entries()) {
+      await createRecipeIngredient.mutateAsync({
+        path: {
+          id: recipe.id,
+        },
+        body: {
+          food: mealFood.food.id,
+          serving_amount: mealFood.serving_size,
+          number_of_servings: mealFood.number_of_servings,
+          order: index,
+        },
+      });
+    }
+
+    setIsAddModalOpen(false);
+    setSelectedMeal(null);
+
+    navigate(`/recipes/${recipe.id}/edit`);
+  }
+
   async function handleApplyMealPlan() {
     if (!activeMealPlan || applyMealPlan.isPending) {
       return;
@@ -269,12 +334,13 @@ export default function DiaryPage() {
       />
 
       {/* TODO this should be in a component not in diary page. */}
-      <AddToMealModal
+      <MealActionsModal
         isOpen={isAddModalOpen}
-        title="Add to meals"
+        title="Meal actions"
         onClose={closeAddModal}
         onFood={openFoodPicker}
         onRecipe={openRecipePicker}
+        onSaveAsRecipe={handleSaveAsRecipe}
       />
 
       <DiaryHeader
@@ -327,6 +393,7 @@ export default function DiaryPage() {
           }}
         /> */}
       </ActionPillButtonGroup>
+
       <MealList
         meals={meals}
         onAdd={openAddModal}

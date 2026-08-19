@@ -7,7 +7,8 @@ import requests
 from github import Github
 from invoke import Context, task
 
-from .data import create_cache_table, migrate
+from . import data
+from .data import create_cache_table
 from .utils import info
 
 
@@ -174,7 +175,7 @@ def update(c: Context, force=False):
         c.run("git fetch origin")
         c.run("git checkout master")
         c.run("uv sync")
-        migrate(c)
+        data.migrate(c)
         create_cache_table(c)
         download_frontend_dist(owner, repo)
 

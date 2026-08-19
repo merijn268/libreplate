@@ -29,7 +29,7 @@ import MealCard from "@/components/meal_card/MealCard";
 import AmountItem from "@/components/meal_card/AmountItem";
 
 import TotalsModal from "@/components/modals/NutrientsTotalsModal";
-import AddToMealModal from "@/components/modals/AddToMealModal";
+import MealActionsModal from "@/components/modals/MealActionsModal";
 import EditFoodAmountModal from "@/components/modals/EditFoodAmountModal";
 import EditRecipeAmountModal from "@/components/modals/EditRecipeAmountModal";
 import EditRecurrenceModal from "@/components/modals/EditRecurrenceModal";
@@ -608,7 +608,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
         })}
       </div>
 
-      <AddToMealModal
+      <MealActionsModal
         isOpen={addModal === "type" && addMeal != null}
         title={addMeal ? `Add to ${addMeal.name}` : "Add to meal"}
         onClose={closeAddFlow}

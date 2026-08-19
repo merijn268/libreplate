@@ -36,13 +36,11 @@ invoke --help
 - [`data.migrate`](#data-migrate)
 - [`data.sync-default-data`](#data-sync-default-data)
 - [`deploy.create-cache-table`](#deploy-create-cache-table)
-- [`deploy.migrate`](#deploy-migrate)
 - [`deploy.update`](#deploy-update)
 - [`dev.check`](#dev-check)
 - [`dev.django-shell`](#dev-django-shell)
 - [`dev.format`](#dev-format)
 - [`dev.generate-api`](#dev-generate-api)
-- [`dev.generate-invoke-manual`](#dev-generate-invoke-manual)
 - [`dev.pre-commit`](#dev-pre-commit)
 - [`dev.serve-backend`](#dev-serve-backend)
 - [`dev.serve-frontend`](#dev-serve-frontend)
@@ -104,18 +102,6 @@ Usage: inv[oke] [--core-opts] deploy.create-cache-table [other tasks here ...]
 
 Docstring:
   Create the Django database cache table.
-```
-<a id="deploy-migrate"></a>
-
-## `deploy.migrate`
-
-**Aliases:** `deploy.m`
-
-```text
-Usage: inv[oke] [--core-opts] deploy.migrate [other tasks here ...]
-
-Docstring:
-  Create and apply Django migrations.
 ```
 <a id="deploy-update"></a>
 
@@ -194,24 +180,6 @@ Docstring:
 Options:
   -c, --check
   -f, --force
-  -v, --verbose
-```
-<a id="dev-generate-invoke-manual"></a>
-
-## `dev.generate-invoke-manual`
-
-**Aliases:** `dev.gi`
-
-```text
-Usage: inv[oke] [--core-opts] dev.generate-invoke-manual [--options] [other tasks here ...]
-
-Docstring:
-  Generate a Markdown manual of all Invoke tasks.
-
-Options:
-  -c, --check     Only check whether the generated manual differs from the
-                  existing file.
-  -f, --force     Force generation, even when there are no changes.
   -v, --verbose
 ```
 <a id="dev-pre-commit"></a>

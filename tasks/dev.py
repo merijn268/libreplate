@@ -17,8 +17,7 @@ from pathlib import Path
 
 from invoke import Context, task
 
-from . import setup
-from .docs import generate_invoke_manual
+from . import docs, setup
 from .utils import (
     BASE_DIR,
     VENV_DIR,
@@ -83,7 +82,7 @@ def ruff_check_cmd(fix: bool = False, exit_zero: bool = False) -> str:
 def verify(c: Context, verbose: bool = False, force: bool = False) -> None:
     """Run all code quality checks and tests"""
 
-    generate_invoke_manual(c, check=True, force=force)
+    docs.generate_invoke_manual(c, check=True, force=force)
     generate_api(c, check=True, force=force)
     check(c, verbose, force=force)
     test(c, verbose, force=force)
@@ -104,7 +103,7 @@ def pre_commit(c, verbose: bool = False, force: bool = False) -> None:
     """
 
     format(c, verbose, force)
-    generate_invoke_manual(c, verbose)
+    docs.generate_invoke_manual(c, verbose)
     generate_api(c, verbose)
     check(c, verbose, force)
     test(c, verbose, force)
