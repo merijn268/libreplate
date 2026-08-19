@@ -6,13 +6,20 @@ export default function SmallPlusButton({ onClick }: Props) {
   return (
     <button
       type="button"
-      className="border-0 bg-transparent p-0"
+      className="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center p-0"
+      style={{
+        width: "30px",
+        height: "30px",
+      }}
       onClick={onClick}
       aria-label="Add to meal"
     >
       <i
-        className="bi bi-plus-lg text-primary"
-        style={{ WebkitTextStroke: "0.7px currentColor" }}
+        className="bi bi-plus-lg"
+        style={{
+          fontSize: "16px",
+          WebkitTextStroke: "0.5px currentColor",
+        }}
       />
     </button>
   );
