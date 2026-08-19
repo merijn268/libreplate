@@ -49,7 +49,7 @@ export default function GraphCard({
   ];
 
   return (
-    <div className="card mb-4 app-surface shadow-sm">
+    <div className="card mb-2 app-surface shadow-sm">
       <div className="card-body">
         <div className="d-flex align-items-start">
           <div>

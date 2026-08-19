@@ -8,7 +8,6 @@ import {
   Line,
   LineChart,
   ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
@@ -145,14 +144,6 @@ export default function GraphChart({ graph }: Props) {
 
         <YAxis domain={yDomain} tick={{ fontSize: 12 }} width={40} />
 
-        <Tooltip
-          labelFormatter={(label) =>
-            typeof label === "string"
-              ? format(parseISO(label), "MMM d, yyyy")
-              : String(label ?? "")
-          }
-        />
-
         {bodyMetricLines.map((line, index) =>
           graph.graph_type === "bar" ? (
             <Bar
@@ -164,7 +155,7 @@ export default function GraphChart({ graph }: Props) {
           ) : (
             <Line
               key={line.id}
-              type="monotone"
+              type="linear"
               dataKey={lineKey(line)}
               name={line.name}
               stroke={getLineColor(index)}
