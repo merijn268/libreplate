@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -87,23 +87,10 @@ export default function BodyMetricsEditModal({
   // metrics/logs data changes while it's already open (e.g. the queries
   // above resolve after the modal has been shown). Computed during render
   // instead of via an effect.
-  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
-  const [prevMetrics, setPrevMetrics] = useState(metrics);
-  const [prevExistingLogs, setPrevExistingLogs] = useState(existingLogs);
-
-  const shouldPrefill =
-    isOpen &&
-    (isOpen !== prevIsOpen ||
-      metrics !== prevMetrics ||
-      existingLogs !== prevExistingLogs);
-
-  if (isOpen !== prevIsOpen) {
-    setPrevIsOpen(isOpen);
-  }
-
-  if (shouldPrefill) {
-    setPrevMetrics(metrics);
-    setPrevExistingLogs(existingLogs);
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
 
     const initial: FieldValues = {};
 
@@ -113,7 +100,7 @@ export default function BodyMetricsEditModal({
     }
 
     setValues(initial);
-  }
+  }, [isOpen, metrics, existingLogs]);
 
   const createLog = useMutation({
     mutationFn: async (
