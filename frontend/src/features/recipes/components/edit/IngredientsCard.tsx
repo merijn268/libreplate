@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import type { Recipe, RecipeIngredient } from "@/api/generated/types.gen";
 import {
@@ -89,26 +89,26 @@ function IngredientTotalsItem({
 }) {
   const { data: food } = useFood(ingredient.food);
 
-  useEffect(() => {
+  const totals = useMemo(() => {
     if (!food) {
-      return;
+      return null;
     }
 
-    onChange(
-      ingredient.id,
-      calculateNutrients(
-        food,
-        ingredient.number_of_servings,
-        ingredient.serving_amount,
-      ),
+    return calculateNutrients(
+      food,
+      ingredient.number_of_servings,
+      ingredient.serving_amount,
     );
-  }, [
-    food,
-    ingredient.id,
-    ingredient.number_of_servings,
-    ingredient.serving_amount,
-    onChange,
-  ]);
+  }, [food, ingredient.number_of_servings, ingredient.serving_amount]);
+
+  const [reportedTotals, setReportedTotals] = useState<NutrientTotals | null>(
+    null,
+  );
+
+  if (totals && totals !== reportedTotals) {
+    setReportedTotals(totals);
+    onChange(ingredient.id, totals);
+  }
 
   return null;
 }
@@ -123,20 +123,6 @@ function IngredientTotals({
   const [ingredientTotals, setIngredientTotals] = useState<
     Record<number, NutrientTotals>
   >({});
-
-  useEffect(() => {
-    setIngredientTotals((current) => {
-      const next = { ...current };
-
-      Object.keys(next).forEach((id) => {
-        if (!ingredients.some((item) => item.id === Number(id))) {
-          delete next[Number(id)];
-        }
-      });
-
-      return next;
-    });
-  }, [ingredients]);
 
   const updateTotal = useCallback((id: number, values: NutrientTotals) => {
     setIngredientTotals((current) => ({
@@ -227,13 +213,20 @@ export default function IngredientsCard({ recipe }: IngredientsCardProps) {
     recipe.ingredients ?? [],
   );
 
+  // Local `ingredients` state is optimistically mutated by add/update/remove
+  // below, so it can't simply mirror the `recipe.ingredients` prop via an
+  // effect. Instead, re-sync only when we detect we've switched to a
+  // different recipe, updated during render (no effect needed).
+  const [syncedRecipeId, setSyncedRecipeId] = useState(recipe.id);
+
+  if (recipe.id !== syncedRecipeId) {
+    setSyncedRecipeId(recipe.id);
+    setIngredients(recipe.ingredients ?? []);
+  }
+
   const [pickerOpen, setPickerOpen] = useState(false);
   const [isTotalsModalOpen, setIsTotalsModalOpen] = useState(false);
   const [totals, setTotals] = useState<NutrientTotals>(emptyTotals());
-
-  useEffect(() => {
-    setIngredients(recipe.ingredients ?? []);
-  }, [recipe.ingredients]);
 
   const addFood = async (foods: Food[]) => {
     setPickerOpen(false);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import type {
   EndEnum,
@@ -68,10 +68,21 @@ export default function EditRecurrenceModal({
     recurrence?.end_after != null ? String(recurrence.end_after) : "",
   );
 
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
+  // Re-seed the form fields whenever the modal transitions to open, or
+  // whenever the `recurrence` prop changes while it's already open.
+  // Tracked with plain state + a render-time check instead of an effect.
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const [prevRecurrence, setPrevRecurrence] = useState(recurrence);
+
+  const shouldReseed =
+    isOpen && (isOpen !== prevIsOpen || recurrence !== prevRecurrence);
+
+  if (isOpen !== prevIsOpen) {
+    setPrevIsOpen(isOpen);
+  }
+
+  if (shouldReseed) {
+    setPrevRecurrence(recurrence);
 
     setInterval((recurrence?.interval as RecurrenceInterval) ?? "week");
     setIntervalCount(String(recurrence?.interval_count ?? 1));
@@ -81,7 +92,7 @@ export default function EditRecurrenceModal({
     setEndAfter(
       recurrence?.end_after != null ? String(recurrence.end_after) : "",
     );
-  }, [isOpen, recurrence]);
+  }
 
   const parsedIntervalCount = Number.parseInt(intervalCount, 10);
   const parsedEndDay = Number.parseInt(endDay, 10);

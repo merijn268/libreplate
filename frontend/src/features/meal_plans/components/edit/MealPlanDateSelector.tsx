@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SelectorBar from "@/components/bars/DaySelectorBar";
 import type { MealPlan } from "@/api/generated";
 
@@ -33,6 +33,11 @@ export default function MealPlanDateSelector({
 
   const hasMultipleWeeks = mealPlan.duration_period === "week" && duration > 1;
 
+  const maxDay = Math.max(durationInDays - 1, 0);
+
+  // Derive the valid day instead of correcting state inside an effect.
+  const effectiveSelectedDay = Math.min(Math.max(selectedDay, 0), maxDay);
+
   const getWeekday = (day: number) => {
     const startDay = mealPlan.start_day ?? 0;
     const weekdayIndex = (startDay + day) % 7;
@@ -40,18 +45,7 @@ export default function MealPlanDateSelector({
     return WEEKDAYS[weekdayIndex] ?? "";
   };
 
-  const weekday = getWeekday(selectedDay);
-
-  useEffect(() => {
-    setSelectedDay((currentDay) => {
-      const nextDay = Math.min(
-        Math.max(currentDay, 0),
-        Math.max(durationInDays - 1, 0),
-      );
-
-      return currentDay === nextDay ? currentDay : nextDay;
-    });
-  }, [durationInDays]);
+  const weekday = getWeekday(effectiveSelectedDay);
 
   const notifyDateChange = (day: number) => {
     onDateChange?.(day, getWeekday(day));
@@ -71,7 +65,7 @@ export default function MealPlanDateSelector({
 
   const handleNext = () => {
     setSelectedDay((currentDay) => {
-      const nextDay = Math.min(durationInDays - 1, currentDay + 1);
+      const nextDay = Math.min(maxDay, currentDay + 1);
 
       if (nextDay !== currentDay) {
         notifyDateChange(nextDay);
@@ -82,25 +76,24 @@ export default function MealPlanDateSelector({
   };
 
   const handleSelectDay = (day: number) => {
-    const clampedDay = Math.min(
-      Math.max(day, 0),
-      Math.max(durationInDays - 1, 0),
-    );
+    const clampedDay = Math.min(Math.max(day, 0), maxDay);
 
-    setSelectedDay((currentDay) => {
-      if (currentDay !== clampedDay) {
-        notifyDateChange(clampedDay);
-      }
+    setSelectedDay(clampedDay);
 
-      return clampedDay;
-    });
+    if (clampedDay !== effectiveSelectedDay) {
+      notifyDateChange(clampedDay);
+    }
 
     setIsModalOpen(false);
   };
 
-  const displayDay = hasMultipleWeeks ? (selectedDay % 7) + 1 : selectedDay + 1;
+  const displayDay = hasMultipleWeeks
+    ? (effectiveSelectedDay % 7) + 1
+    : effectiveSelectedDay + 1;
 
-  const weekNumber = hasMultipleWeeks ? Math.floor(selectedDay / 7) + 1 : null;
+  const weekNumber = hasMultipleWeeks
+    ? Math.floor(effectiveSelectedDay / 7) + 1
+    : null;
 
   return (
     <>
@@ -123,7 +116,7 @@ export default function MealPlanDateSelector({
       <MealPlanDateSelectorModal
         mealPlan={mealPlan}
         isOpen={isModalOpen}
-        selectedDay={selectedDay}
+        selectedDay={effectiveSelectedDay}
         onClose={() => setIsModalOpen(false)}
         onSelectDay={handleSelectDay}
       />

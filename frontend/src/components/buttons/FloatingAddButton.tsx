@@ -3,8 +3,7 @@
  */
 
 type FloatingAddButtonProps = {
-  // TODO, don't make optional
-  onClick?: () => void;
+  onClick: () => void;
   disabled?: boolean;
 };
 

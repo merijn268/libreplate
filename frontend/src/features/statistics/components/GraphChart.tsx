@@ -1,5 +1,6 @@
 import { format, parseISO } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Bar,
   BarChart,
@@ -30,76 +31,61 @@ type Props = {
 };
 
 export default function GraphChart({ graph }: Props) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [chartData, setChartData] = useState<ChartPoint[]>([]);
-
   const bodyMetricLines = useMemo(
     () => graph.lines.filter((line) => line.body_metric),
     [graph.lines],
   );
 
-  useEffect(() => {
-    let cancelled = false;
+  // Data fetching + derived chart data now lives in react-query instead of a
+  // useEffect + setState trio. react-query hashes the query key by value, so
+  // this only refetches when `graph`/`bodyMetricLines` actually change in
+  // content, not merely by reference.
+  const chartQuery = useQuery({
+    queryKey: ["graph-chart", graph, bodyMetricLines],
+    queryFn: async (): Promise<ChartPoint[]> => {
+      const allLogs = await Promise.all(
+        bodyMetricLines.map((line) =>
+          listBodyMetricLogs(line.body_metric!.body_metric),
+        ),
+      );
 
-    async function load() {
-      setLoading(true);
-      setError(null);
+      const { start, end } = resolveDateRange(graph, allLogs.flat());
 
-      try {
-        const allLogs = await Promise.all(
-          bodyMetricLines.map((line) =>
-            listBodyMetricLogs(line.body_metric!.body_metric),
-          ),
+      const series = bodyMetricLines.map((line, index) => {
+        const rawPoints = (allLogs[index] ?? [])
+          .map((log) => ({
+            date: log.date,
+            value: log.amount,
+          }))
+          .sort((a, b) => a.date.localeCompare(b.date));
+
+        const averaged = applyMovingAverage(
+          rawPoints,
+          line.moving_average_unit,
+          line.moving_average_amount,
         );
 
-        if (cancelled) return;
+        return {
+          line,
+          points: filterPointsInRange(averaged, start, end),
+        };
+      });
 
-        const { start, end } = resolveDateRange(graph, allLogs.flat());
+      return buildChartData(series);
+    },
+    enabled: bodyMetricLines.length > 0,
+  });
 
-        const series = bodyMetricLines.map((line, index) => {
-          const rawPoints = (allLogs[index] ?? [])
-            .map((log) => ({
-              date: log.date,
-              value: log.amount,
-            }))
-            .sort((a, b) => a.date.localeCompare(b.date));
+  // Memoized so the `[]` fallback doesn't produce a new array reference on
+  // every render (which would otherwise make the yDomain useMemo below
+  // recompute every time regardless of its dependencies).
+  const chartData = useMemo(
+    () => (bodyMetricLines.length > 0 ? (chartQuery.data ?? []) : []),
+    [bodyMetricLines, chartQuery.data],
+  );
 
-          const averaged = applyMovingAverage(
-            rawPoints,
-            line.moving_average_unit,
-            line.moving_average_amount,
-          );
-
-          return {
-            line,
-            points: filterPointsInRange(averaged, start, end),
-          };
-        });
-
-        setChartData(buildChartData(series));
-      } catch {
-        if (!cancelled) {
-          setError("Couldn't load data for this graph.");
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    if (bodyMetricLines.length > 0) {
-      load();
-    } else {
-      setChartData([]);
-      setLoading(false);
-    }
-
-    return () => {
-      cancelled = true;
-    };
-  }, [graph, bodyMetricLines]);
+  const loading = bodyMetricLines.length > 0 && chartQuery.isLoading;
+  const hasError = bodyMetricLines.length > 0 && chartQuery.isError;
 
   const yDomain = useMemo(() => {
     const values = chartData.flatMap((point) =>
@@ -128,8 +114,12 @@ export default function GraphChart({ graph }: Props) {
     );
   }
 
-  if (error) {
-    return <div className="text-danger small py-4 text-center">{error}</div>;
+  if (hasError) {
+    return (
+      <div className="text-danger small py-4 text-center">
+        Couldn't load data for this graph.
+      </div>
+    );
   }
 
   if (chartData.length === 0) {

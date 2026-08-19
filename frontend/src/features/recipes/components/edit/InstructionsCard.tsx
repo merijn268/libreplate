@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Form } from "react-bootstrap";
 
 import { recipesPartialUpdate } from "@/api/generated";
@@ -13,11 +13,17 @@ type Props = {
 export default function InstructionsCard({ recipe }: Props) {
   const [instructions, setInstructions] = useState(recipe.instructions ?? "");
 
-  const instructionsRef = useAutoResizeTextarea(instructions);
+  // Reset local `instructions` whenever a new `recipe` object comes in
+  // (different recipe, or a refetched/updated one), computed during render
+  // instead of via an effect.
+  const [syncedRecipe, setSyncedRecipe] = useState(recipe);
 
-  useEffect(() => {
+  if (recipe !== syncedRecipe) {
+    setSyncedRecipe(recipe);
     setInstructions(recipe.instructions ?? "");
-  }, [recipe]);
+  }
+
+  const instructionsRef = useAutoResizeTextarea(instructions);
 
   const save = () => {
     recipesPartialUpdate({

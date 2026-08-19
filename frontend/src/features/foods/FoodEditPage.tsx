@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -88,10 +88,13 @@ export default function FoodEditPage() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [nutrients, setNutrients] = useState<FoodNutrient[]>([]);
 
-  useEffect(() => {
-    if (!foodQuery.data) {
-      return;
-    }
+  // Prefill the form fields whenever a new `foodQuery.data` object arrives
+  // (initial load, switching food id, or a refetch after save). Computed
+  // during render instead of via an effect.
+  const [syncedFood, setSyncedFood] = useState(foodQuery.data);
+
+  if (foodQuery.data && foodQuery.data !== syncedFood) {
+    setSyncedFood(foodQuery.data);
 
     const food = foodQuery.data;
 
@@ -103,12 +106,26 @@ export default function FoodEditPage() {
     setUnitName(food.unit.name);
     setBarcode(food.barcode ?? "");
     setIsFavorite(food.is_favorite ?? false);
-  }, [foodQuery.data]);
+  }
 
-  useEffect(() => {
-    if (!foodQuery.data || !nutrientsQuery.data) {
-      return;
-    }
+  // Recompute the merged nutrients list whenever the food or the available
+  // nutrient definitions change, again during render rather than in an
+  // effect.
+  const [syncedNutrientSources, setSyncedNutrientSources] = useState<{
+    food: typeof foodQuery.data;
+    nutrients: typeof nutrientsQuery.data;
+  }>({ food: foodQuery.data, nutrients: nutrientsQuery.data });
+
+  if (
+    foodQuery.data &&
+    nutrientsQuery.data &&
+    (foodQuery.data !== syncedNutrientSources.food ||
+      nutrientsQuery.data !== syncedNutrientSources.nutrients)
+  ) {
+    setSyncedNutrientSources({
+      food: foodQuery.data,
+      nutrients: nutrientsQuery.data,
+    });
 
     const food = foodQuery.data;
     const availableNutrients = nutrientsQuery.data;
@@ -137,7 +154,7 @@ export default function FoodEditPage() {
     );
 
     setNutrients(merged);
-  }, [foodQuery.data, nutrientsQuery.data]);
+  }
 
   if (foodQuery.isPending || nutrientsQuery.isPending) {
     return <div>Loading...</div>;

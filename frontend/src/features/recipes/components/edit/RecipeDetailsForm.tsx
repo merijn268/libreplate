@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Form, Row, Col } from "react-bootstrap";
 
 import { recipesPartialUpdate } from "@/api/generated";
@@ -20,22 +20,6 @@ export default function RecipeDetailsForm({ recipe }: Props) {
 
   const descriptionRef = useAutoResizeTextarea(description);
   const instructionsRef = useAutoResizeTextarea(instructions);
-
-  useEffect(() => {
-    setName(recipe.name ?? "");
-    setDescription(recipe.description ?? "");
-    setInstructions(recipe.instructions ?? "");
-    setPortions(String(recipe.portions ?? 0));
-    setCookingTime(recipe.cooking_time ?? "");
-    setPreppingTime(recipe.prepping_time ?? "");
-  }, [
-    recipe.name,
-    recipe.description,
-    recipe.instructions,
-    recipe.portions,
-    recipe.cooking_time,
-    recipe.prepping_time,
-  ]);
 
   const save = (field: keyof Recipe, value: string) => {
     recipesPartialUpdate({
