@@ -6,6 +6,7 @@ import type {
   PlannedMealEntryRecurrence,
 } from "@/api/generated";
 import Modal from "@/components/modals/Modal";
+import { modalUiStyles } from "@/components/modals/modalUiStyles";
 
 type Props = {
   isOpen: boolean;
@@ -147,19 +148,19 @@ export default function EditRecurrenceModal({
       title="Edit recurrence"
       onClose={onClose}
       footer={
-        <div className="d-flex justify-content-between">
+        <div className={modalUiStyles.footer.container}>
           <button
             type="button"
-            className="btn btn-outline-danger"
+            className={modalUiStyles.buttons.danger}
             onClick={handleDisableRecurrence}
           >
             No recurrence
           </button>
 
-          <div className="d-flex gap-2">
+          <div className={modalUiStyles.footer.actions}>
             <button
               type="button"
-              className="btn btn-secondary"
+              className={modalUiStyles.buttons.secondary}
               onClick={onClose}
             >
               Cancel
@@ -167,7 +168,7 @@ export default function EditRecurrenceModal({
 
             <button
               type="button"
-              className="btn btn-primary"
+              className={modalUiStyles.buttons.primary}
               disabled={!isValid}
               onClick={handleSave}
             >
@@ -177,10 +178,10 @@ export default function EditRecurrenceModal({
         </div>
       }
     >
-      <div className="d-flex flex-column gap-3">
+      <div className={modalUiStyles.form.fields}>
         <div className="d-flex gap-3">
           <div className="w-50">
-            <label className="form-label">Repeat every</label>
+            <label className={modalUiStyles.form.label}>Repeat every</label>
 
             <input
               type="number"
@@ -193,7 +194,7 @@ export default function EditRecurrenceModal({
           </div>
 
           <div className="w-50">
-            <label className="form-label">Interval</label>
+            <label className={modalUiStyles.form.label}>Interval</label>
 
             <select
               className="form-select"
@@ -210,7 +211,7 @@ export default function EditRecurrenceModal({
 
         {interval === "week" && (
           <div>
-            <label className="form-label">Repeat on</label>
+            <label className={modalUiStyles.form.label}>Repeat on</label>
 
             <div className="d-flex flex-wrap gap-2">
               {WEEKDAYS.map((weekday) => (
@@ -232,7 +233,7 @@ export default function EditRecurrenceModal({
         )}
 
         <div>
-          <label className="form-label">Ends</label>
+          <label className={modalUiStyles.form.label}>Ends</label>
 
           <select
             className="form-select"
@@ -247,7 +248,7 @@ export default function EditRecurrenceModal({
 
         {end === "on_day" && (
           <div>
-            <label className="form-label">End day</label>
+            <label className={modalUiStyles.form.label}>End day</label>
 
             <input
               type="number"
@@ -262,7 +263,7 @@ export default function EditRecurrenceModal({
 
         {end === "after" && (
           <div>
-            <label className="form-label">Occurrences</label>
+            <label className={modalUiStyles.form.label}>Occurrences</label>
 
             <input
               type="number"
@@ -276,7 +277,7 @@ export default function EditRecurrenceModal({
         )}
 
         {!isValid && (
-          <div className="text-danger small">
+          <div className={modalUiStyles.form.errorMessage}>
             Enter valid recurrence values.
             {interval === "week" && weekdays.length === 0
               ? " Select at least one weekday."

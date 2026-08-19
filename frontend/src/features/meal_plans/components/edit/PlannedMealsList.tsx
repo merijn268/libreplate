@@ -553,7 +553,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
 
   return (
     <>
-      <div className="mt-3">
+      <div>
         {plannedMeals.map((meal, mealIndex) => {
           const mealKey = getMealKey(meal, mealIndex);
           const mealTotals = getMealTotals(meal);

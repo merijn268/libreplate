@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import type { PlannedMealEntryRecurrence, Recipe } from "@/api/generated";
 
 import Modal from "@/components/modals/Modal";
+import { modalUiStyles } from "@/components/modals/modalUiStyles";
 
 type Props = {
   recipe: Recipe;
@@ -78,20 +79,20 @@ export default function EditRecipeAmountModal({
       title={recipe.name}
       onClose={isDeleting ? () => undefined : onClose}
       footer={
-        <div className="d-flex justify-content-between">
+        <div className={modalUiStyles.footer.container}>
           <button
             type="button"
-            className="btn btn-outline-danger"
+            className={modalUiStyles.buttons.danger}
             onClick={() => void handleDelete()}
             disabled={isDeleting}
           >
             {isDeleting ? "Deleting..." : "Delete"}
           </button>
 
-          <div className="d-flex justify-content-end gap-2">
+          <div className={modalUiStyles.footer.actions}>
             <button
               type="button"
-              className="btn btn-sm btn-light"
+              className={modalUiStyles.buttons.secondary}
               onClick={onClose}
               disabled={isDeleting}
             >
@@ -100,7 +101,7 @@ export default function EditRecipeAmountModal({
 
             <button
               type="button"
-              className="btn btn-sm btn-primary px-3"
+              className={modalUiStyles.buttons.primary}
               disabled={!hasValidInputs || isDeleting}
               onClick={() => void handleSave()}
             >
@@ -110,20 +111,22 @@ export default function EditRecipeAmountModal({
         </div>
       }
     >
-      <div className="d-flex flex-column gap-3">
-        <div className="mt-2">
-          <div className="d-flex align-items-center gap-2 mb-1">
+      <div className={modalUiStyles.form.fields}>
+        <div className={modalUiStyles.form.field}>
+          <div className={modalUiStyles.form.labelRow}>
             <label
               htmlFor="number-of-servings"
-              className={`form-label mb-0 ${
-                !hasValidInputs ? "text-danger" : ""
+              className={`${modalUiStyles.form.label} ${
+                !hasValidInputs ? modalUiStyles.form.error : ""
               }`}
             >
               Servings
             </label>
 
             {!hasValidInputs && (
-              <span className="text-danger small">(Enter a valid number)</span>
+              <span className={modalUiStyles.form.errorMessage}>
+                (Enter a valid number)
+              </span>
             )}
           </div>
 
@@ -140,22 +143,24 @@ export default function EditRecipeAmountModal({
           />
         </div>
 
-        <div className="list-group list-group-flush border rounded overflow-hidden">
+        <div className={modalUiStyles.list.container}>
           <button
             type="button"
-            className="list-group-item list-group-item-action px-3 py-2"
+            className={modalUiStyles.list.action}
             onClick={handleEditRecipe}
             disabled={isDeleting}
           >
-            <div className="d-flex align-items-center justify-content-between">
-              <span className="fw-medium">
-                <i className="bi bi-book me-2 text-primary"></i>
+            <div className={modalUiStyles.list.actionContent}>
+              <span className={modalUiStyles.list.actionLabel}>
+                <i
+                  className={`bi bi-book me-2 ${modalUiStyles.list.actionIcon}`}
+                />
                 Edit recipe
               </span>
 
-              <span className="text-muted small d-flex align-items-center gap-1">
+              <span className={modalUiStyles.list.actionMeta}>
                 <i
-                  className="bi bi-chevron-right text-primary"
+                  className={`bi bi-chevron-right ${modalUiStyles.list.actionIcon}`}
                   aria-hidden="true"
                 />
               </span>
@@ -165,19 +170,23 @@ export default function EditRecipeAmountModal({
           {onEditRecurrence != null && (
             <button
               type="button"
-              className="list-group-item list-group-item-action px-3 py-2"
+              className={modalUiStyles.list.action}
               onClick={onEditRecurrence}
               disabled={isDeleting}
             >
-              <div className="d-flex align-items-center justify-content-between">
+              <div className={modalUiStyles.list.actionContent}>
                 <div className="text-start">
-                  <i className="bi bi-arrow-repeat me-2 text-primary"></i>
-                  <span className="fw-medium">Recurrence</span>
+                  <i
+                    className={`bi bi-arrow-repeat me-2 ${modalUiStyles.list.actionIcon}`}
+                  />
+                  <span className={modalUiStyles.list.actionLabel}>
+                    Recurrence
+                  </span>
                 </div>
 
-                <span className="text-muted small d-flex align-items-center gap-1">
+                <span className={modalUiStyles.list.actionMeta}>
                   <i
-                    className="bi bi-chevron-right text-primary"
+                    className={`bi bi-chevron-right ${modalUiStyles.list.actionIcon}`}
                     aria-hidden="true"
                   />
                 </span>

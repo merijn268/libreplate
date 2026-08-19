@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 
 import type { Food, PlannedMealEntryRecurrence } from "@/api/generated";
-import Modal from "@/components/modals/Modal";
 import MacroPieChart from "@/components/MacroPieChart";
+import Modal from "@/components/modals/Modal";
+import { modalUiStyles } from "@/components/modals/modalUiStyles";
 
 type Props = {
   food: Food;
@@ -161,20 +162,20 @@ export default function EditFoodAmountModal({
       title={food.name}
       onClose={isDeleting ? () => undefined : onClose}
       footer={
-        <div className="d-flex justify-content-between">
+        <div className={modalUiStyles.footer.container}>
           <button
             type="button"
-            className="btn btn-outline-danger"
+            className={modalUiStyles.buttons.danger}
             onClick={() => void handleDelete()}
             disabled={isDeleting}
           >
             {isDeleting ? "Deleting..." : "Delete"}
           </button>
 
-          <div className="d-flex justify-content-end gap-2">
+          <div className={modalUiStyles.footer.actions}>
             <button
               type="button"
-              className="btn btn-secondary"
+              className={modalUiStyles.buttons.secondary}
               onClick={onClose}
               disabled={isDeleting}
             >
@@ -183,7 +184,7 @@ export default function EditFoodAmountModal({
 
             <button
               type="button"
-              className="btn btn-primary"
+              className={modalUiStyles.buttons.primary}
               onClick={() => void handleSave()}
               disabled={!hasValidInputs || isDeleting}
             >
@@ -193,10 +194,10 @@ export default function EditFoodAmountModal({
         </div>
       }
     >
-      <div className="d-flex flex-column gap-3">
+      <div className={modalUiStyles.form.fields}>
         <div className="d-flex gap-3">
           <div className="w-50">
-            <label className="form-label">Serving size (g)</label>
+            <label className={modalUiStyles.form.label}>Serving size (g)</label>
 
             <input
               type="number"
@@ -210,7 +211,9 @@ export default function EditFoodAmountModal({
           </div>
 
           <div className="w-50">
-            <label className="form-label">Number of servings</label>
+            <label className={modalUiStyles.form.label}>
+              Number of servings
+            </label>
 
             <input
               type="number"
@@ -239,7 +242,7 @@ export default function EditFoodAmountModal({
 
               <button
                 type="button"
-                className="btn btn-outline-primary"
+                className={modalUiStyles.buttons.secondary}
                 onClick={onEditRecurrence}
                 disabled={isDeleting}
               >
