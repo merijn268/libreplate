@@ -211,12 +211,7 @@ def format(c: Context, verbose: bool = False, force: bool = False) -> None:
         )
         print_success(message="React formatters passed")
 
-    if force or codebase_has_changes(
-        [
-            BASE_DIR / "backend",
-            BASE_DIR / "tasks",
-        ]
-    ):
+    if force or codebase_has_changes([BASE_DIR / "backend", BASE_DIR / "tasks"]):
         venv_run(c, isort_cmd(), quiet_stdout=not verbose)
         venv_run(c, black_cmd().replace("--check", ""), quiet_stdout=not verbose)
         venv_run(
