@@ -5,15 +5,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('meal_plans', '0005_alter_mealplan_options_alter_mealplan_start_day'),
+        ("meal_plans", "0005_alter_mealplan_options_alter_mealplan_start_day"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='mealplan',
-            name='duration',
-            field=models.PositiveSmallIntegerField(default=7, help_text='Duration of the meal plan in days.', validators=[django.core.validators.MinValueValidator(1)]),
+            model_name="mealplan",
+            name="duration",
+            field=models.PositiveSmallIntegerField(
+                default=7,
+                help_text="Duration of the meal plan in days.",
+                validators=[django.core.validators.MinValueValidator(1)],
+            ),
         ),
     ]

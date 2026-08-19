@@ -3,7 +3,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("goals", "0002_goalgroup_created_at_goalgroup_is_favorite_and_more"),
     ]

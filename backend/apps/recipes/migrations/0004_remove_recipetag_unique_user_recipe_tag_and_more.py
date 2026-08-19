@@ -5,19 +5,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('recipes', '0003_alter_recipe_options_alter_recipetag_options_and_more'),
+        ("recipes", "0003_alter_recipe_options_alter_recipetag_options_and_more"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.RemoveConstraint(
-            model_name='recipetag',
-            name='unique_user_recipe_tag',
+            model_name="recipetag",
+            name="unique_user_recipe_tag",
         ),
         migrations.AddConstraint(
-            model_name='recipetag',
-            constraint=models.UniqueConstraint(fields=('user', 'name'), name='unique_recipetag_tag'),
+            model_name="recipetag",
+            constraint=models.UniqueConstraint(
+                fields=("user", "name"), name="unique_recipetag_tag"
+            ),
         ),
     ]

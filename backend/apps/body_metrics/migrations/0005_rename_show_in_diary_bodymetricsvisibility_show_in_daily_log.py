@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("body_metrics", "0004_alter_bodymetric_options_and_more"),
     ]

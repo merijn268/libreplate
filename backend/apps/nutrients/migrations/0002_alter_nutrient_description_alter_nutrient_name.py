@@ -4,21 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('nutrients', '0001_initial'),
+        ("nutrients", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='nutrient',
-            name='description',
-            field=models.TextField(blank=True, default=''),
+            model_name="nutrient",
+            name="description",
+            field=models.TextField(blank=True, default=""),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='nutrient',
-            name='name',
+            model_name="nutrient",
+            name="name",
             field=models.CharField(max_length=255),
         ),
     ]

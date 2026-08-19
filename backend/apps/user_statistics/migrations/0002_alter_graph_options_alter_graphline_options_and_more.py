@@ -7,65 +7,68 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('user_statistics', '0001_initial'),
+        ("user_statistics", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='graph',
-            options={'ordering': ['name']},
+            name="graph",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='graphline',
-            options={'ordering': ['name']},
+            name="graphline",
+            options={"ordering": ["name"]},
         ),
         migrations.AddField(
-            model_name='graph',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            model_name="graph",
+            name="created_at",
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='graph',
-            name='description',
+            model_name="graph",
+            name="description",
             field=models.TextField(blank=True),
         ),
         migrations.AddField(
-            model_name='graph',
-            name='is_favorite',
+            model_name="graph",
+            name="is_favorite",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='graph',
-            name='last_used_at',
+            model_name="graph",
+            name="last_used_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='graph',
-            name='updated_at',
+            model_name="graph",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AddField(
-            model_name='graphline',
-            name='description',
+            model_name="graphline",
+            name="description",
             field=models.TextField(blank=True),
         ),
         migrations.AlterField(
-            model_name='graph',
-            name='name',
+            model_name="graph",
+            name="name",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='graph',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="graph",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AlterField(
-            model_name='graphline',
-            name='name',
+            model_name="graphline",
+            name="name",
             field=models.CharField(max_length=255),
         ),
     ]

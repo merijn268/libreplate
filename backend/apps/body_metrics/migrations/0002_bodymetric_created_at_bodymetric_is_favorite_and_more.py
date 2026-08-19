@@ -7,53 +7,62 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('body_metrics', '0001_initial'),
+        ("body_metrics", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='bodymetric',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            model_name="bodymetric",
+            name="created_at",
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='bodymetric',
-            name='is_favorite',
+            model_name="bodymetric",
+            name="is_favorite",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='bodymetric',
-            name='last_used_at',
+            model_name="bodymetric",
+            name="last_used_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='bodymetric',
-            name='updated_at',
+            model_name="bodymetric",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AlterField(
-            model_name='bodymetric',
-            name='description',
-            field=models.TextField(blank=True, default=''),
+            model_name="bodymetric",
+            name="description",
+            field=models.TextField(blank=True, default=""),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='bodymetric',
-            name='name',
+            model_name="bodymetric",
+            name="name",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='bodymetric',
-            name='user',
-            field=models.ForeignKey(blank=True, help_text='Leave empty for a global object.', null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="bodymetric",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Leave empty for a global object.",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='bodymetriclog',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="bodymetriclog",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

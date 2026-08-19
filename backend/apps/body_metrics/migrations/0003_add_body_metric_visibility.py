@@ -42,7 +42,6 @@ def create_body_metric_visibility(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         (
             "body_metrics",
@@ -97,4 +96,3 @@ class Migration(migrations.Migration):
             ),
         ),
     ]
-

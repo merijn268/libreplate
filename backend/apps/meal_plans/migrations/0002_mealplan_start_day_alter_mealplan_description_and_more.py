@@ -6,42 +6,66 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('meal_plans', '0001_initial'),
-        ('meals', '0001_initial'),
+        ("meal_plans", "0001_initial"),
+        ("meals", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='mealplan',
-            name='start_day',
-            field=models.PositiveSmallIntegerField(choices=[(0, 'Monday'), (1, 'Tuesday'), (2, 'Wednesday'), (3, 'Thursday'), (4, 'Friday'), (5, 'Saturday'), (6, 'Sunday')], default=0, help_text='Weekday on which the meal plan starts.', validators=[django.core.validators.MaxValueValidator(6)]),
+            model_name="mealplan",
+            name="start_day",
+            field=models.PositiveSmallIntegerField(
+                choices=[
+                    (0, "Monday"),
+                    (1, "Tuesday"),
+                    (2, "Wednesday"),
+                    (3, "Thursday"),
+                    (4, "Friday"),
+                    (5, "Saturday"),
+                    (6, "Sunday"),
+                ],
+                default=0,
+                help_text="Weekday on which the meal plan starts.",
+                validators=[django.core.validators.MaxValueValidator(6)],
+            ),
         ),
         migrations.AlterField(
-            model_name='mealplan',
-            name='description',
-            field=models.TextField(blank=True, default=''),
+            model_name="mealplan",
+            name="description",
+            field=models.TextField(blank=True, default=""),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='mealplanfood',
-            name='day',
-            field=models.PositiveSmallIntegerField(help_text="Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc."),
+            model_name="mealplanfood",
+            name="day",
+            field=models.PositiveSmallIntegerField(
+                help_text="Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc."
+            ),
         ),
         migrations.AlterField(
-            model_name='mealplanfood',
-            name='meal',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='meal_plan_foods', to='meals.defaultmeal'),
+            model_name="mealplanfood",
+            name="meal",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="meal_plan_foods",
+                to="meals.defaultmeal",
+            ),
         ),
         migrations.AlterField(
-            model_name='mealplanrecipe',
-            name='day',
-            field=models.PositiveSmallIntegerField(help_text="Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc."),
+            model_name="mealplanrecipe",
+            name="day",
+            field=models.PositiveSmallIntegerField(
+                help_text="Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc."
+            ),
         ),
         migrations.AlterField(
-            model_name='mealplanrecipe',
-            name='meal',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='meal_plan_recipes', to='meals.defaultmeal'),
+            model_name="mealplanrecipe",
+            name="meal",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="meal_plan_recipes",
+                to="meals.defaultmeal",
+            ),
         ),
     ]

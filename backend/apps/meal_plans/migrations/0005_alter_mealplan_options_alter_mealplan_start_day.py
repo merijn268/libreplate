@@ -5,19 +5,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('meal_plans', '0004_remove_mealplantag_unique_user_meal_plan_tag_and_more'),
+        ("meal_plans", "0004_remove_mealplantag_unique_user_meal_plan_tag_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='mealplan',
+            name="mealplan",
             options={},
         ),
         migrations.AlterField(
-            model_name='mealplan',
-            name='start_day',
-            field=models.PositiveSmallIntegerField(choices=[(0, 'Monday'), (1, 'Tuesday'), (2, 'Wednesday'), (3, 'Thursday'), (4, 'Friday'), (5, 'Saturday'), (6, 'Sunday')], default=0, help_text='Weekday number on which the meal plan starts (Monday=0)', validators=[django.core.validators.MaxValueValidator(6)]),
+            model_name="mealplan",
+            name="start_day",
+            field=models.PositiveSmallIntegerField(
+                choices=[
+                    (0, "Monday"),
+                    (1, "Tuesday"),
+                    (2, "Wednesday"),
+                    (3, "Thursday"),
+                    (4, "Friday"),
+                    (5, "Saturday"),
+                    (6, "Sunday"),
+                ],
+                default=0,
+                help_text="Weekday number on which the meal plan starts (Monday=0)",
+                validators=[django.core.validators.MaxValueValidator(6)],
+            ),
         ),
     ]

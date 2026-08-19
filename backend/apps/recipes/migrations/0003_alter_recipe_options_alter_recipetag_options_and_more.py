@@ -6,58 +6,59 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('recipes', '0002_alter_recipetag_user'),
+        ("recipes", "0002_alter_recipetag_user"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='recipe',
-            options={'ordering': ['name']},
+            name="recipe",
+            options={"ordering": ["name"]},
         ),
         migrations.AlterModelOptions(
-            name='recipetag',
+            name="recipetag",
             options={},
         ),
         migrations.RemoveField(
-            model_name='recipe',
-            name='is_pinned',
+            model_name="recipe",
+            name="is_pinned",
         ),
         migrations.RemoveField(
-            model_name='recipe',
-            name='summary',
+            model_name="recipe",
+            name="summary",
         ),
         migrations.AddField(
-            model_name='recipetag',
-            name='description',
+            model_name="recipetag",
+            name="description",
             field=models.TextField(blank=True),
         ),
         migrations.AddField(
-            model_name='recipetag',
-            name='updated_at',
+            model_name="recipetag",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AlterField(
-            model_name='recipe',
-            name='description',
-            field=models.TextField(blank=True, default=''),
+            model_name="recipe",
+            name="description",
+            field=models.TextField(blank=True, default=""),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='recipe',
-            name='last_used_at',
+            model_name="recipe",
+            name="last_used_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='recipe',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="recipe",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AlterField(
-            model_name='recipetag',
-            name='name',
+            model_name="recipetag",
+            name="name",
             field=models.CharField(max_length=255),
         ),
     ]

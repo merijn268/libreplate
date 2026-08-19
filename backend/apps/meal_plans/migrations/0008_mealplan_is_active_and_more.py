@@ -5,20 +5,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('meal_plans', '0007_plannedmealentry_remove_mealplanrecipe_meal_and_more'),
+        ("meal_plans", "0007_plannedmealentry_remove_mealplanrecipe_meal_and_more"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='mealplan',
-            name='is_active',
+            model_name="mealplan",
+            name="is_active",
             field=models.BooleanField(default=False),
         ),
         migrations.AddConstraint(
-            model_name='mealplan',
-            constraint=models.UniqueConstraint(condition=models.Q(('is_active', True)), fields=('user',), name='unique_active_meal_plan_per_user'),
+            model_name="mealplan",
+            constraint=models.UniqueConstraint(
+                condition=models.Q(("is_active", True)),
+                fields=("user",),
+                name="unique_active_meal_plan_per_user",
+            ),
         ),
     ]

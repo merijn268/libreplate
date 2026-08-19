@@ -5,31 +5,34 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('foods', '0002_foodtag_food_tags_foodtag_unique_user_food_tag'),
-        ('units', '0001_initial'),
+        ("foods", "0002_foodtag_food_tags_foodtag_unique_user_food_tag"),
+        ("units", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='food',
-            name='usda_fdc_id',
+            model_name="food",
+            name="usda_fdc_id",
         ),
         migrations.AddField(
-            model_name='food',
-            name='external_id',
-            field=models.CharField(blank=True, db_index=True, max_length=100, null=True),
+            model_name="food",
+            name="external_id",
+            field=models.CharField(
+                blank=True, db_index=True, max_length=100, null=True
+            ),
         ),
         migrations.AddField(
-            model_name='food',
-            name='external_source',
+            model_name="food",
+            name="external_source",
             field=models.CharField(blank=True, db_index=True, max_length=50, null=True),
         ),
         migrations.AlterField(
-            model_name='food',
-            name='unit',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, to='units.unit'),
+            model_name="food",
+            name="unit",
+            field=models.ForeignKey(
+                default=1, on_delete=django.db.models.deletion.CASCADE, to="units.unit"
+            ),
             preserve_default=False,
         ),
     ]

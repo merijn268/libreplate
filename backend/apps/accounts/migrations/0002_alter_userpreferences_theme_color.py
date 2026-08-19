@@ -5,15 +5,16 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('accounts', '0001_initial'),
+        ("accounts", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='userpreferences',
-            name='theme_color',
-            field=colorfield.fields.ColorField(default='#107800', image_field=None, max_length=25, samples=None),
+            model_name="userpreferences",
+            name="theme_color",
+            field=colorfield.fields.ColorField(
+                default="#107800", image_field=None, max_length=25, samples=None
+            ),
         ),
     ]

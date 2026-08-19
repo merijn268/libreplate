@@ -6,101 +6,264 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('foods', '0005_remove_foodtag_unique_user_food_tag_and_more'),
-        ('meal_plans', '0006_mealplan_duration'),
-        ('recipes', '0004_remove_recipetag_unique_user_recipe_tag_and_more'),
+        ("foods", "0005_remove_foodtag_unique_user_food_tag_and_more"),
+        ("meal_plans", "0006_mealplan_duration"),
+        ("recipes", "0004_remove_recipetag_unique_user_recipe_tag_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='PlannedMealEntry',
+            name="PlannedMealEntry",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number_of_servings', models.FloatField(default=1, validators=[django.core.validators.MinValueValidator(0)])),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "number_of_servings",
+                    models.FloatField(
+                        default=1,
+                        validators=[django.core.validators.MinValueValidator(0)],
+                    ),
+                ),
             ],
         ),
         migrations.RemoveField(
-            model_name='mealplanrecipe',
-            name='meal',
+            model_name="mealplanrecipe",
+            name="meal",
         ),
         migrations.RemoveField(
-            model_name='mealplanrecipe',
-            name='meal_plan',
+            model_name="mealplanrecipe",
+            name="meal_plan",
         ),
         migrations.RemoveField(
-            model_name='mealplanrecipe',
-            name='recipe',
+            model_name="mealplanrecipe",
+            name="recipe",
         ),
         migrations.AddField(
-            model_name='mealplan',
-            name='duration_period',
-            field=models.CharField(choices=[('day', 'Day'), ('week', 'Week')], default='week', help_text='Period used for the meal plan duration.', max_length=4),
+            model_name="mealplan",
+            name="duration_period",
+            field=models.CharField(
+                choices=[("day", "Day"), ("week", "Week")],
+                default="week",
+                help_text="Period used for the meal plan duration.",
+                max_length=4,
+            ),
         ),
         migrations.AlterField(
-            model_name='mealplan',
-            name='duration',
-            field=models.PositiveSmallIntegerField(default=1, help_text='Length of the meal plan.', validators=[django.core.validators.MinValueValidator(1)]),
+            model_name="mealplan",
+            name="duration",
+            field=models.PositiveSmallIntegerField(
+                default=1,
+                help_text="Length of the meal plan.",
+                validators=[django.core.validators.MinValueValidator(1)],
+            ),
         ),
         migrations.AlterField(
-            model_name='mealplan',
-            name='start_day',
-            field=models.PositiveSmallIntegerField(default=0, help_text='Weekday number on which the meal plan starts (Monday=0).', validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(6)]),
+            model_name="mealplan",
+            name="start_day",
+            field=models.PositiveSmallIntegerField(
+                default=0,
+                help_text="Weekday number on which the meal plan starts (Monday=0).",
+                validators=[
+                    django.core.validators.MinValueValidator(0),
+                    django.core.validators.MaxValueValidator(6),
+                ],
+            ),
         ),
         migrations.CreateModel(
-            name='PlannedMeal',
+            name="PlannedMeal",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('day', models.PositiveSmallIntegerField(help_text="Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.", validators=[django.core.validators.MinValueValidator(0)])),
-                ('order', models.PositiveIntegerField(default=0, help_text='Display order of the meal within the day.')),
-                ('meal_plan', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='planned_meals', to='meal_plans.mealplan')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                (
+                    "day",
+                    models.PositiveSmallIntegerField(
+                        help_text="Day offset from the meal plan's start day. 0 = start day, 1 = next day, etc.",
+                        validators=[django.core.validators.MinValueValidator(0)],
+                    ),
+                ),
+                (
+                    "order",
+                    models.PositiveIntegerField(
+                        default=0, help_text="Display order of the meal within the day."
+                    ),
+                ),
+                (
+                    "meal_plan",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="planned_meals",
+                        to="meal_plans.mealplan",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['name'],
-                'abstract': False,
+                "ordering": ["name"],
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='PlannedMealFood',
+            name="PlannedMealFood",
             fields=[
-                ('plannedmealentry_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='meal_plans.plannedmealentry')),
-                ('serving_size', models.FloatField(validators=[django.core.validators.MinValueValidator(0)])),
-                ('food', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='meal_plan_entries', to='foods.food')),
+                (
+                    "plannedmealentry_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="meal_plans.plannedmealentry",
+                    ),
+                ),
+                (
+                    "serving_size",
+                    models.FloatField(
+                        validators=[django.core.validators.MinValueValidator(0)]
+                    ),
+                ),
+                (
+                    "food",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="meal_plan_entries",
+                        to="foods.food",
+                    ),
+                ),
             ],
-            bases=('meal_plans.plannedmealentry',),
+            bases=("meal_plans.plannedmealentry",),
         ),
         migrations.CreateModel(
-            name='PlannedMealRecipe',
+            name="PlannedMealRecipe",
             fields=[
-                ('plannedmealentry_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='meal_plans.plannedmealentry')),
-                ('recipe', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='meal_plan_entries', to='recipes.recipe')),
+                (
+                    "plannedmealentry_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="meal_plans.plannedmealentry",
+                    ),
+                ),
+                (
+                    "recipe",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="meal_plan_entries",
+                        to="recipes.recipe",
+                    ),
+                ),
             ],
-            bases=('meal_plans.plannedmealentry',),
+            bases=("meal_plans.plannedmealentry",),
         ),
         migrations.AddField(
-            model_name='plannedmealentry',
-            name='planned_meal',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='entries', to='meal_plans.plannedmeal'),
+            model_name="plannedmealentry",
+            name="planned_meal",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="entries",
+                to="meal_plans.plannedmeal",
+            ),
         ),
         migrations.CreateModel(
-            name='PlannedMealEntryRecurrence',
+            name="PlannedMealEntryRecurrence",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('interval_count', models.PositiveSmallIntegerField(default=1, help_text="Number of intervals between repetitions. For example, 2 with interval 'week' means every 2 weeks.", validators=[django.core.validators.MinValueValidator(1)])),
-                ('interval', models.CharField(choices=[('day', 'Day'), ('week', 'Week')], default='week', help_text='Unit used by interval_count.', max_length=10)),
-                ('weekdays', models.JSONField(blank=True, default=list, help_text="List of weekday numbers on which the entry repeats when interval is 'week'. Values must be integers from 0 to 6, where Monday=0 and Sunday=6. For example, [0, 2, 4] means Monday, Wednesday, and Friday.")),
-                ('end', models.CharField(choices=[('never', 'Never'), ('on_day', 'On day'), ('after', 'After')], default='never', help_text='Condition that determines when repetition ends.', max_length=10)),
-                ('end_day', models.PositiveIntegerField(blank=True, help_text="Day offset from the meal plan's start day on which repetition ends.", null=True, validators=[django.core.validators.MinValueValidator(0)])),
-                ('end_after', models.PositiveIntegerField(blank=True, help_text='Number of occurrences after which repetition ends.', null=True, validators=[django.core.validators.MinValueValidator(1)])),
-                ('planned_meal_entry', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='recurrence', to='meal_plans.plannedmealentry')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "interval_count",
+                    models.PositiveSmallIntegerField(
+                        default=1,
+                        help_text="Number of intervals between repetitions. For example, 2 with interval 'week' means every 2 weeks.",
+                        validators=[django.core.validators.MinValueValidator(1)],
+                    ),
+                ),
+                (
+                    "interval",
+                    models.CharField(
+                        choices=[("day", "Day"), ("week", "Week")],
+                        default="week",
+                        help_text="Unit used by interval_count.",
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "weekdays",
+                    models.JSONField(
+                        blank=True,
+                        default=list,
+                        help_text="List of weekday numbers on which the entry repeats when interval is 'week'. Values must be integers from 0 to 6, where Monday=0 and Sunday=6. For example, [0, 2, 4] means Monday, Wednesday, and Friday.",
+                    ),
+                ),
+                (
+                    "end",
+                    models.CharField(
+                        choices=[
+                            ("never", "Never"),
+                            ("on_day", "On day"),
+                            ("after", "After"),
+                        ],
+                        default="never",
+                        help_text="Condition that determines when repetition ends.",
+                        max_length=10,
+                    ),
+                ),
+                (
+                    "end_day",
+                    models.PositiveIntegerField(
+                        blank=True,
+                        help_text="Day offset from the meal plan's start day on which repetition ends.",
+                        null=True,
+                        validators=[django.core.validators.MinValueValidator(0)],
+                    ),
+                ),
+                (
+                    "end_after",
+                    models.PositiveIntegerField(
+                        blank=True,
+                        help_text="Number of occurrences after which repetition ends.",
+                        null=True,
+                        validators=[django.core.validators.MinValueValidator(1)],
+                    ),
+                ),
+                (
+                    "planned_meal_entry",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="recurrence",
+                        to="meal_plans.plannedmealentry",
+                    ),
+                ),
             ],
         ),
         migrations.DeleteModel(
-            name='MealPlanFood',
+            name="MealPlanFood",
         ),
         migrations.DeleteModel(
-            name='MealPlanRecipe',
+            name="MealPlanRecipe",
         ),
     ]

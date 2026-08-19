@@ -6,25 +6,30 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('units', '0001_initial'),
+        ("units", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='unit',
+            name="unit",
             options={},
         ),
         migrations.AlterField(
-            model_name='unit',
-            name='name',
+            model_name="unit",
+            name="name",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='unit',
-            name='user',
-            field=models.ForeignKey(blank=True, help_text='Leave empty for a global object.', null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="unit",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Leave empty for a global object.",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

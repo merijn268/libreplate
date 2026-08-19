@@ -6,41 +6,42 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('groceries', '0001_initial'),
+        ("groceries", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='grocerylist',
-            name='description',
+            model_name="grocerylist",
+            name="description",
             field=models.TextField(blank=True),
         ),
         migrations.AddField(
-            model_name='grocerylist',
-            name='is_favorite',
+            model_name="grocerylist",
+            name="is_favorite",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='grocerylist',
-            name='last_used_at',
+            model_name="grocerylist",
+            name="last_used_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='grocerylistfood',
-            name='updated_at',
+            model_name="grocerylistfood",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AlterField(
-            model_name='grocerylist',
-            name='name',
+            model_name="grocerylist",
+            name="name",
             field=models.CharField(max_length=255),
         ),
         migrations.AlterField(
-            model_name='grocerylist',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="grocerylist",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

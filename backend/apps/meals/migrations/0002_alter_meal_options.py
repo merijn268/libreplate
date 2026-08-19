@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('meals', '0001_initial'),
+        ("meals", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='meal',
+            name="meal",
             options={},
         ),
     ]
