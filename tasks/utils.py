@@ -159,7 +159,7 @@ def copy_frontend_dist() -> None:
 
 def codebase_has_changes(
     paths: Path | list[Path],
-    base_ref: str = "HEAD",
+    base_ref: str = "origin/master",
 ) -> bool:
     """
     Return True if any of `paths` have changes compared with `base_ref` in Git.
