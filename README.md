@@ -1,8 +1,30 @@
 # LibrePlate
 
-A free and open-source food tracker and meal planner.
+**LibrePlate** is a free, open-source, and self-hostable food tracker and meal planner designed to help you manage your nutrition, recipes, and meal planning in one place.
 
-LibrePlate exists because many existing food tracking services are closed source, app-only, have limited features, or lock users into their platform. This project aims to provide a modern, feature-rich, configurable, and transparent alternative that anyone can use, self-host, and contribute to.
+## Features
+
+- **Food & nutrition diary** Track foods, recipes, body metrics, and daily nutrient intake, with an overview of whether you've reached your nutritional goals.
+- **Food integrations** Import and track foods from multiple sources:
+  - Dirk
+  - OpenFoodFacts *(planned)*
+  - Albert Heijn *(planned)*
+  - PLUS *(planned)*
+  - USDA *(planned)*
+  - Nutritionix *(planned)*
+- **Recipe management** Create, manage, and reuse your own recipes.
+- **Grocery generation** Generate grocery lists based on your recipes and meal plans.
+- **Statistics & insights** Get insights into your nutrition, body metrics, and progress over time.
+- **Meal planning** Create detailed meal plans to organize what you'll eat throughout the day or week.
+- **Daily goals** Set personalized daily nutrition goals.
+
+## Project Status
+
+LibrePlate is currently under active development and is **not yet feature-complete**. At the moment, it provides only the barebones functionality needed to build towards the full vision.
+
+Expect missing features, rough edges, and changes as development continues.
+
+The goal is to gradually turn LibrePlate into a complete, flexible, and privacy-friendly alternative for tracking food, nutrition, and meal planning — while keeping it **free, open-source, and self-hostable**.
 
 ## Getting Started
 
