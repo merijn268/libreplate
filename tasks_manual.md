@@ -108,6 +108,7 @@ Docstring:
   Run code quality checks.
 
 Options:
+  -f, --force     Run checks even if there are no codebase changes.
   -v, --verbose   Show stdout output from commands.
 ```
 <a id="dev-django-shell"></a>
@@ -135,6 +136,7 @@ Docstring:
   Automatically format the codebase.
 
 Options:
+  -f, --force     Run formatter even if there are no codebase changes.
   -v, --verbose   Show stdout output from commands.
 ```
 <a id="dev-generate-api"></a>
@@ -153,6 +155,7 @@ Docstring:
 
 Options:
   -c, --check
+  -f, --force
   -v, --verbose
 ```
 <a id="dev-generate-invoke-manual"></a>
@@ -167,11 +170,11 @@ Usage: inv[oke] [--core-opts] dev.generate-invoke-manual [--options] [other task
 Docstring:
   Generate a Markdown manual of all Invoke tasks.
 
-  Args:
-      check: Only check whether the generated manual differs from the existing file.
-
 Options:
-  -c, --check
+  -c, --check     Only check whether the generated manual differs from the
+                  existing file.
+  -f, --force     Force generation, even when there are no changes.
+  -v, --verbose
 ```
 <a id="dev-pre-commit"></a>
 
@@ -188,6 +191,8 @@ Docstring:
   Also run all file generators so applicable generated code can be commited.
 
 Options:
+  -f, --force     Run formatters, checks, and tests even if there are no
+                  codebase changes.
   -v, --verbose   Show stdout output from commands.
 ```
 <a id="dev-serve-backend"></a>
@@ -224,9 +229,10 @@ Docstring:
 Usage: inv[oke] [--core-opts] dev.test [--options] [other tasks here ...]
 
 Docstring:
-  Run the LibrePlate automated test suite.
+  Run the LibrePlate automated test suite
 
 Options:
+  -f, --force     Run tests even if there are no codebase changes.
   -v, --verbose   Show stdout output from commands.
 ```
 <a id="dev-user-add-dummy"></a>
@@ -251,9 +257,10 @@ Docstring:
 Usage: inv[oke] [--core-opts] dev.verify [--options] [other tasks here ...]
 
 Docstring:
-  Run all code quality checks and tests.
+  Run all code quality checks and tests
 
 Options:
+  -f, --force     Force all checks to run.
   -v, --verbose   Show stdout output from commands.
 ```
 <a id="docs-generate-invoke-manual"></a>
@@ -268,11 +275,11 @@ Usage: inv[oke] [--core-opts] docs.generate-invoke-manual [--options] [other tas
 Docstring:
   Generate a Markdown manual of all Invoke tasks.
 
-  Args:
-      check: Only check whether the generated manual differs from the existing file.
-
 Options:
-  -c, --check
+  -c, --check     Only check whether the generated manual differs from the
+                  existing file.
+  -f, --force     Force generation, even when there are no changes.
+  -v, --verbose
 ```
 <a id="manage-create-cache-table"></a>
 

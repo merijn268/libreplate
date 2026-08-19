@@ -3,7 +3,7 @@ from pathlib import Path
 
 from invoke import Context, task
 from invoke.exceptions import Exit
-from utils import BASE_DIR, print_success
+from utils import BASE_DIR, codebase_has_changes, info, print_success
 
 # TODO this code should probably be moved to a sepparate package!
 
@@ -51,14 +51,24 @@ invoke --help
 """
 
 
-@task(aliases=["gi"])
-def generate_invoke_manual(c: Context, check: bool = False) -> None:
+@task(
+    aliases=["gi"],
+    help={
+        "check": "Only check whether the generated manual differs from the existing file.",
+        "force": "Force generation, even when there are no changes.",
+    },
+)
+def generate_invoke_manual(
+    c: Context, verbose: bool = False, check: bool = False, force: bool = False
+) -> None:
     """
     Generate a Markdown manual of all Invoke tasks.
-
-    Args:
-        check: Only check whether the generated manual differs from the existing file.
     """
+
+    if not force and not codebase_has_changes(BASE_DIR / "tasks"):
+        if verbose:
+            info("No changes in invoke generation.")
+        return
 
     output = Path(BASE_DIR / "tasks_manual.md")
     result = c.run("invoke --list", hide=True)

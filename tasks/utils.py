@@ -6,13 +6,21 @@ from __future__ import annotations
 
 import os
 import shutil
+import subprocess
 import sys
+from enum import IntEnum
 from pathlib import Path
 
 from dotenv import load_dotenv
 from invoke import Context
 from invoke.exceptions import Failure
 from rich.console import Console
+
+
+class GitDiffExitCode(IntEnum):
+    NO_CHANGES = 0
+    CHANGES_FOUND = 1
+
 
 # This file is located in base_dir/tasks/utils.py. So 'parent' needs to be
 # called twice.
@@ -137,3 +145,32 @@ def copy_frontend_dist() -> None:
             shutil.copy2(item, target)
 
     print_success(f"Frontend copied to {destination}")
+
+
+def codebase_has_changes(
+    paths: Path | list[Path],
+    base_ref: str = "HEAD",
+) -> bool:
+    """
+    Return True if any of `paths` have changes compared with `base_ref` in Git.
+    """
+    if isinstance(paths, Path):
+        paths = [paths]
+
+    for path in paths:
+        if not path.exists():
+            raise FileNotFoundError(f"Path does not exist: {path}")
+
+    result = subprocess.run(
+        ["git", "diff", "--quiet", base_ref, "--", *paths],
+        cwd=Path.cwd(),
+        capture_output=True,
+    )
+
+    match result.returncode:
+        case GitDiffExitCode.NO_CHANGES:
+            return False
+        case GitDiffExitCode.CHANGES_FOUND:
+            return True
+        case _:
+            raise RuntimeError(f"Git diff failed: {result.stderr.decode().strip()}")

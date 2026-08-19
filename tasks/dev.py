@@ -22,6 +22,7 @@ from .docs import generate_invoke_manual
 from .utils import (
     BASE_DIR,
     VENV_DIR,
+    codebase_has_changes,
     django_run,
     info,
     npm_run,
@@ -75,37 +76,42 @@ def ruff_check_cmd(fix: bool = False, exit_zero: bool = False) -> str:
 # TODO add a "changes in" function. not all code has to be checked every run
 @task(
     aliases=["v"],
-    help={"verbose": "Show stdout output from commands."},
+    help={
+        "verbose": "Show stdout output from commands.",
+        "force": "Force all checks to run.",
+    },
 )
-def verify(c: Context, verbose: bool = False) -> None:
-    """
-    Run all code quality checks and tests.
-    """
+def verify(c: Context, verbose: bool = False, force: bool = False) -> None:
+    """Run all code quality checks and tests"""
 
-    generate_invoke_manual(c, check=True)
-    generate_api(c, check=True)
-    check(c, verbose)
-    test(c, verbose)
+    generate_invoke_manual(c, check=True, force=force)
+    generate_api(c, check=True, force=force)
+    check(c, verbose, force=force)
+    test(c, verbose, force=force)
 
 
-# TODO only format files that have been changed in this commit flag. Much faster.
 @task(
     aliases=["pc"],
-    help={"verbose": "Show stdout output from commands."},
+    help={
+        "verbose": "Show stdout output from commands.",
+        "force": "Run formatters, checks, and tests even if there are no codebase changes.",
+    },
 )
-def pre_commit(c, verbose: str = False) -> None:
+def pre_commit(c, verbose: bool = False, force: bool = False) -> None:
     """
     Command to run pre commit to make sure it passes the pipeline.
 
     Also run all file generators so applicable generated code can be commited.
     """
 
-    format(c, verbose)
+    format(c, verbose, force)
     generate_invoke_manual(c, verbose)
     generate_api(c, verbose)
-    check(c, verbose)
-    test(c, verbose)
-    setup.build_front_end.body(c, verbose=verbose, check=True)
+    check(c, verbose, force)
+    test(c, verbose, force)
+
+    if force or codebase_has_changes(BASE_DIR / "frontend"):
+        setup.build_front_end.body(c, verbose=verbose, check=True)
 
 
 @task(aliases=["ds"])
@@ -143,9 +149,12 @@ def user_add_dummy(c: Context):
 
 @task(
     aliases=["c"],
-    help={"verbose": "Show stdout output from commands."},
+    help={
+        "verbose": "Show stdout output from commands.",
+        "force": "Run checks even if there are no codebase changes.",
+    },
 )
-def check(c: Context, verbose: bool = False) -> None:
+def check(c: Context, verbose: bool = False, force: bool = False) -> None:
     """
     Run code quality checks.
     """
@@ -153,66 +162,93 @@ def check(c: Context, verbose: bool = False) -> None:
     if verbose:
         info("Checking code quality. This may take a while.")
 
-    venv_run(c, isort_cmd(check_only=True), quiet_stdout=not verbose)
-    venv_run(c, black_cmd(), quiet_stdout=not verbose)
-    venv_run(c, ruff_check_cmd(fix=True), quiet_stdout=not verbose)
-    npx_run(
-        c,
-        "oxlint --deny-warnings . --ignore-pattern dist/assets/",
-        quiet_stdout=not verbose,
-    )
-    npx_run(
-        c,
-        f"prettier --check . --ignore-path {BASE_DIR / 'frontend/.prettierignore'}",
-        quiet_stdout=not verbose,
-    )
+    if force or codebase_has_changes(
+        [
+            BASE_DIR / "backend",
+            BASE_DIR / "tasks",
+        ]
+    ):
+        venv_run(c, isort_cmd(check_only=True), quiet_stdout=not verbose)
+        venv_run(c, black_cmd(), quiet_stdout=not verbose)
+        venv_run(c, ruff_check_cmd(fix=True), quiet_stdout=not verbose)
+        print_success(message="Python Code checks passed")
 
-    print_success(message="Code checks passed")
+    if force or codebase_has_changes(BASE_DIR / "frontend"):
+        npx_run(
+            c,
+            "oxlint --deny-warnings . --ignore-pattern dist/assets/",
+            quiet_stdout=not verbose,
+        )
+        npx_run(
+            c,
+            f"prettier --check . --ignore-path {BASE_DIR / 'frontend/.prettierignore'}",
+            quiet_stdout=not verbose,
+        )
+
+        print_success(message="React Code checks passed")
 
 
 # TODO Formatter still formats react code, not sure what... probably the generated API.
 # TODO IDE should automatically format!
 @task(
     aliases=["f"],
-    help={"verbose": "Show stdout output from commands."},
+    help={
+        "verbose": "Show stdout output from commands.",
+        "force": "Run formatter even if there are no codebase changes.",
+    },
 )
-def format(c: Context, verbose: bool = False) -> None:
+def format(c: Context, verbose: bool = False, force: bool = False) -> None:
     """
     Automatically format the codebase.
     """
 
     if verbose:
-        info("Formatting codebase.")
+        info("Checking formatters need to run")
 
-    npx_run(
-        c,
-        f"prettier --write . --ignore-path {BASE_DIR / 'frontend/.prettierignore'}",
-        quiet_stdout=not verbose,
-    )
-    venv_run(c, isort_cmd(), quiet_stdout=not verbose)
-    venv_run(c, black_cmd().replace("--check", ""), quiet_stdout=not verbose)
-    venv_run(
-        c, f"ruff format {BASE_DIR} --exclude {VENV_DIR}", quiet_stdout=not verbose
-    )
-    venv_run(c, ruff_check_cmd(fix=True, exit_zero=True), quiet_stdout=not verbose)
+    if force or codebase_has_changes(BASE_DIR / "frontend"):
+        npx_run(
+            c,
+            f"prettier --write . --ignore-path {BASE_DIR / 'frontend/.prettierignore'}",
+            quiet_stdout=not verbose,
+        )
+        print_success(message="React formatters passed")
 
-    print_success(message="Code formatters passed")
+    if force or codebase_has_changes(
+        [
+            BASE_DIR / "backend",
+            BASE_DIR / "tasks",
+        ]
+    ):
+        venv_run(c, isort_cmd(), quiet_stdout=not verbose)
+        venv_run(c, black_cmd().replace("--check", ""), quiet_stdout=not verbose)
+        venv_run(
+            c, f"ruff format {BASE_DIR} --exclude {VENV_DIR}", quiet_stdout=not verbose
+        )
+        venv_run(c, ruff_check_cmd(fix=True, exit_zero=True), quiet_stdout=not verbose)
+
+        print_success(message="Python formatters passed")
 
 
 @task(
     aliases=["t"],
-    help={"verbose": "Show stdout output from commands."},
+    help={
+        "verbose": "Show stdout output from commands.",
+        "force": "Run tests even if there are no codebase changes.",
+    },
 )
-def test(c: Context, verbose: bool = False) -> None:
-    """
-    Run the LibrePlate automated test suite.
-    """
+def test(c: Context, verbose: bool = False, force: bool = False) -> None:
+    """Run the LibrePlate automated test suite"""
 
     if verbose:
-        info("Running tests")
+        info("Checking whether tests need to run")
 
-    with c.cd(BASE_DIR / "backend"):
-        venv_run(c, "pytest", quiet_stdout=not verbose)
+    if force or codebase_has_changes(BASE_DIR / "backend"):
+        with c.cd(BASE_DIR / "backend"):
+            venv_run(c, "pytest", quiet_stdout=not verbose)
+    else:
+        if verbose:
+            info("No changes in backend.")
+        return
 
     print_success(message="All tests passed")
 
@@ -258,12 +294,20 @@ def api_changed(c: Context) -> bool:
 
 
 @task(aliases=["ga"])
-def generate_api(c: Context, check: bool = False, verbose: bool = False) -> None:
+def generate_api(
+    c: Context, check: bool = False, verbose: bool = False, force: bool = False
+) -> None:
     """
     Generate the frontend API client from the Django OpenAPI schema.
 
     Use --check to fail if generated files would change.
     """
+
+    if not force and not codebase_has_changes(BASE_DIR / "backend"):
+        if verbose:
+            info("No changes in api generation.")
+        return
+
     schema_path = BASE_DIR / "frontend" / "openapi.yaml"
 
     if check:
