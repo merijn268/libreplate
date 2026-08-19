@@ -18,6 +18,15 @@
 - **Meal planning** Create detailed meal plans to organize what you'll eat throughout the day or week.
 - **Daily goals** Set personalized daily nutrition goals.
 
+## Screenshots
+
+Note: Screenshots may be out of date! UI changes a lot at the moment.
+
+<p align="center">
+  <img src="docs/images/diary.png" width="250">
+  <img src="docs/images/recurrence_recipe.png" width="250">
+</p>
+
 ## Project Status
 
 LibrePlate is currently under active development and is **not yet feature-complete**. At the moment, it provides only the barebones functionality needed to build towards the full vision.
