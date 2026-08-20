@@ -31,12 +31,6 @@ from .utils import (
     venv_run,
 )
 
-# TODO force and verbose options are ugly. They are added to each function.
-# They should be configured in a nicer way:
-# invoke --verbose <task> <task>
-# instead of
-# invoke <task> --verbose <task> --verbose
-
 
 def isort_cmd(check_only: bool = False) -> str:
     args = [
