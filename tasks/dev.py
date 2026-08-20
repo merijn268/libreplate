@@ -145,7 +145,7 @@ def check(c: Context) -> None:
     force = c.config.cli.force.value
 
     if verbose:
-        info("Checking code quality. This may take a while.")
+        info("Checking code quality.")
 
     if force or codebase_has_changes(
         [
@@ -216,15 +216,12 @@ def test(c: Context) -> None:
     verbose = c.config.cli.verbose.value
     force = c.config.cli.force.value
 
-    if verbose:
-        info("Checking whether tests need to run")
-
     if force or codebase_has_changes(BASE_DIR / "backend"):
         with c.cd(BASE_DIR / "backend"):
             venv_run(c, "pytest", quiet_stdout=not verbose)
     else:
         if verbose:
-            info("No changes in backend.")
+            info("No changes in Django backend, not running tests.")
         return
 
     print_success(message="All tests passed")

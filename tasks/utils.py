@@ -155,12 +155,18 @@ def copy_frontend_dist() -> None:
     print_success(f"Frontend copied to {destination}")
 
 
-def codebase_has_changes(
-    paths: Path | list[Path],
-    base_ref: str = "origin/master",
-) -> bool:
+def codebase_has_changes(paths: Path | list[Path]) -> bool:
     """
-    Return True if any of `paths` have changes compared with `base_ref` in Git.
+    Return True if any of `paths` changed in the latest commit range or
+    in the current working tree.
+
+    Includes:
+    - changes from the previous commit to HEAD
+    - staged changes
+    - unstaged changes
+    - untracked files
+
+    Works with shallow Git checkouts such as GitHub Actions.
     """
     if isinstance(paths, Path):
         paths = [paths]
@@ -169,21 +175,80 @@ def codebase_has_changes(
         if not path.exists():
             raise FileNotFoundError(f"Path does not exist: {path}")
 
-    try:
-        result = subprocess.run(
-            ["git", "diff", "--quiet", base_ref, "--", *paths],
-            cwd=Path.cwd(),
-            capture_output=True,
-        )
-    except FileNotFoundError as exc:
-        raise RuntimeError(
-            "Git is not installed or could not be found on PATH."
-        ) from exc
+    def run_git(*args: str) -> subprocess.CompletedProcess[bytes]:
+        try:
+            return subprocess.run(
+                ["git", *args],
+                cwd=Path.cwd(),
+                capture_output=True,
+            )
+        except FileNotFoundError as exc:
+            raise RuntimeError(
+                "Git is not installed or could not be found on PATH."
+            ) from exc
+
+    def commit_exists(rev: str) -> bool:
+        result = run_git("cat-file", "-e", f"{rev}^{{commit}}")
+        return result.returncode == 0
+
+    # First check the current working tree against HEAD.
+    # This includes staged and unstaged changes to tracked files.
+    result = run_git("diff", "--quiet", "HEAD", "--", *paths)
 
     match result.returncode:
-        case GitDiffExitCode.NO_CHANGES:
-            return False
         case GitDiffExitCode.CHANGES_FOUND:
             return True
+        case GitDiffExitCode.NO_CHANGES:
+            pass
+        case _:
+            raise RuntimeError(f"Git diff failed: {result.stderr.decode().strip()}")
+
+    # Untracked files are not included by git diff.
+    result = run_git(
+        "ls-files",
+        "--others",
+        "--exclude-standard",
+        "--",
+        *paths,
+    )
+
+    if result.returncode != 0:
+        raise RuntimeError(f"Git ls-files failed: {result.stderr.decode().strip()}")
+
+    if result.stdout.strip():
+        return True
+
+    # Determine the commit to diff against.
+    #
+    # GitHub Actions exposes the commit before the push in GITHUB_EVENT_BEFORE.
+    # This is only set for push events, and even then the commit object may
+    # not exist locally on a shallow checkout, so we verify (and try to
+    # fetch) before trusting it. Otherwise fall back to HEAD~1.
+    before = os.environ.get("GITHUB_EVENT_BEFORE")
+    base_rev: str | None = None
+
+    if before and before != "0" * 40:
+        if not commit_exists(before):
+            run_git("fetch", "--depth=1", "origin", before)
+        if commit_exists(before):
+            base_rev = before
+
+    if base_rev is None and commit_exists("HEAD~1"):
+        base_rev = "HEAD~1"
+
+    if base_rev is None:
+        # No usable previous commit exists locally (e.g. the repo's first
+        # commit, or a shallow checkout where the prior commit couldn't be
+        # fetched). The working-tree and untracked checks above are all
+        # that can be determined in that case.
+        return False
+
+    result = run_git("diff", "--quiet", base_rev, "HEAD", "--", *paths)
+
+    match result.returncode:
+        case GitDiffExitCode.CHANGES_FOUND:
+            return True
+        case GitDiffExitCode.NO_CHANGES:
+            return False
         case _:
             raise RuntimeError(f"Git diff failed: {result.stderr.decode().strip()}")
