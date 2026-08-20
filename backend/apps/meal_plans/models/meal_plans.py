@@ -4,11 +4,8 @@ from datetime import timedelta
 from decimal import Decimal
 
 from apps.core.models import base as base_models
-from apps.foods.models import Food
 from apps.meals.models import DefaultMeal, Meal, MealFood
-from apps.recipes.models import Recipe
 from apps.tags.models import BaseTag
-from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models, transaction
 
@@ -96,6 +93,8 @@ class MealPlan(
         Used both by MealPlanSerializer (to show them to the user) and
         by apply() (to know what to copy onto real Meals).
         """
+        from .planned_meals import PlannedMeal  # local import avoids circular import
+
         planned_meals = list(self.planned_meals.all())
 
         default_meals = list(
@@ -164,6 +163,10 @@ class MealPlan(
         `entry.recurrence` is a reverse OneToOneField accessor, which
         raises DoesNotExist rather than returning None when absent.
         """
+        from .recurrence import (
+            PlannedMealEntryRecurrence,  # local import avoids circular import
+        )
+
         try:
             return entry.recurrence
         except PlannedMealEntryRecurrence.DoesNotExist:
@@ -282,6 +285,10 @@ class MealPlan(
     def _apply_entries_to_date(
         self, name, order, entries, target_date, default_meals_by_name, summary
     ):
+        from .planned_meals import (
+            PlannedMealFood,  # local import avoids circular import
+        )
+
         meal = Meal.objects.filter(
             user=self.user,
             date=target_date,
@@ -375,264 +382,3 @@ class MealPlan(
                 name="unique_active_meal_plan_per_user",
             ),
         ]
-
-
-class PlannedMeal(base_models.HasName):
-    """
-    A meal scheduled within a meal plan.
-    """
-
-    meal_plan = models.ForeignKey(
-        MealPlan,
-        on_delete=models.CASCADE,
-        related_name="planned_meals",
-    )
-
-    day = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(0)],
-        help_text=(
-            "Day offset from the meal plan's start day. "
-            "0 = start day, 1 = next day, etc."
-        ),
-    )
-
-    order = models.PositiveIntegerField(
-        default=0,
-        help_text="Display order of the meal within the day.",
-    )
-
-    def clean(self):
-        super().clean()
-
-        if self.meal_plan_id and self.day >= self.meal_plan.get_duration_days():
-            raise ValidationError(
-                {"day": ("Day offset must be less than the meal plan duration.")}
-            )
-
-    def get_weekday(self) -> int:
-        return (self.meal_plan.start_day + self.day) % 7
-
-    def get_weekday_display(self) -> str:
-        return calendar.day_name[self.get_weekday()]
-
-    def foods(self):
-        """
-        Return the food entries belonging to this planned meal.
-
-        PlannedMealFood is a subclass of PlannedMealEntry (multi-table
-        inheritance), so the FK back to PlannedMeal only exists once, on
-        PlannedMealEntry, as `related_name="entries"`. There is no
-        `planned_meal.foods` relation to read directly, so this queries
-        PlannedMealFood explicitly instead. Named to match the "foods"
-        field on PlannedMealSerializer: DRF calls zero-argument callables
-        automatically when resolving a field's value.
-        """
-        if self.pk is None:
-            return PlannedMealFood.objects.none()
-
-        return PlannedMealFood.objects.filter(
-            planned_meal_id=self.pk,
-        ).select_related("food", "food__unit", "recurrence")
-
-    def recipes(self):
-        """Return the recipe entries belonging to this planned meal. See foods()."""
-        if self.pk is None:
-            return PlannedMealRecipe.objects.none()
-
-        return PlannedMealRecipe.objects.filter(
-            planned_meal_id=self.pk,
-        ).select_related("recipe", "recurrence")
-
-
-class PlannedMealEntry(models.Model):
-    """
-    An item served as part of a planned meal.
-    """
-
-    planned_meal = models.ForeignKey(
-        PlannedMeal,
-        on_delete=models.CASCADE,
-        related_name="entries",
-    )
-
-    number_of_servings = models.FloatField(
-        default=1,
-        validators=[MinValueValidator(0)],
-    )
-
-    def get_item(self):
-        raise NotImplementedError
-
-
-class PlannedMealEntryRecurrence(models.Model):
-    """
-    Defines how a planned meal entry repeats.
-
-    A recurrence is expressed relative to the planned meal's day.
-    """
-
-    class End(models.TextChoices):
-        NEVER = "never", "Never"
-        ON_DAY = "on_day", "On day"
-        AFTER = "after", "After"
-
-    planned_meal_entry = models.OneToOneField(
-        PlannedMealEntry,
-        on_delete=models.CASCADE,
-        related_name="recurrence",
-    )
-
-    interval_count = models.PositiveSmallIntegerField(
-        default=1,
-        validators=[MinValueValidator(1)],
-        help_text=(
-            "Number of intervals between repetitions. "
-            "For example, 2 with interval 'week' means every 2 weeks."
-        ),
-    )
-
-    interval = models.CharField(
-        max_length=10,
-        choices=MealPlanPeriodUnit.choices,
-        default=MealPlanPeriodUnit.WEEK,
-        help_text="Unit used by interval_count.",
-    )
-
-    weekdays = models.JSONField(
-        default=list,
-        blank=True,
-        help_text=(
-            "List of weekday numbers on which the entry repeats when "
-            "interval is 'week'. Values must be integers from 0 to 6, "
-            "where Monday=0 and Sunday=6. For example, [0, 2, 4] "
-            "means Monday, Wednesday, and Friday."
-        ),
-    )
-
-    end = models.CharField(
-        max_length=10,
-        choices=End.choices,
-        default=End.NEVER,
-        help_text="Condition that determines when repetition ends.",
-    )
-
-    end_day = models.PositiveIntegerField(
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(0)],
-        help_text=(
-            "Day offset from the meal plan's start day on which repetition ends."
-        ),
-    )
-
-    end_after = models.PositiveIntegerField(
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(1)],
-        help_text=("Number of occurrences after which repetition ends."),
-    )
-
-    def _matches_pattern(self, origin_day: int, day: int, start_day: int) -> bool:
-        """
-        Whether `day` (an absolute, non-wrapped plan-day index - see
-        `MealPlan._get_absolute_day_for_offset`) matches this
-        recurrence's interval/weekday pattern, ignoring any `end`
-        condition. `origin_day` is the entry's own PlannedMeal.day - its
-        first, anchor occurrence.
-        """
-        diff = day - origin_day
-
-        if diff <= 0:
-            return False
-
-        if self.interval_count <= 0:
-            return False
-
-        if self.interval == MealPlanPeriodUnit.DAY:
-            return diff % self.interval_count == 0
-
-        # WEEK: only fires on the configured weekdays, every
-        # `interval_count` weeks (counted in plan-day weeks, i.e.
-        # 7-day blocks starting at the plan's own day 0).
-        if not self.weekdays:
-            return False
-
-        weekday = (start_day + day) % 7
-
-        if weekday not in self.weekdays:
-            return False
-
-        week_diff = (day // 7) - (origin_day // 7)
-
-        return week_diff % self.interval_count == 0
-
-    def _occurrence_number(self, origin_day: int, day: int, start_day: int) -> int:
-        """
-        Which occurrence `day` is, counting the origin day itself as
-        occurrence 1. Used only to evaluate `end == AFTER`. Only ever
-        called on days that already matched `_matches_pattern`, over the
-        small (<= MealPlan.MAX_APPLY_DAYS + 6) window `apply()` works
-        with, so a simple day-by-day scan is cheap.
-        """
-        count = 1  # the origin occurrence itself
-
-        for candidate in range(origin_day + 1, day + 1):
-            if self._matches_pattern(origin_day, candidate, start_day):
-                count += 1
-
-        return count
-
-    def occurs_on(self, origin_day: int, day: int, start_day: int) -> bool:
-        """
-        Whether this recurrence produces an occurrence of its entry on
-        `day` (an absolute, non-wrapped plan-day index). `origin_day` is
-        the entry's PlannedMeal.day, and `start_day` is the owning
-        MealPlan's start_day (needed to translate plan-day indices into
-        weekdays for WEEK-interval recurrences).
-
-        The origin day itself is always applied directly by
-        `MealPlan.apply()`'s normal plan-day matching, so this only
-        needs to answer for days *after* the origin.
-        """
-        if not self._matches_pattern(origin_day, day, start_day):
-            return False
-
-        if self.end == self.End.ON_DAY:
-            return self.end_day is None or day <= self.end_day
-
-        if self.end == self.End.AFTER:
-            if self.end_after is None:
-                return True
-            return self._occurrence_number(origin_day, day, start_day) <= self.end_after
-
-        return True
-
-
-class PlannedMealFood(PlannedMealEntry):
-    food = models.ForeignKey(
-        Food,
-        on_delete=models.CASCADE,
-        related_name="meal_plan_entries",
-    )
-
-    serving_size = models.FloatField(
-        validators=[MinValueValidator(0)],
-    )
-
-    def get_item(self) -> Food:
-        return self.food
-
-
-class PlannedMealRecipe(PlannedMealEntry):
-    """
-    A recipe served as part of a planned meal.
-    """
-
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name="meal_plan_entries",
-    )
-
-    def get_item(self) -> Recipe:
-        return self.recipe

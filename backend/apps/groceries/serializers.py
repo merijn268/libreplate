@@ -1,6 +1,6 @@
 from apps.foods.models import Food
 from apps.foods.serializers import FoodSerializer
-from apps.meal_plans.models import MealPlan
+from apps.meal_plans.models.meal_plans import MealPlan
 from rest_framework import serializers
 
 from .models import GroceryList, GroceryListFood

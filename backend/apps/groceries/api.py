@@ -1,4 +1,4 @@
-from apps.meal_plans.models import MealPlan
+from apps.meal_plans.models.meal_plans import MealPlan
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import status, viewsets
