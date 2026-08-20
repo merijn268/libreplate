@@ -17,7 +17,7 @@ import type { DayMeal, Food, Recipe } from "@/api/generated";
 import NutrientTotalsBar from "../../components/bars/NutrientsTotalBar";
 import FoodPickerModal from "../foods/components/FoodPickerModal";
 import RecipePickerModal from "../recipes/components/common/RecipePickermodal";
-import MealActionsModal from "../../components/modals/MealActionsModal";
+import MealActionsModal from "./components/MealActionsModal";
 import BodyMetricsEditModal from "@/features/body_metrics/BodyMetricsEditModal";
 
 import DiaryHeader from "../../components/DateSelector";

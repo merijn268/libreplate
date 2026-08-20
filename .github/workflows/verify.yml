@@ -50,6 +50,10 @@ jobs:
       - name: Sync dependencies
         run: uv sync
 
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
       - name: Create environment file
         run: |
           cp .env_example .env
@@ -59,13 +63,13 @@ jobs:
           sed -i "s|^CSRF_COOKIE_SECURE=.*|CSRF_COOKIE_SECURE=False|" .env
 
       - name: Init LibrePlate
-        run: uv run python libreplate_cli.py deploy.init
+        run: .venv/bin/python libreplate_cli.py deploy.init
 
       - name: Run verification
-        run: uv run python libreplate_cli.py --verbose dev.verify
+        run: .venv/bin/python libreplate_cli.py --verbose dev.verify
 
       - name: Build front end
-        run: uv run python libreplate_cli.py deploy.build-front-end
+        run: .venv/bin/python libreplate_cli.py deploy.build-front-end
 
       - name: Upload frontend build
         if: github.event_name == 'push' && github.ref == 'refs/heads/master'
