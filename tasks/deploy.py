@@ -1,3 +1,9 @@
+"""
+Invoke tasks for project deployment/management.
+"""
+
+from __future__ import annotations
+
 import io
 import os
 import subprocess
@@ -8,8 +14,9 @@ from github import Github
 from invoke import Context, task
 
 from . import data
-from .data import create_cache_table
-from .utils import info
+from .utils import copy_frontend_dist, info, npm_run, print_success
+
+# TODO use Docker for release.
 
 
 def latest_master_sha():
@@ -137,22 +144,20 @@ def download_frontend_dist(owner: str, repo: str):
     info(f"Front end build extracted at `{frontend_dist}`.")
 
 
-@task(
-    aliases=["u"],
-    help={
-        "force": "Force the update even if the current checkout is already up to date."
-    },
-)
-def update(c: Context, force=False):
+@task(aliases=["u"])
+def update(c: Context):
     """
     Update LibrePlate dependencies, source code, frontend assets, and database state.
+
+    When the force option is configured, always perform the update even
+    if the current checkout is already up to date.
     """
     info("Checking latest master build")
 
     sha = latest_master_sha()
     current = current_sha()
 
-    if current == sha and not force:
+    if current == sha and not c.config.cli.force.value:
         info(f"Already up to date at {sha[:7]}, skipping update")
         return
 
@@ -176,7 +181,7 @@ def update(c: Context, force=False):
         c.run("git checkout master")
         c.run("uv sync")
         data.migrate(c)
-        create_cache_table(c)
+        data.create_cache_table(c)
         download_frontend_dist(owner, repo)
 
     except Exception:
@@ -186,3 +191,35 @@ def update(c: Context, force=False):
         raise
 
     info("Update complete")
+
+
+@task(
+    aliases=["bf"],
+    help={
+        "check": "Only build, do not copy frontend assets.",
+    },
+)
+def build_front_end(c: Context, check: bool = False):
+    """
+    Build the React front end.
+    """
+    verbose = c.config.cli.verbose.value
+
+    npm_run(c, "ci", quiet_stdout=not verbose)
+    npm_run(c, "run build", quiet_stdout=not verbose)
+
+    if not check:
+        copy_frontend_dist()
+
+    print_success("Build front end succesfully")
+
+
+@task(aliases=["i"])
+def init(c: Context):
+    """
+    Initialize LibrePlate.
+    """
+    info("Installing LibrePlate")
+    data.create_cache_table(c)
+    data.migrate(c)
+    data.sync_default_data(c)

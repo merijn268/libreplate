@@ -17,7 +17,7 @@ from pathlib import Path
 
 from invoke import Context, task
 
-from . import docs, setup
+from . import deploy, docs
 from .utils import (
     BASE_DIR,
     VENV_DIR,
@@ -30,6 +30,12 @@ from .utils import (
     print_success,
     venv_run,
 )
+
+# TODO force and verbose options are ugly. They are added to each function.
+# They should be configured in a nicer way:
+# invoke --verbose <task> <task>
+# instead of
+# invoke <task> --verbose <task> --verbose
 
 
 def isort_cmd(check_only: bool = False) -> str:
@@ -72,43 +78,32 @@ def ruff_check_cmd(fix: bool = False, exit_zero: bool = False) -> str:
     return " ".join(args)
 
 
-@task(
-    aliases=["v"],
-    help={
-        "verbose": "Show stdout output from commands.",
-        "force": "Force all checks to run.",
-    },
-)
-def verify(c: Context, verbose: bool = False, force: bool = False) -> None:
-    """Run all code quality checks and tests"""
+@task(aliases=["v"])
+def verify(c: Context) -> None:
+    """Run all code quality checks and tests."""
 
-    check(c, verbose, force=force)
-    test(c, verbose, force=force)
-    docs.generate_invoke_manual(c, check=True, force=force)
-    generate_api(c, check=True, force=force)
+    check(c)
+    test(c)
+    docs.generate_manual(c, check=True)
+    generate_api(c, check=True)
 
 
-@task(
-    aliases=["pc"],
-    help={
-        "verbose": "Show stdout output from commands.",
-        "force": "Run formatters, checks, and tests even if there are no codebase changes.",
-    },
-)
-def pre_commit(c, verbose: bool = False, force: bool = False) -> None:
+@task(aliases=["pc"])
+def pre_commit(c) -> None:
     """
-    Command to run pre commit to make sure it passes the pipeline.
+    Run pre-commit checks and generate applicable files.
 
-    Also run all file generators so applicable generated code can be commited.
+    Also run all file generators so applicable generated code can be committed.
     """
 
-    format(c, verbose, force)
-    check(c, verbose, force)
-    test(c, verbose, force)
-    docs.generate_invoke_manual(c, verbose)
-    generate_api(c, verbose)
-    if force or codebase_has_changes(BASE_DIR / "frontend"):
-        setup.build_front_end.body(c, verbose=verbose, check=True)
+    format(c)
+    check(c)
+    test(c)
+    docs.generate_manual(c)
+    generate_api(c)
+
+    if c.config.cli.force.value or codebase_has_changes(BASE_DIR / "frontend"):
+        deploy.build_front_end.body(c, check=True)
 
 
 @task(aliases=["ds"])
@@ -123,6 +118,10 @@ def django_shell(c: Context):
 def user_add_dummy(c: Context):
     """
     Create a dummy LibrePlate user account.
+
+    Login:
+        username = dummy
+        password = dummy
     """
     username = "dummy"
     first_name = "Dummy"
@@ -144,17 +143,12 @@ def user_add_dummy(c: Context):
     )
 
 
-@task(
-    aliases=["c"],
-    help={
-        "verbose": "Show stdout output from commands.",
-        "force": "Run checks even if there are no codebase changes.",
-    },
-)
-def check(c: Context, verbose: bool = False, force: bool = False) -> None:
-    """
-    Run code quality checks.
-    """
+@task(aliases=["c"])
+def check(c: Context) -> None:
+    """Run code quality checks."""
+
+    verbose = c.config.cli.verbose.value
+    force = c.config.cli.force.value
 
     if verbose:
         info("Checking code quality. This may take a while.")
@@ -186,17 +180,12 @@ def check(c: Context, verbose: bool = False, force: bool = False) -> None:
 
 
 # TODO IDE should automatically format!
-@task(
-    aliases=["f"],
-    help={
-        "verbose": "Show stdout output from commands.",
-        "force": "Run formatter even if there are no codebase changes.",
-    },
-)
-def format(c: Context, verbose: bool = False, force: bool = False) -> None:
-    """
-    Automatically format the codebase.
-    """
+@task(aliases=["f"])
+def format(c: Context) -> None:
+    """Automatically format the codebase."""
+
+    verbose = c.config.cli.verbose.value
+    force = c.config.cli.force.value
 
     if verbose:
         info("Checking formatters need to run")
@@ -213,22 +202,25 @@ def format(c: Context, verbose: bool = False, force: bool = False) -> None:
         venv_run(c, isort_cmd(), quiet_stdout=not verbose)
         venv_run(c, black_cmd().replace("--check", ""), quiet_stdout=not verbose)
         venv_run(
-            c, f"ruff format {BASE_DIR} --exclude {VENV_DIR}", quiet_stdout=not verbose
+            c,
+            f"ruff format {BASE_DIR} --exclude {VENV_DIR}",
+            quiet_stdout=not verbose,
         )
-        venv_run(c, ruff_check_cmd(fix=True, exit_zero=True), quiet_stdout=not verbose)
+        venv_run(
+            c,
+            ruff_check_cmd(fix=True, exit_zero=True),
+            quiet_stdout=not verbose,
+        )
 
         print_success(message="Python formatters passed")
 
 
-@task(
-    aliases=["t"],
-    help={
-        "verbose": "Show stdout output from commands.",
-        "force": "Run tests even if there are no codebase changes.",
-    },
-)
-def test(c: Context, verbose: bool = False, force: bool = False) -> None:
-    """Run the LibrePlate automated test suite"""
+@task(aliases=["t"])
+def test(c: Context) -> None:
+    """Run the LibrePlate automated test suite."""
+
+    verbose = c.config.cli.verbose.value
+    force = c.config.cli.force.value
 
     if verbose:
         info("Checking whether tests need to run")
@@ -285,14 +277,15 @@ def api_changed(c: Context) -> bool:
 
 
 @task(aliases=["ga"])
-def generate_api(
-    c: Context, check: bool = False, verbose: bool = False, force: bool = False
-) -> None:
+def generate_api(c: Context, check: bool = False) -> None:
     """
     Generate the frontend API client from the Django OpenAPI schema.
 
     Use --check to fail if generated files would change.
     """
+
+    verbose = c.config.cli.verbose.value
+    force = c.config.cli.force.value
 
     if not force and not codebase_has_changes(BASE_DIR / "backend"):
         if verbose:
@@ -310,7 +303,11 @@ def generate_api(
         return
 
     with c.cd(BASE_DIR / "backend"):
-        venv_run(c, f"python manage.py spectacular --file {schema_path}", verbose)
+        venv_run(
+            c,
+            f"python manage.py spectacular --file {schema_path}",
+            quiet_stdout=not verbose,
+        )
 
     npm_run(c, "run api:generate", quiet_stdout=not verbose)
     print_success("Frontend API generated")
