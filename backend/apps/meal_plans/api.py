@@ -8,6 +8,7 @@ from .models import (
     PlannedMeal,
     PlannedMealFood,
     PlannedMealRecipe,
+    RandomizerItem,
 )
 from .serializers import (
     MealPlanApplySerializer,
@@ -16,6 +17,7 @@ from .serializers import (
     PlannedMealFoodSerializer,
     PlannedMealRecipeSerializer,
     PlannedMealSerializer,
+    RandomizerItemSerializer,
 )
 
 
@@ -217,3 +219,40 @@ class PlannedMealRecipeViewSet(viewsets.ModelViewSet):
             )
 
         return queryset
+
+
+class RandomizerItemViewSet(viewsets.ModelViewSet):
+    """CRUD for randomizer entries within the current user's meal plans."""
+
+    queryset = RandomizerItem.objects.all()
+    serializer_class = RandomizerItemSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = RandomizerItem.objects.filter(
+            planned_meal__meal_plan__user=self.request.user,
+        ).prefetch_related("candidates__food", "candidates__recipe")
+
+        meal_plan_id = self.request.query_params.get("meal_plan")
+        if meal_plan_id is not None:
+            queryset = queryset.filter(
+                planned_meal__meal_plan_id=meal_plan_id,
+            )
+
+        planned_meal_id = self.request.query_params.get("planned_meal")
+        if planned_meal_id is not None:
+            queryset = queryset.filter(
+                planned_meal_id=planned_meal_id,
+            )
+
+        return queryset
+
+    @action(detail=True, methods=["post"])
+    def randomize(self, request, pk=None):
+        """Draw a new seed for this randomizer and return the result."""
+
+        randomizer_item = self.get_object()
+        randomizer_item.randomize()
+
+        serializer = self.get_serializer(randomizer_item)
+        return Response(serializer.data)

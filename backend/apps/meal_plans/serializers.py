@@ -17,6 +17,8 @@ from .models import (
     PlannedMealEntryRecurrence,
     PlannedMealFood,
     PlannedMealRecipe,
+    RandomizerCandidate,
+    RandomizerItem,
 )
 
 
@@ -124,9 +126,131 @@ class PlannedMealRecipeSerializer(PlannedMealEntrySerializer):
         ]
 
 
+class RandomizerCandidateSerializer(serializers.ModelSerializer):
+    food_id = serializers.PrimaryKeyRelatedField(
+        queryset=Food.objects.all(),
+        source="food",
+        required=False,
+        allow_null=True,
+    )
+    food = FoodSerializer(read_only=True)
+    recipe_id = serializers.PrimaryKeyRelatedField(
+        queryset=Recipe.objects.all(),
+        source="recipe",
+        required=False,
+        allow_null=True,
+    )
+    recipe = RecipeSerializer(read_only=True)
+
+    class Meta:
+        model = RandomizerCandidate
+        fields = [
+            "id",
+            "food_id",
+            "food",
+            "recipe_id",
+            "recipe",
+            "number_of_servings",
+            "serving_size",
+        ]
+
+    def validate(self, attrs: dict[str, Any]) -> dict[str, Any]:
+        food = attrs.get("food")
+        recipe = attrs.get("recipe")
+
+        if bool(food) == bool(recipe):
+            raise serializers.ValidationError(
+                "A randomizer candidate must have either a food or a recipe."
+            )
+
+        serving_size = attrs.get("serving_size")
+
+        if recipe and serving_size is not None:
+            raise serializers.ValidationError(
+                {"serving_size": "Serving size only applies to foods, not recipes."}
+            )
+
+        if food and serving_size is None:
+            raise serializers.ValidationError(
+                {"serving_size": "Serving size is required for foods."}
+            )
+
+        return attrs
+
+
+class RandomizerItemSerializer(PlannedMealEntrySerializer):
+    candidates = RandomizerCandidateSerializer(many=True, required=False)
+    selected_item = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RandomizerItem
+        fields = [
+            "id",
+            "planned_meal_id",
+            "name",
+            "seed",
+            "candidates",
+            "selected_item",
+            "recurrence",
+        ]
+        read_only_fields = ["seed"]
+
+    def get_selected_item(self, obj) -> dict[str, Any] | None:
+        """
+        Return the currently selected candidate's item (Food or Recipe)
+        and amount, based on the persisted seed. None if no seed has
+        been set yet or no candidates are configured.
+        """
+        item, amount = obj.get_item_and_amount(seed=obj.seed)
+
+        if item is None:
+            return None
+
+        return {
+            "type": "food" if isinstance(item, Food) else "recipe",
+            "id": item.id,
+            "name": item.name,
+            **(amount or {}),
+        }
+
+    def _create_candidates(
+        self,
+        randomizer_item: RandomizerItem,
+        candidates_data: list[dict[str, Any]],
+    ) -> None:
+        for candidate_data in candidates_data:
+            candidate = RandomizerCandidate.objects.create(**candidate_data)
+            randomizer_item.candidates.add(candidate)
+
+    def create(self, validated_data: dict[str, Any]) -> RandomizerItem:
+        candidates_data = validated_data.pop("candidates", [])
+        randomizer_item = super().create(validated_data)
+        self._create_candidates(randomizer_item, candidates_data)
+        return randomizer_item
+
+    def update(
+        self,
+        instance: RandomizerItem,
+        validated_data: dict[str, Any],
+    ) -> RandomizerItem:
+        candidates_data = validated_data.pop("candidates", None)
+        instance = super().update(instance, validated_data)
+
+        if candidates_data is not None:
+            # Candidates are owned by their RandomizerItem in practice
+            # (the M2M exists so a candidate row is addressable on its
+            # own), so a full update just replaces the whole set rather
+            # than trying to diff it.
+            instance.candidates.clear()
+            self._create_candidates(instance, candidates_data)
+
+        return instance
+
+
 class PlannedMealSerializer(serializers.ModelSerializer):
     foods = PlannedMealFoodSerializer(many=True, required=False)
     recipes = PlannedMealRecipeSerializer(many=True, required=False)
+    randomizers = RandomizerItemSerializer(many=True, required=False)
     weekday = serializers.SerializerMethodField()
     is_virtual = serializers.SerializerMethodField()
 
@@ -154,6 +278,7 @@ class PlannedMealSerializer(serializers.ModelSerializer):
             "weekday",
             "foods",
             "recipes",
+            "randomizers",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -227,9 +352,35 @@ class PlannedMealSerializer(serializers.ModelSerializer):
                     **recurrence_data,
                 )
 
+    def _create_randomizer_entries(
+        self,
+        planned_meal: PlannedMeal,
+        randomizers_data: list[dict[str, Any]],
+    ) -> None:
+
+        for randomizer_data in randomizers_data:
+            randomizer_data = randomizer_data.copy()
+            recurrence_data = randomizer_data.pop(key="recurrence", default=None)
+            candidates_data = randomizer_data.pop(key="candidates", default=[])
+
+            entry = RandomizerItem.objects.create(
+                planned_meal=planned_meal,
+                **randomizer_data,
+            )
+
+            randomizer_serializer = RandomizerItemSerializer(context=self.context)
+            randomizer_serializer._create_candidates(entry, candidates_data)
+
+            if recurrence_data is not None:
+                PlannedMealEntryRecurrence.objects.create(
+                    planned_meal_entry=entry,
+                    **recurrence_data,
+                )
+
     def create(self, validated_data: dict[str, Any]) -> PlannedMeal:
         """
-        Create a planned meal and its associated food and recipe entries.
+        Create a planned meal and its associated food, recipe, and
+        randomizer entries.
         """
         if "meal_plan" not in validated_data:
             raise serializers.ValidationError(
@@ -238,9 +389,11 @@ class PlannedMealSerializer(serializers.ModelSerializer):
 
         foods_data = validated_data.pop("foods", [])
         recipes_data = validated_data.pop("recipes", [])
+        randomizers_data = validated_data.pop("randomizers", [])
         planned_meal = PlannedMeal.objects.create(**validated_data)
         self._create_food_entries(planned_meal, foods_data)
         self._create_recipe_entries(planned_meal, recipes_data)
+        self._create_randomizer_entries(planned_meal, randomizers_data)
         return planned_meal
 
     def update(
@@ -249,10 +402,12 @@ class PlannedMealSerializer(serializers.ModelSerializer):
         validated_data: dict[str, Any],
     ) -> PlannedMeal:
         """
-        Update a planned meal and its associated food and recipe entries.
+        Update a planned meal and its associated food, recipe, and
+        randomizer entries.
         """
         foods_data = validated_data.pop(key="foods", default=None)
         recipes_data = validated_data.pop(key="recipes", default=None)
+        randomizers_data = validated_data.pop(key="randomizers", default=None)
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -265,6 +420,10 @@ class PlannedMealSerializer(serializers.ModelSerializer):
         if recipes_data is not None:
             PlannedMealRecipe.objects.filter(planned_meal=instance).delete()
             self._create_recipe_entries(instance, recipes_data)
+
+        if randomizers_data is not None:
+            RandomizerItem.objects.filter(planned_meal=instance).delete()
+            self._create_randomizer_entries(instance, randomizers_data)
 
         return instance
 
@@ -416,6 +575,7 @@ class MealPlanSerializer(serializers.ModelSerializer):
         planned_meal_data = planned_meal_data.copy()
         foods_data = planned_meal_data.pop(key="foods", default=[])
         recipes_data = planned_meal_data.pop(key="recipes", default=[])
+        randomizers_data = planned_meal_data.pop(key="randomizers", default=[])
         planned_meal = PlannedMeal.objects.create(
             meal_plan=meal_plan,
             **planned_meal_data,
@@ -423,6 +583,7 @@ class MealPlanSerializer(serializers.ModelSerializer):
         serializer = PlannedMealSerializer(context=self.context)
         serializer._create_food_entries(planned_meal, foods_data)
         serializer._create_recipe_entries(planned_meal, recipes_data)
+        serializer._create_randomizer_entries(planned_meal, randomizers_data)
         return planned_meal
 
     def create(self, validated_data: dict[str, Any]) -> MealPlan:

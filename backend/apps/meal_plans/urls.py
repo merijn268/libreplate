@@ -6,6 +6,7 @@ from .api import (
     PlannedMealFoodViewSet,
     PlannedMealRecipeViewSet,
     PlannedMealViewSet,
+    RandomizerItemViewSet,
 )
 
 # TODO introduce namespaces
@@ -30,6 +31,12 @@ router.register(
     prefix="recipes",
     viewset=PlannedMealRecipeViewSet,
     basename="meal-plan-recipe",
+)
+
+router.register(
+    prefix="randomizers",
+    viewset=RandomizerItemViewSet,
+    basename="meal-plan-randomizer",
 )
 
 router.register(

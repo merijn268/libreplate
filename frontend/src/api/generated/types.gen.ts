@@ -550,6 +550,7 @@ export type PatchedPlannedMeal = {
     readonly weekday?: string;
     foods?: Array<PlannedMealFood>;
     recipes?: Array<PlannedMealRecipe>;
+    randomizers?: Array<RandomizerItem>;
 };
 
 export type PatchedPlannedMealFood = {
@@ -568,6 +569,23 @@ export type PatchedPlannedMealRecipe = {
     recipe_id?: number;
     recipe?: Recipe;
     number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence | null;
+};
+
+export type PatchedRandomizerItem = {
+    readonly id?: number;
+    planned_meal_id?: number;
+    name?: string;
+    readonly seed?: number | null;
+    candidates?: Array<RandomizerCandidate>;
+    /**
+     * Return the currently selected candidate's item (Food or Recipe)
+     * and amount, based on the persisted seed. None if no seed has
+     * been set yet or no candidates are configured.
+     */
+    readonly selected_item?: {
+        [key: string]: unknown;
+    } | null;
     recurrence?: PlannedMealEntryRecurrence | null;
 };
 
@@ -647,6 +665,7 @@ export type PlannedMeal = {
     readonly weekday: string;
     foods?: Array<PlannedMealFood>;
     recipes?: Array<PlannedMealRecipe>;
+    randomizers?: Array<RandomizerItem>;
 };
 
 export type PlannedMealEntryRecurrence = {
@@ -699,6 +718,36 @@ export type PlannedMealRecipe = {
     recipe_id: number;
     recipe: Recipe;
     number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence | null;
+};
+
+export type RandomizerCandidate = {
+    readonly id: number;
+    food_id?: number | null;
+    food: Food;
+    recipe_id?: number | null;
+    recipe: Recipe;
+    number_of_servings?: string;
+    /**
+     * Only applicable when the item is a food.
+     */
+    serving_size?: string | null;
+};
+
+export type RandomizerItem = {
+    readonly id: number;
+    planned_meal_id: number;
+    name: string;
+    readonly seed: number | null;
+    candidates?: Array<RandomizerCandidate>;
+    /**
+     * Return the currently selected candidate's item (Food or Recipe)
+     * and amount, based on the persisted seed. None if no seed has
+     * been set yet or no candidates are configured.
+     */
+    readonly selected_item: {
+        [key: string]: unknown;
+    } | null;
     recurrence?: PlannedMealEntryRecurrence | null;
 };
 
@@ -1173,6 +1222,7 @@ export type PatchedPlannedMealWritable = {
     day?: number;
     foods?: Array<PlannedMealFoodWritable>;
     recipes?: Array<PlannedMealRecipeWritable>;
+    randomizers?: Array<RandomizerItemWritable>;
 };
 
 export type PatchedPlannedMealFoodWritable = {
@@ -1187,6 +1237,13 @@ export type PatchedPlannedMealRecipeWritable = {
     planned_meal_id?: number;
     recipe_id?: number;
     number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence | null;
+};
+
+export type PatchedRandomizerItemWritable = {
+    planned_meal_id?: number;
+    name?: string;
+    candidates?: Array<RandomizerCandidateWritable>;
     recurrence?: PlannedMealEntryRecurrence | null;
 };
 
@@ -1229,6 +1286,7 @@ export type PlannedMealWritable = {
     day: number;
     foods?: Array<PlannedMealFoodWritable>;
     recipes?: Array<PlannedMealRecipeWritable>;
+    randomizers?: Array<RandomizerItemWritable>;
 };
 
 export type PlannedMealFoodWritable = {
@@ -1243,6 +1301,23 @@ export type PlannedMealRecipeWritable = {
     planned_meal_id: number;
     recipe_id: number;
     number_of_servings?: number;
+    recurrence?: PlannedMealEntryRecurrence | null;
+};
+
+export type RandomizerCandidateWritable = {
+    food_id?: number | null;
+    recipe_id?: number | null;
+    number_of_servings?: string;
+    /**
+     * Only applicable when the item is a food.
+     */
+    serving_size?: string | null;
+};
+
+export type RandomizerItemWritable = {
+    planned_meal_id: number;
+    name: string;
+    candidates?: Array<RandomizerCandidateWritable>;
     recurrence?: PlannedMealEntryRecurrence | null;
 };
 
@@ -2692,6 +2767,125 @@ export type MealPlansPlannedMealsUpdateResponses = {
 };
 
 export type MealPlansPlannedMealsUpdateResponse = MealPlansPlannedMealsUpdateResponses[keyof MealPlansPlannedMealsUpdateResponses];
+
+export type MealPlansRandomizersListData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/meal-plans/randomizers/';
+};
+
+export type MealPlansRandomizersListResponses = {
+    200: Array<RandomizerItem>;
+};
+
+export type MealPlansRandomizersListResponse = MealPlansRandomizersListResponses[keyof MealPlansRandomizersListResponses];
+
+export type MealPlansRandomizersCreateData = {
+    body: RandomizerItemWritable;
+    path?: never;
+    query?: never;
+    url: '/api/meal-plans/randomizers/';
+};
+
+export type MealPlansRandomizersCreateResponses = {
+    201: RandomizerItem;
+};
+
+export type MealPlansRandomizersCreateResponse = MealPlansRandomizersCreateResponses[keyof MealPlansRandomizersCreateResponses];
+
+export type MealPlansRandomizersDestroyData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this randomizer item.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/randomizers/{id}/';
+};
+
+export type MealPlansRandomizersDestroyResponses = {
+    /**
+     * No response body
+     */
+    204: void;
+};
+
+export type MealPlansRandomizersDestroyResponse = MealPlansRandomizersDestroyResponses[keyof MealPlansRandomizersDestroyResponses];
+
+export type MealPlansRandomizersRetrieveData = {
+    body?: never;
+    path: {
+        /**
+         * A unique integer value identifying this randomizer item.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/randomizers/{id}/';
+};
+
+export type MealPlansRandomizersRetrieveResponses = {
+    200: RandomizerItem;
+};
+
+export type MealPlansRandomizersRetrieveResponse = MealPlansRandomizersRetrieveResponses[keyof MealPlansRandomizersRetrieveResponses];
+
+export type MealPlansRandomizersPartialUpdateData = {
+    body?: PatchedRandomizerItemWritable;
+    path: {
+        /**
+         * A unique integer value identifying this randomizer item.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/randomizers/{id}/';
+};
+
+export type MealPlansRandomizersPartialUpdateResponses = {
+    200: RandomizerItem;
+};
+
+export type MealPlansRandomizersPartialUpdateResponse = MealPlansRandomizersPartialUpdateResponses[keyof MealPlansRandomizersPartialUpdateResponses];
+
+export type MealPlansRandomizersUpdateData = {
+    body: RandomizerItemWritable;
+    path: {
+        /**
+         * A unique integer value identifying this randomizer item.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/randomizers/{id}/';
+};
+
+export type MealPlansRandomizersUpdateResponses = {
+    200: RandomizerItem;
+};
+
+export type MealPlansRandomizersUpdateResponse = MealPlansRandomizersUpdateResponses[keyof MealPlansRandomizersUpdateResponses];
+
+export type MealPlansRandomizersRandomizeCreateData = {
+    body: RandomizerItemWritable;
+    path: {
+        /**
+         * A unique integer value identifying this randomizer item.
+         */
+        id: number;
+    };
+    query?: never;
+    url: '/api/meal-plans/randomizers/{id}/randomize/';
+};
+
+export type MealPlansRandomizersRandomizeCreateResponses = {
+    200: RandomizerItem;
+};
+
+export type MealPlansRandomizersRandomizeCreateResponse = MealPlansRandomizersRandomizeCreateResponses[keyof MealPlansRandomizersRandomizeCreateResponses];
 
 export type MealPlansRecipesListData = {
     body?: never;

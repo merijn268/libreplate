@@ -8,6 +8,7 @@ type Props = {
   onClose: () => void;
   onFood: () => void;
   onRecipe: () => void;
+  onRandomizer: () => void;
   onSaveAsRecipe?: () => void;
   onMove?: () => void;
   onSaveToMealPlan?: () => void;
@@ -20,6 +21,7 @@ export default function PlannedMealActionsModal({
   onFood,
   onRecipe,
   onSaveAsRecipe,
+  onRandomizer,
 }: Props) {
   return (
     <Modal isOpen={isOpen} title={title} onClose={onClose}>
@@ -35,7 +37,7 @@ export default function PlannedMealActionsModal({
         <ListActionButton
           label="Add randomizer"
           icon="bi bi-shuffle"
-          onClick={onSaveAsRecipe}
+          onClick={onRandomizer}
         />
 
         <ListActionButton

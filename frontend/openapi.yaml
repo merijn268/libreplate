@@ -2189,6 +2189,187 @@ paths:
       responses:
         '204':
           description: No response body
+  /api/meal-plans/randomizers/:
+    get:
+      operationId: meal_plans_randomizers_list
+      description: CRUD for randomizer entries within the current user's meal plans.
+      tags:
+      - meal-plans
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RandomizerItem'
+          description: ''
+    post:
+      operationId: meal_plans_randomizers_create
+      description: CRUD for randomizer entries within the current user's meal plans.
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RandomizerItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RandomizerItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RandomizerItem'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RandomizerItem'
+          description: ''
+  /api/meal-plans/randomizers/{id}/:
+    get:
+      operationId: meal_plans_randomizers_retrieve
+      description: CRUD for randomizer entries within the current user's meal plans.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this randomizer item.
+        required: true
+      tags:
+      - meal-plans
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RandomizerItem'
+          description: ''
+    put:
+      operationId: meal_plans_randomizers_update
+      description: CRUD for randomizer entries within the current user's meal plans.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this randomizer item.
+        required: true
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RandomizerItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RandomizerItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RandomizerItem'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RandomizerItem'
+          description: ''
+    patch:
+      operationId: meal_plans_randomizers_partial_update
+      description: CRUD for randomizer entries within the current user's meal plans.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this randomizer item.
+        required: true
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRandomizerItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRandomizerItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRandomizerItem'
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RandomizerItem'
+          description: ''
+    delete:
+      operationId: meal_plans_randomizers_destroy
+      description: CRUD for randomizer entries within the current user's meal plans.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this randomizer item.
+        required: true
+      tags:
+      - meal-plans
+      security:
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/meal-plans/randomizers/{id}/randomize/:
+    post:
+      operationId: meal_plans_randomizers_randomize_create
+      description: Draw a new seed for this randomizer and return the result.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this randomizer item.
+        required: true
+      tags:
+      - meal-plans
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RandomizerItem'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/RandomizerItem'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/RandomizerItem'
+        required: true
+      security:
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RandomizerItem'
+          description: ''
   /api/meal-plans/recipes/:
     get:
       operationId: meal_plans_recipes_list
@@ -5013,6 +5194,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PlannedMealRecipe'
+        randomizers:
+          type: array
+          items:
+            $ref: '#/components/schemas/RandomizerItem'
     PatchedPlannedMealFood:
       type: object
       properties:
@@ -5057,6 +5242,38 @@ components:
           type: number
           format: double
           minimum: 0
+        recurrence:
+          allOf:
+          - $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+          nullable: true
+    PatchedRandomizerItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        planned_meal_id:
+          type: integer
+        name:
+          type: string
+          maxLength: 255
+        seed:
+          type: integer
+          readOnly: true
+          nullable: true
+        candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/RandomizerCandidate'
+        selected_item:
+          type: object
+          additionalProperties: {}
+          nullable: true
+          description: |-
+            Return the currently selected candidate's item (Food or Recipe)
+            and amount, based on the persisted seed. None if no seed has
+            been set yet or no candidates are configured.
+          readOnly: true
         recurrence:
           allOf:
           - $ref: '#/components/schemas/PlannedMealEntryRecurrence'
@@ -5232,6 +5449,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PlannedMealRecipe'
+        randomizers:
+          type: array
+          items:
+            $ref: '#/components/schemas/RandomizerItem'
       required:
       - day
       - id
@@ -5340,6 +5561,78 @@ components:
       - planned_meal_id
       - recipe
       - recipe_id
+    RandomizerCandidate:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        food_id:
+          type: integer
+          nullable: true
+        food:
+          allOf:
+          - $ref: '#/components/schemas/Food'
+          readOnly: true
+        recipe_id:
+          type: integer
+          nullable: true
+        recipe:
+          allOf:
+          - $ref: '#/components/schemas/Recipe'
+          readOnly: true
+        number_of_servings:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+        serving_size:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,4}(?:\.\d{0,2})?$
+          nullable: true
+          description: Only applicable when the item is a food.
+      required:
+      - food
+      - id
+      - recipe
+    RandomizerItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        planned_meal_id:
+          type: integer
+        name:
+          type: string
+          maxLength: 255
+        seed:
+          type: integer
+          readOnly: true
+          nullable: true
+        candidates:
+          type: array
+          items:
+            $ref: '#/components/schemas/RandomizerCandidate'
+        selected_item:
+          type: object
+          additionalProperties: {}
+          nullable: true
+          description: |-
+            Return the currently selected candidate's item (Food or Recipe)
+            and amount, based on the persisted seed. None if no seed has
+            been set yet or no candidates are configured.
+          readOnly: true
+        recurrence:
+          allOf:
+          - $ref: '#/components/schemas/PlannedMealEntryRecurrence'
+          nullable: true
+      required:
+      - id
+      - name
+      - planned_meal_id
+      - seed
+      - selected_item
     RangeTypeEnum:
       enum:
       - fixed

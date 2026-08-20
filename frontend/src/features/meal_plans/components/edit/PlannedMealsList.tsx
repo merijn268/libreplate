@@ -1,11 +1,15 @@
 import { useMemo, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import type {
   Food,
   MealPlan,
   PlannedMeal,
   PlannedMealEntryRecurrence,
+  PlannedMealFoodWritable,
+  PlannedMealRecipeWritable,
+  PlannedMealWritable,
+  PatchedRandomizerItem,
   Recipe,
 } from "@/api/generated";
 
@@ -14,15 +18,10 @@ import {
   mealPlansFoodsDestroy,
   mealPlansFoodsPartialUpdate,
   mealPlansPlannedMealsCreate,
+  mealPlansRandomizersList,
   mealPlansRecipesCreate,
   mealPlansRecipesDestroy,
   mealPlansRecipesPartialUpdate,
-} from "@/api/generated";
-
-import type {
-  PlannedMealFoodWritable,
-  PlannedMealRecipeWritable,
-  PlannedMealWritable,
 } from "@/api/generated";
 
 import MealCard from "@/components/meal_card/MealCard";
@@ -33,6 +32,7 @@ import PlannedMealActionsModal from "@/features/meal_plans//components/edit/Plan
 import EditFoodAmountModal from "@/components/modals/EditFoodAmountModal";
 import EditRecipeAmountModal from "@/components/modals/EditRecipeAmountModal";
 import EditRecurrenceModal from "@/components/modals/EditRecurrenceModal";
+import RandomizerModal from "./RandomizerItemModal";
 
 import FoodPickerModal from "@/features/foods/components/FoodPickerModal";
 import RecipePickerModal from "@/features/recipes/components/common/RecipePickermodal";
@@ -53,9 +53,8 @@ type MealTotals = {
   carbs: number;
 };
 
-type AddModal = "none" | "type" | "food" | "recipe";
-
-type EditModal = "none" | "food" | "recipe" | "recurrence";
+type AddModal = "none" | "type" | "food" | "recipe" | "randomizer";
+type EditModal = "none" | "food" | "recipe" | "recurrence" | "randomizer";
 
 type EditEntry =
   | {
@@ -93,10 +92,62 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
   const [editEntry, setEditEntry] = useState<EditEntry | null>(null);
   const [editModal, setEditModal] = useState<EditModal>("none");
 
+  const [randomizerMealId, setRandomizerMealId] = useState<number | null>(null);
+  const [editingRandomizer, setEditingRandomizer] =
+    useState<PatchedRandomizerItem | null>(null);
+
+  /*
+   * Randomizers are currently returned by their own endpoint and are not
+   * guaranteed to be nested inside mealPlan.planned_meals.
+   *
+   * Fetch them separately and merge them into the appropriate meal using
+   * planned_meal_id.
+   */
+  const { data: randomizers = [] } = useQuery({
+    queryKey: ["meal-plan-randomizers", mealPlan.id],
+    queryFn: async () => {
+      const response = await mealPlansRandomizersList();
+
+      if (response.error) {
+        throw new Error("Failed to load meal plan randomizers.");
+      }
+
+      return response.data ?? [];
+    },
+  });
+
+  const randomizersByMealId = useMemo(() => {
+    const map = new Map<number, typeof randomizers>();
+
+    for (const randomizer of randomizers) {
+      if (randomizer.planned_meal_id == null) {
+        continue;
+      }
+
+      const existing = map.get(randomizer.planned_meal_id) ?? [];
+
+      existing.push(randomizer);
+
+      map.set(randomizer.planned_meal_id, existing);
+    }
+
+    return map;
+  }, [randomizers]);
+
   const invalidateMealPlan = () => {
     return queryClient.invalidateQueries({
       queryKey: ["meal-plan", mealPlan.id],
     });
+  };
+
+  const invalidateRandomizers = () => {
+    return queryClient.invalidateQueries({
+      queryKey: ["meal-plan-randomizers", mealPlan.id],
+    });
+  };
+
+  const invalidateMealPlanAndRandomizers = async () => {
+    await Promise.all([invalidateMealPlan(), invalidateRandomizers()]);
   };
 
   const materializeMeal = async (meal: PlannedMeal): Promise<number> => {
@@ -104,9 +155,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
       return meal.id;
     }
 
-    const body: PlannedMealWritable & {
-      meal_plan_id: number;
-    } = {
+    const body: PlannedMealWritable = {
       meal_plan_id: mealPlan.id,
       name: meal.name,
       day: meal.day,
@@ -257,6 +306,9 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
 
     const mealsByKey = new Map<string, PlannedMeal>();
 
+    /*
+     * Meals that actually exist on this day.
+     */
     for (const meal of sourceMeals) {
       if (meal.day !== day) {
         continue;
@@ -264,13 +316,27 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
 
       const key = `${meal.name}-${meal.order ?? 0}`;
 
+      const nestedRandomizers = meal.randomizers ?? [];
+
+      const fetchedRandomizers =
+        meal.id != null ? (randomizersByMealId.get(meal.id) ?? []) : [];
+
+      const mergedRandomizers = mergeRandomizers(
+        nestedRandomizers,
+        fetchedRandomizers,
+      );
+
       mealsByKey.set(key, {
         ...meal,
         foods: [...(meal.foods ?? [])],
         recipes: [...(meal.recipes ?? [])],
+        randomizers: mergedRandomizers,
       });
     }
 
+    /*
+     * Recurring entries from previous days.
+     */
     for (const sourceMeal of sourceMeals) {
       if (sourceMeal.day === day) {
         continue;
@@ -295,7 +361,27 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
           }),
       );
 
-      if (recurringFoods.length === 0 && recurringRecipes.length === 0) {
+      const sourceRandomizers = mergeRandomizers(
+        sourceMeal.randomizers ?? [],
+        sourceMeal.id != null
+          ? (randomizersByMealId.get(sourceMeal.id) ?? [])
+          : [],
+      );
+
+      const recurringRandomizers = sourceRandomizers.filter((randomizer) =>
+        entryOccursOnDay({
+          sourceDay: sourceMeal.day,
+          targetDay: day,
+          recurrence: normalizeRecurrence(randomizer.recurrence),
+          mealPlanStartDay: mealPlan.start_day,
+        }),
+      );
+
+      if (
+        recurringFoods.length === 0 &&
+        recurringRecipes.length === 0 &&
+        recurringRandomizers.length === 0
+      ) {
         continue;
       }
 
@@ -308,6 +394,11 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
 
         existing.recipes = [...(existing.recipes ?? []), ...recurringRecipes];
 
+        existing.randomizers = mergeRandomizers(
+          existing.randomizers ?? [],
+          recurringRandomizers,
+        );
+
         continue;
       }
 
@@ -316,13 +407,14 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
         day,
         foods: recurringFoods,
         recipes: recurringRecipes,
+        randomizers: recurringRandomizers,
       });
     }
 
     return [...mealsByKey.values()].sort(
       (a, b) => (a.order ?? 0) - (b.order ?? 0),
     );
-  }, [mealPlan.planned_meals, mealPlan.start_day, day]);
+  }, [mealPlan.planned_meals, mealPlan.start_day, day, randomizersByMealId]);
 
   const getMealKey = (meal: PlannedMeal, index: number) => {
     if (meal.id != null) {
@@ -375,6 +467,8 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
   const closeAddFlow = () => {
     setAddModal("none");
     setAddMeal(null);
+    setRandomizerMealId(null);
+    setEditingRandomizer(null);
   };
 
   const openFoodPicker = () => {
@@ -383,6 +477,48 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
 
   const openRecipePicker = () => {
     setAddModal("recipe");
+  };
+
+  const openCreateRandomizer = async () => {
+    if (addMeal == null) {
+      return;
+    }
+
+    try {
+      const plannedMealId = await materializeMeal(addMeal);
+
+      setRandomizerMealId(plannedMealId);
+      setEditingRandomizer(null);
+      setAddModal("randomizer");
+
+      await invalidateMealPlan();
+    } catch (error) {
+      console.error("Failed to prepare randomizer", error);
+    }
+  };
+
+  const handleRandomizerSaved = async (randomizer: PatchedRandomizerItem) => {
+    setEditingRandomizer(randomizer);
+
+    await invalidateMealPlanAndRandomizers();
+  };
+
+  const handleRandomizerDeleted = async () => {
+    await invalidateMealPlanAndRandomizers();
+    closeAddFlow();
+  };
+
+  const openRandomizerEditor = (
+    meal: PlannedMeal,
+    randomizer: PatchedRandomizerItem,
+  ) => {
+    if (meal.id == null || randomizer.id == null) {
+      return;
+    }
+
+    setRandomizerMealId(meal.id);
+    setEditingRandomizer(randomizer);
+    setAddModal("randomizer");
   };
 
   const handleFoodSelect = async (foods: Food[]) => {
@@ -530,9 +666,11 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
 
     try {
       await deleteFoodMutation.mutateAsync(editEntry.id);
+
       closeEditFlow();
     } catch (error) {
       console.error("Failed to delete planned food", error);
+
       throw error;
     }
   };
@@ -544,9 +682,11 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
 
     try {
       await deleteRecipeMutation.mutateAsync(editEntry.id);
+
       closeEditFlow();
     } catch (error) {
       console.error("Failed to delete planned recipe", error);
+
       throw error;
     }
   };
@@ -556,6 +696,7 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
       <div>
         {plannedMeals.map((meal, mealIndex) => {
           const mealKey = getMealKey(meal, mealIndex);
+
           const mealTotals = getMealTotals(meal);
 
           return (
@@ -602,6 +743,26 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
                     />
                   );
                 })}
+
+                {(meal.randomizers ?? []).map((randomizer, randomizerIndex) => {
+                  const randomizerKey =
+                    randomizer.id != null
+                      ? `randomizer-${randomizer.id}`
+                      : `${mealKey}-randomizer-${randomizerIndex}`;
+
+                  const candidateCount = randomizer.candidates?.length ?? 0;
+
+                  return (
+                    <AmountItem
+                      key={randomizerKey}
+                      label={randomizer.name ?? "Randomizer"}
+                      amount={`${candidateCount} candidate${
+                        candidateCount === 1 ? "" : "s"
+                      }`}
+                      onClick={() => openRandomizerEditor(meal, randomizer)}
+                    />
+                  );
+                })}
               </ul>
             </MealCard>
           );
@@ -614,6 +775,9 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
         onClose={closeAddFlow}
         onFood={openFoodPicker}
         onRecipe={openRecipePicker}
+        onRandomizer={() => {
+          void openCreateRandomizer();
+        }}
       />
 
       <FoodPickerModal
@@ -627,6 +791,17 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
         onClose={closeAddFlow}
         onSelect={handleRecipeSelect}
       />
+
+      {addModal === "randomizer" && randomizerMealId != null && (
+        <RandomizerModal
+          isOpen
+          plannedMealId={randomizerMealId}
+          randomizer={editingRandomizer}
+          onClose={closeAddFlow}
+          onSaved={handleRandomizerSaved}
+          onDeleted={handleRandomizerDeleted}
+        />
+      )}
 
       {editEntry?.type === "food" && editModal === "food" && (
         <EditFoodAmountModal
@@ -674,4 +849,27 @@ export default function PlannedMealsList({ mealPlan, day }: Props) {
       )}
     </>
   );
+}
+
+function mergeRandomizers<
+  T extends {
+    id?: number;
+  },
+>(first: T[], second: T[]): T[] {
+  const result: T[] = [];
+  const seen = new Set<number>();
+
+  for (const randomizer of [...first, ...second]) {
+    if (randomizer.id != null) {
+      if (seen.has(randomizer.id)) {
+        continue;
+      }
+
+      seen.add(randomizer.id);
+    }
+
+    result.push(randomizer);
+  }
+
+  return result;
 }
