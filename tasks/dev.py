@@ -10,6 +10,7 @@ including:
 - Starting the development or production web server
 """
 
+import difflib
 import filecmp
 import shlex
 import tempfile
@@ -260,11 +261,24 @@ def api_changed(c: Context) -> bool:
                 f"python manage.py spectacular --file {tmp_schema}",
             )
 
-        return not filecmp.cmp(
-            tmp_schema,
-            schema_path,
-            shallow=False,
+        if filecmp.cmp(tmp_schema, schema_path, shallow=False):
+            return False
+
+        old = schema_path.read_text().splitlines(keepends=True)
+        new = tmp_schema.read_text().splitlines(keepends=True)
+
+        diff = "".join(
+            difflib.unified_diff(
+                old,
+                new,
+                fromfile=str(schema_path),
+                tofile=str(tmp_schema),
+            )
         )
+
+        info(f"OpenAPI schema changed:\n{diff}")
+
+        return True
 
 
 @task(aliases=["ga"])
@@ -287,7 +301,7 @@ def generate_api(c: Context, check: bool = False) -> None:
 
     if check:
         if api_changed(c):
-            print_error("API client is out of date. Run `invoke dev.generate-api`.")
+            print_error("API client is out of date. Please update it.")
             raise SystemExit(1)
 
         print_success("API client is up to date")

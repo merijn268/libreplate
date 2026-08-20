@@ -19,6 +19,7 @@ class MealPlanPeriodUnit(models.TextChoices):
     WEEK = "week", "Week"
 
 
+# TODO meal plan is quite big, split off logic
 class MealPlan(
     base_models.BelongsToUser,
     base_models.CanBeFavorited,
@@ -163,7 +164,7 @@ class MealPlan(
         `entry.recurrence` is a reverse OneToOneField accessor, which
         raises DoesNotExist rather than returning None when absent.
         """
-        from .recurrence import (
+        from .recurrences import (
             PlannedMealEntryRecurrence,  # local import avoids circular import
         )
 

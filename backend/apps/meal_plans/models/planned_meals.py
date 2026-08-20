@@ -1,11 +1,11 @@
 import calendar
 
 from apps.core.models import base as base_models
-from apps.foods.models import Food
-from apps.recipes.models import Recipe
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
+
+from .entries import PlannedMealFood, PlannedMealRecipe
 
 
 class PlannedMeal(base_models.HasName):
@@ -49,77 +49,28 @@ class PlannedMeal(base_models.HasName):
     def foods(self):
         """
         Return the food entries belonging to this planned meal.
-
-        PlannedMealFood is a subclass of PlannedMealEntry (multi-table
-        inheritance), so the FK back to PlannedMeal only exists once, on
-        PlannedMealEntry, as `related_name="entries"`. There is no
-        `planned_meal.foods` relation to read directly, so this queries
-        PlannedMealFood explicitly instead. Named to match the "foods"
-        field on PlannedMealSerializer: DRF calls zero-argument callables
-        automatically when resolving a field's value.
         """
         if self.pk is None:
             return PlannedMealFood.objects.none()
 
         return PlannedMealFood.objects.filter(
             planned_meal_id=self.pk,
-        ).select_related("food", "food__unit", "recurrence")
+        ).select_related(
+            "food",
+            "food__unit",
+            "recurrence",
+        )
 
     def recipes(self):
-        """Return the recipe entries belonging to this planned meal. See foods()."""
+        """
+        Return the recipe entries belonging to this planned meal.
+        """
         if self.pk is None:
             return PlannedMealRecipe.objects.none()
 
         return PlannedMealRecipe.objects.filter(
             planned_meal_id=self.pk,
-        ).select_related("recipe", "recurrence")
-
-
-class PlannedMealEntry(models.Model):
-    """
-    An item served as part of a planned meal.
-    """
-
-    planned_meal = models.ForeignKey(
-        PlannedMeal,
-        on_delete=models.CASCADE,
-        related_name="entries",
-    )
-
-    number_of_servings = models.FloatField(
-        default=1,
-        validators=[MinValueValidator(0)],
-    )
-
-    def get_item(self):
-        raise NotImplementedError
-
-
-class PlannedMealFood(PlannedMealEntry):
-    food = models.ForeignKey(
-        Food,
-        on_delete=models.CASCADE,
-        related_name="meal_plan_entries",
-    )
-
-    serving_size = models.FloatField(
-        validators=[MinValueValidator(0)],
-    )
-
-    def get_item(self) -> Food:
-        return self.food
-
-
-class PlannedMealRecipe(PlannedMealEntry):
-    """
-    A recipe served as part of a planned meal.
-    """
-
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        related_name="meal_plan_entries",
-    )
-
-    def get_item(self) -> Recipe:
-        return self.recipe
+        ).select_related(
+            "recipe",
+            "recurrence",
+        )

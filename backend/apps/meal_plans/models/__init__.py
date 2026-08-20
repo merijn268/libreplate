@@ -1,3 +1,8 @@
+from .entries import (
+    PlannedMealEntry,
+    PlannedMealFood,
+    PlannedMealRecipe,
+)
 from .meal_plans import (
     MealPlan,
     MealPlanPeriodUnit,
@@ -5,15 +10,12 @@ from .meal_plans import (
 )
 from .planned_meals import (
     PlannedMeal,
-    PlannedMealEntry,
-    PlannedMealFood,
-    PlannedMealRecipe,
 )
 from .randomizers import (
     RandomizerCandidate,
     RandomizerItem,
 )
-from .recurrence import (
+from .recurrences import (
     PlannedMealEntryRecurrence,
 )
 

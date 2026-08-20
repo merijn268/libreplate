@@ -1,3 +1,4 @@
+import difflib
 import re
 from pathlib import Path
 
@@ -60,8 +61,9 @@ def generate_manual(c: Context, check: bool = False) -> None:
         return
 
     output = Path(BASE_DIR / "docs/cli_manual.md")
-    result = c.run(f"{BASE_DIR}/libreplate_cli.py --list", hide=True)
-
+    result = c.run(
+        f"{BASE_DIR}/.venv/bin/python3 {BASE_DIR}/libreplate_cli.py --list", hide=True
+    )
     tasks = []
 
     for line in result.stdout.splitlines():
@@ -97,7 +99,7 @@ def generate_manual(c: Context, check: bool = False) -> None:
         anchor = name.lower().replace(".", "-")
 
         help_text = c.run(
-            f"{BASE_DIR}/libreplate_cli.py --help {name}",
+            f"{BASE_DIR}/.venv/bin/python3 {BASE_DIR}/libreplate_cli.py --help {name}",
             hide=True,
             warn=True,
         ).stdout.strip()
@@ -135,6 +137,15 @@ def generate_manual(c: Context, check: bool = False) -> None:
         existing = output.read_text(encoding="utf-8")
 
         if existing != generated:
+            if c.config.cli.verbose:
+                diff = difflib.unified_diff(
+                    existing.splitlines(keepends=True),
+                    generated.splitlines(keepends=True),
+                    fromfile=str(output),
+                    tofile="generated",
+                )
+                print("".join(diff))
+
             raise Exit(
                 f"`{output}` is out of date. Run `./libreplate_cli.py dev.generate-manual`.",
                 code=1,

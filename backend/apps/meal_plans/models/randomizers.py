@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from .planned_meals import PlannedMealEntry
+from .entries import PlannedMealEntry
 
 
 class FoodOrRecipeAmount(models.Model):
