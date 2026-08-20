@@ -51,7 +51,7 @@ To learn more about a task:
 **Aliases:** `data.au`
 
 ```text
-Usage: libreplate [--core-opts] data.add-usda-api-key [--options] [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] data.add-usda-api-key [--options] [other tasks here ...]
 
 Docstring:
   Configure the USDA API key.
@@ -64,7 +64,7 @@ Options:
 ## `data.create-cache-table`
 
 ```text
-Usage: libreplate [--core-opts] data.create-cache-table [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] data.create-cache-table [other tasks here ...]
 
 Docstring:
   Create the Django database cache table.
@@ -76,7 +76,7 @@ Docstring:
 **Aliases:** `data.m`
 
 ```text
-Usage: libreplate [--core-opts] data.migrate [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] data.migrate [other tasks here ...]
 
 Docstring:
   Apply Django database migrations.
@@ -88,7 +88,7 @@ Docstring:
 **Aliases:** `data.sd`
 
 ```text
-Usage: libreplate [--core-opts] data.sync-default-data [--options] [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] data.sync-default-data [--options] [other tasks here ...]
 
 Docstring:
   Synchronize default application data.
@@ -103,7 +103,7 @@ Options:
 **Aliases:** `data.ua`
 
 ```text
-Usage: libreplate [--core-opts] data.user-add [--options] [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] data.user-add [--options] [other tasks here ...]
 
 Docstring:
   Create a new LibrePlate user account.
@@ -123,7 +123,7 @@ Options:
 **Aliases:** `data.ur`
 
 ```text
-Usage: libreplate [--core-opts] data.user-remove [--options] [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] data.user-remove [--options] [other tasks here ...]
 
 Docstring:
   Remove an existing LibrePlate user account.
@@ -138,7 +138,7 @@ Options:
 **Aliases:** `deploy.bf`
 
 ```text
-Usage: libreplate [--core-opts] deploy.build-front-end [--options] [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] deploy.build-front-end [--options] [other tasks here ...]
 
 Docstring:
   Build the React front end.
@@ -153,7 +153,7 @@ Options:
 **Aliases:** `deploy.i`
 
 ```text
-Usage: libreplate [--core-opts] deploy.init [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] deploy.init [other tasks here ...]
 
 Docstring:
   Initialize LibrePlate.
@@ -165,7 +165,7 @@ Docstring:
 **Aliases:** `deploy.u`
 
 ```text
-Usage: libreplate [--core-opts] deploy.update [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] deploy.update [other tasks here ...]
 
 Docstring:
   Update LibrePlate dependencies, source code, frontend assets, and database state.
@@ -180,7 +180,7 @@ Docstring:
 **Aliases:** `dev.c`
 
 ```text
-Usage: libreplate [--core-opts] dev.check [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] dev.check [other tasks here ...]
 
 Docstring:
   Run code quality checks.
@@ -192,7 +192,7 @@ Docstring:
 **Aliases:** `dev.ds`
 
 ```text
-Usage: libreplate [--core-opts] dev.django-shell [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] dev.django-shell [other tasks here ...]
 
 Docstring:
   Open the django shell.
@@ -204,7 +204,7 @@ Docstring:
 **Aliases:** `dev.f`
 
 ```text
-Usage: libreplate [--core-opts] dev.format [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] dev.format [other tasks here ...]
 
 Docstring:
   Automatically format the codebase.
@@ -216,7 +216,7 @@ Docstring:
 **Aliases:** `dev.ga`
 
 ```text
-Usage: libreplate [--core-opts] dev.generate-api [--options] [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] dev.generate-api [--options] [other tasks here ...]
 
 Docstring:
   Generate the frontend API client from the Django OpenAPI schema.
@@ -233,7 +233,7 @@ Options:
 **Aliases:** `dev.pc`
 
 ```text
-Usage: libreplate [--core-opts] dev.pre-commit [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] dev.pre-commit [other tasks here ...]
 
 Docstring:
   Run pre-commit checks and generate applicable files.
@@ -247,7 +247,7 @@ Docstring:
 **Aliases:** `dev.sb`
 
 ```text
-Usage: libreplate [--core-opts] dev.serve-backend [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] dev.serve-backend [other tasks here ...]
 
 Docstring:
   Start the backend development server.
@@ -259,7 +259,7 @@ Docstring:
 **Aliases:** `dev.sf`
 
 ```text
-Usage: libreplate [--core-opts] dev.serve-frontend [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] dev.serve-frontend [other tasks here ...]
 
 Docstring:
   Start the frontend development server.
@@ -271,7 +271,7 @@ Docstring:
 **Aliases:** `dev.t`
 
 ```text
-Usage: libreplate [--core-opts] dev.test [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] dev.test [other tasks here ...]
 
 Docstring:
   Run the LibrePlate automated test suite.
@@ -283,7 +283,7 @@ Docstring:
 **Aliases:** `dev.ud`
 
 ```text
-Usage: libreplate [--core-opts] dev.user-add-dummy [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] dev.user-add-dummy [other tasks here ...]
 
 Docstring:
   Create a dummy LibrePlate user account.
@@ -299,7 +299,7 @@ Docstring:
 **Aliases:** `dev.v`
 
 ```text
-Usage: libreplate [--core-opts] dev.verify [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] dev.verify [other tasks here ...]
 
 Docstring:
   Run all code quality checks and tests.
@@ -311,7 +311,7 @@ Docstring:
 **Aliases:** `docs.gm`
 
 ```text
-Usage: libreplate [--core-opts] docs.generate-manual [--options] [other tasks here ...]
+Usage: libreplate_cli.py [--core-opts] docs.generate-manual [--options] [other tasks here ...]
 
 Docstring:
   Generate a Markdown manual of all Invoke tasks.

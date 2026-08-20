@@ -59,7 +59,7 @@ def generate_manual(c: Context, check: bool = False) -> None:
             info("No changes in manual generation.")
         return
 
-    output = Path(BASE_DIR / "cli_manual.md")
+    output = Path(BASE_DIR / "docs/cli_manual.md")
     result = c.run(f"{BASE_DIR}/libreplate_cli.py --list", hide=True)
 
     tasks = []

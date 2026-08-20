@@ -37,7 +37,7 @@ The goal is to gradually turn LibrePlate into a complete, flexible, and privacy-
 
 ## Getting Started
 
-LibrePlate includes a CLI for managing development tasks such as formatting, checking, testing, and deployment like updating, migrating data and running the application. See the manual here: [CLI Manual](cli_manual.md).
+LibrePlate includes a CLI for managing development tasks such as formatting, checking, testing, and deployment like updating, migrating data and running the application. See the manual here: [CLI Manual](docs/cli_manual.md).
 
 To use invoke you will have to create a virtual environment first, and use its
 python shell. Install [Python UV](https://docs.astral.sh/uv/getting-started/installation/) and run.
